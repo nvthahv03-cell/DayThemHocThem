@@ -1243,7 +1243,7 @@ function beatPreviewActions(){
 }
 
 function currentHonorific(){
-  const me=currentUser()||{};
+  const me=(window.HVAPersonnel&&typeof window.HVAPersonnel.currentUser==='function') ? window.HVAPersonnel.currentUser() : {};
   const raw=[
     me.gioiTinh,me.gender,me.sex,
     state.teacher&&state.teacher.gender,
