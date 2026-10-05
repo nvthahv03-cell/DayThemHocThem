@@ -300,6 +300,27 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 #submitReportBtn:disabled{cursor:not-allowed;opacity:.72;pointer-events:none}
 #submitReportBtn[aria-busy="true"] .bi-arrow-repeat{display:inline-block;animation:dthtSpin .8s linear infinite}
 @keyframes dthtSpin{to{transform:rotate(360deg)}}
+
+/* V7.6 — nhịp cụm thao tác + xác nhận sau gửi */
+.previewActions.action-beat{animation:hvaActionBeat .62s cubic-bezier(.22,.8,.28,1) 1}
+@keyframes hvaActionBeat{
+  0%{transform:scale(1)}
+  38%{transform:scale(1.055)}
+  68%{transform:scale(.985)}
+  100%{transform:scale(1)}
+}
+.submit-ack{
+  margin-top:18px;padding:16px 18px;border:1px solid #a7d7bb;border-radius:16px;
+  background:#f0fbf4;display:flex;align-items:center;gap:14px;
+  box-shadow:0 8px 24px rgba(22,101,52,.08)
+}
+.submit-ack[hidden]{display:none!important}
+.submit-ack-icon{
+  width:44px;height:44px;min-width:44px;border-radius:50%;
+  display:grid;place-items:center;background:#168447;color:#fff;font-size:24px;font-weight:900
+}
+.submit-ack-title{font-size:17px;font-weight:900;color:#14532d;line-height:1.35}
+.submit-ack-sub{margin-top:4px;font-size:11px;font-weight:800;color:#4b7560;letter-spacing:.035em}
 </style>
 </head>
 <body>
@@ -486,10 +507,17 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
       </div>
     </article>
 
-    <div class="actions previewActions">
+    <div class="actions previewActions" id="previewActions">
       <button class="btn secondary" onclick="backEdit()"><i class="bi bi-arrow-left"></i> Quay lại chỉnh sửa</button>
       <button id="submitReportBtn" class="btn primary" onclick="submitReport()"><i class="bi bi-send-check"></i> Xác nhận & gửi</button>
       <button class="btn secondary" onclick="window.print()"><i class="bi bi-printer"></i> In / lưu PDF</button>
+    </div>
+    <div id="submitAcknowledgement" class="submit-ack" hidden>
+      <div class="submit-ack-icon"><i class="bi bi-check-lg"></i></div>
+      <div>
+        <div class="submit-ack-title" id="submitAckTitle">Báo cáo đã được hệ thống ghi nhận.</div>
+        <div class="submit-ack-sub">TRUNG TÂM QUẢN TRỊ SỐ HVA · TRƯỜNG THPT HÒA VANG</div>
+      </div>
     </div>
   </section>
 
@@ -1177,6 +1205,7 @@ function fillPreview(p){
     $('pRelation').textContent=p.relationship;
   }
   $('previewCard').classList.remove('hidden');
+  beatPreviewActions();
   $('declareCard').classList.add('hidden');
   setStep(2);
   window.scrollTo({top:0,behavior:'smooth'});
@@ -1203,6 +1232,35 @@ async function callAPI(method,...args){
   const fn=window.HVA_API?.dtht?.[method];
   if(typeof fn!=='function') throw new Error('Chưa nối backend HVA: HVA_API.dtht.'+method);
   return await fn(...args);
+}
+
+function beatPreviewActions(){
+  const box=$('previewActions');
+  if(!box) return;
+  box.classList.remove('action-beat');
+  void box.offsetWidth;
+  box.classList.add('action-beat');
+}
+
+function currentHonorific(){
+  const me=currentUser()||{};
+  const raw=[
+    me.gioiTinh,me.gender,me.sex,
+    state.teacher&&state.teacher.gender,
+    state.teacher&&state.teacher.gioiTinh
+  ].filter(Boolean).join(' ').toLowerCase();
+  if(/\b(nữ|nu|female|woman)\b/i.test(raw)) return 'Cô';
+  if(/\b(nam|male|man)\b/i.test(raw)) return 'Thầy';
+  return 'Thầy/Cô';
+}
+
+function showSubmitAcknowledgement(){
+  const actions=$('previewActions');
+  const ack=$('submitAcknowledgement');
+  const title=$('submitAckTitle');
+  if(actions) actions.hidden=true;
+  if(title) title.textContent='Báo cáo của '+currentHonorific()+' đã được hệ thống ghi nhận.';
+  if(ack) ack.hidden=false;
 }
 
 async function submitReport(){
@@ -1232,6 +1290,7 @@ async function submitReport(){
     }
 
     await loadData();
+    showSubmitAcknowledgement();
     showHvaNotice('success','Gửi bản kê khai thành công','Hồ sơ kê khai đã được ghi nhận trên hệ thống HVA.');
   }catch(e){
     window.__dthtSubmitting=false;
