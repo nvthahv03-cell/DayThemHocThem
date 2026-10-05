@@ -588,9 +588,13 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
       return await parseResponse(r);
     }
 
-    const headers={'Accept':'application/json'};
-    if(token) headers['Authorization']='Bearer '+token;
-    const r=await fetch(u.toString(),{method:'GET',headers,cache:'no-store',credentials:'include',redirect:'follow'});
+    // DTHT standalone: sessionToken đã nằm trong query.
+    // Không gửi Authorization/cookie để tránh preflight/CORS khi chạy từ GitHub Pages.
+    const r=await fetch(u.toString(),{
+      method:'GET',
+      cache:'no-store',
+      redirect:'follow'
+    });
     return await parseResponse(r);
   }
 
@@ -1306,9 +1310,45 @@ async function submitReport(){
 }
 
 function renderHistory(){
- const rows=state.reports||[];$('historyRows').innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.teacherName)}</td><td>${esc(x.team)}</td><td>${x.participates?'Có tham gia':'Không tham gia'}</td><td>${esc(x.version||1)}</td><td>${esc(x.updatedAt||'')}</td><td>${x.participates?'<button class="btn secondary" onclick="viewReport(\''+esc(x.id)+'\')">Xem</button>':'—'}</td></tr>`).join(''):'<tr><td colspan="6">Chưa có hồ sơ kê khai.</td></tr>';
+ const rows=state.reports||[];$('historyRows').innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.teacherName)}</td><td>${esc(x.team)}</td><td>${x.participates?'Có tham gia':'Không tham gia'}</td><td>${esc(x.version||1)}</td><td>${esc(x.updatedAt||'')}</td><td><button class="btn secondary" onclick="viewReport('${esc(x.id)}')">Xem</button></td></tr>`).join(''):'<tr><td colspan="6">Chưa có hồ sơ kê khai.</td></tr>';
 }
-function viewReport(id){alert('Điểm nối HVA: mở hồ sơ '+id)}
+function viewReport(id){
+  const x=(state.reports||[]).find(r=>String(r.id||'')===String(id||''));
+  if(!x) return;
+
+  state.participates=!!x.participates;
+  state.teacher={
+    key:String(x.teacherKey||state.teacher?.key||''),
+    name:String(x.teacherName||state.teacher?.name||''),
+    team:String(x.team||state.teacher?.team||'')
+  };
+
+  $('assignedSubject').value=x.assignedSubject||'';
+  $('tutorSubject').value=x.tutorSubject||'';
+  $('tutorTime').value=x.tutorTime||'';
+  $('tutorForm').value=x.tutorForm||'';
+  $('tutorPlace').value=x.tutorPlace||'';
+  $('relationship').value=x.relationship||'';
+
+  fillPreview();
+  $('declareCard').classList.add('hidden');
+  $('previewCard').classList.remove('hidden');
+
+  // Hồ sơ đã gửi: chỉ xem/in, không cho gửi lại từ bản lịch sử.
+  const actions=$('previewActions');
+  const ack=$('submitAcknowledgement');
+  const title=$('submitAckTitle');
+  if(actions){
+    actions.hidden=false;
+    const submitBtn=$('submitReportBtn');
+    if(submitBtn) submitBtn.style.display='none';
+  }
+  if(title) title.textContent='Hồ sơ này đã được hệ thống HVA ghi nhận.';
+  if(ack) ack.hidden=false;
+
+  setStep(3);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 async function loadData(){
   try{
     const fn=window.HVA_API?.dtht?.getInitial;
