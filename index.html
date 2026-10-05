@@ -90,6 +90,29 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .steps.steps-3{grid-template-columns:repeat(3,1fr)}
 #identityName,#identityTeam,#identityUsername{background:#f8fbff;color:#0f3f70;font-weight:800}
 @media(max-width:720px){.steps.steps-3{grid-template-columns:1fr}.steps.steps-3 .step{min-height:44px}}
+
+/* ===== DTHT PREMIUM DECLARATION V7 ===== */
+.declaration-card{padding:26px 28px 28px}
+.section-kicker{font-size:11px;font-weight:900;letter-spacing:.08em;color:#0a66b7;margin-bottom:5px}
+.section-title{margin:0 0 4px!important;font-size:22px!important;color:#0b355d!important}
+.identity-card{margin:20px 0 8px;padding:16px 18px;border:1px solid #dbe8f5;border-radius:16px;background:linear-gradient(135deg,#f9fcff,#f3f9ff);display:flex;align-items:center;gap:14px;box-shadow:0 8px 22px rgba(15,73,120,.06)}
+.identity-avatar{width:48px;height:48px;flex:0 0 48px;border-radius:14px;display:grid;place-items:center;background:#e5f2ff;color:#0867b5;font-size:22px}
+.identity-main{min-width:0;flex:1}.identity-label{font-size:10px;font-weight:900;letter-spacing:.1em;color:#70859a}.identity-name{font-size:20px;line-height:1.2;font-weight:900;color:#123f67;margin:3px 0 7px}
+.identity-meta{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#536b80}.identity-meta i{color:#0a78c9;margin-right:4px}.identity-meta b{color:#244c6e}
+.identity-verified{white-space:nowrap;border-radius:999px;padding:7px 10px;background:#eaf8ef;color:#16713a;font-size:11px;font-weight:900}.identity-verified i{margin-right:4px}
+.identity-note{font-size:11px;color:#688096;padding:0 4px 14px}
+.participation-box{margin-top:12px;padding-top:18px;border-top:1px solid #e6eef6}.question-title{font-size:17px;font-weight:900;color:#173e61;margin-bottom:12px}
+.choice-premium{display:grid;grid-template-columns:1fr 1fr;gap:12px}.choice-premium button{display:flex!important;align-items:center;text-align:left!important;gap:12px;padding:15px 16px!important;border:1.5px solid #d9e6f2!important;border-radius:14px!important;background:#fff!important;min-height:78px;transition:.18s}.choice-premium button:hover{transform:translateY(-1px);border-color:#8fc5ee!important;box-shadow:0 8px 18px rgba(15,93,151,.08)}.choice-premium button.on{border-color:#0b78c9!important;background:#f2f9ff!important;box-shadow:0 0 0 3px rgba(11,120,201,.08)}.choice-premium strong{display:block;color:#173f62;font-size:14px}.choice-premium small{display:block;color:#6d8194;margin-top:3px;line-height:1.35}.choice-icon{width:36px;height:36px;flex:0 0 36px;border-radius:10px;background:#edf6ff;display:grid;place-items:center;color:#0873c3;font-size:18px}
+.report-form{margin-top:20px;padding-top:20px;border-top:1px solid #e6eef6}.form-heading{margin-bottom:15px;font-size:11px;font-weight:900;letter-spacing:.07em;color:#0b6db8}
+.report-form .field label{font-weight:800;color:#284b69}.report-form .field b{color:#d82929}.report-form input,.report-form textarea{border:1.3px solid #d5e1ec!important;background:#fff!important}.report-form input:focus,.report-form textarea:focus{border-color:#0b79ca!important;box-shadow:0 0 0 3px rgba(11,121,202,.08)!important}
+.subtle-status{margin-top:14px!important;background:#f8fbfe!important;border-color:#e7eef5!important;color:#718396!important;font-size:11px!important}
+.preview-shell{background:#eef3f8!important;padding:18px!important}.preview-toolbar{max-width:820px;margin:0 auto 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}.preview-toolbar>div{display:flex;flex-direction:column;color:#234763}.preview-toolbar span{font-size:11px;color:#71869a;margin-top:2px}
+.official-paper{max-width:794px!important;margin:0 auto!important;padding:54px 62px 58px!important;background:#fff!important;color:#111!important;border:0!important;border-radius:2px!important;box-shadow:0 15px 45px rgba(35,56,76,.13)!important;font-family:"Times New Roman",Times,serif!important;font-size:16px!important;line-height:1.55!important}
+.official-head{display:grid;grid-template-columns:42% 58%;gap:18px;text-align:center;margin-bottom:34px;font-size:14px;line-height:1.35}.agency div,.agency b,.nation b{display:block}.official-line{display:block;width:180px;max-width:72%;border-top:1px solid #111;margin:6px auto 0}.official-line.short{width:90px}
+.official-title{text-align:center;font-size:20px;font-weight:700;margin-top:8px}.official-subtitle{text-align:center;font-size:16px;font-weight:700;margin-bottom:30px}.official-paper p{margin:9px 0;text-align:justify}.official-sign{width:48%;margin:30px 0 0 auto;text-align:center;line-height:1.45}.official-sign>*{display:block}.signature-space{height:64px}
+.steps.steps-3{grid-template-columns:repeat(3,1fr)!important}
+@media(max-width:720px){.declaration-card{padding:20px 16px}.identity-card{align-items:flex-start}.identity-verified{display:none}.identity-name{font-size:18px}.identity-meta{gap:7px;flex-direction:column}.choice-premium{grid-template-columns:1fr}.official-paper{padding:34px 22px!important;font-size:14px!important}.official-head{grid-template-columns:1fr;gap:18px}.official-sign{width:62%}.preview-toolbar{align-items:flex-start}.steps.steps-3{grid-template-columns:repeat(3,1fr)!important}.steps.steps-3 .step{font-size:10px!important}}
+@media print{body>*{display:none!important}#previewCard{display:block!important;padding:0!important;background:#fff!important}#previewCard .preview-toolbar,#previewCard .previewActions{display:none!important}#paper{display:block!important;box-shadow:none!important;max-width:none!important;margin:0!important;padding:18mm 20mm!important}}
 </style>
 </head>
 <body>
@@ -144,69 +167,139 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
   <div class="steps steps-3">
     <div class="step on" id="s1"><span>1</span>Kê khai</div>
-    <div class="step" id="s2"><span>2</span>Xem trước</div>
+    <div class="step" id="s2"><span>2</span>Xem bản kê khai</div>
     <div class="step" id="s3"><span>3</span>Xác nhận & gửi</div>
   </div>
 
-  <section class="card" id="declareCard">
-    <h2>1. Kê khai dạy thêm – học thêm</h2>
-    <p class="muted">Thông tin người kê khai được xác định tự động từ tài khoản HVA đang đăng nhập.</p>
+  <section class="card declaration-card" id="declareCard">
+    <div class="section-kicker">MẪU SỐ 03 · VBHN QUY ĐỊNH VỀ DẠY THÊM, HỌC THÊM</div>
+    <h2 class="section-title">Kê khai dạy thêm ngoài nhà trường</h2>
+    <p class="muted">Thông tin người kê khai được nhận diện tự động từ tài khoản HVA đang đăng nhập.</p>
 
-    <div class="grid teacher-picker">
-      <div class="field"><label>Giáo viên kê khai</label><input id="identityName" readonly></div>
-      <div class="field"><label>Tổ chuyên môn</label><input id="identityTeam" readonly></div>
-      <div class="field"><label>Tài khoản HVA</label><input id="identityUsername" readonly></div>
-      <div class="field"><label>Năm học</label><input value="2026–2027" readonly></div>
+    <div class="identity-card">
+      <div class="identity-avatar"><i class="bi bi-person-check-fill"></i></div>
+      <div class="identity-main">
+        <div class="identity-label">NGƯỜI KÊ KHAI</div>
+        <div class="identity-name" id="identityName">Đang xác định...</div>
+        <div class="identity-meta">
+          <span><i class="bi bi-diagram-3"></i> <b id="identityTeam">—</b></span>
+          <span><i class="bi bi-person-badge"></i> <b id="identityUsername">—</b></span>
+          <span><i class="bi bi-calendar3"></i> Năm học <b>2026–2027</b></span>
+        </div>
+      </div>
+      <div class="identity-verified"><i class="bi bi-patch-check-fill"></i> Đã xác thực HVA</div>
     </div>
 
-    <div id="teacherInfo" class="status">Đang xác định thông tin người kê khai từ HVA...</div>
+    <div id="teacherInfo" class="identity-note">Đang đồng bộ hồ sơ nhân sự HVA...</div>
 
-    <div id="participation" class="hidden">
-      <h2 style="margin-top:22px">Thầy/Cô có tham gia dạy thêm ngoài nhà trường không?</h2>
-      <div class="choice">
-        <button type="button" id="noBtn" onclick="setParticipate(false)"><strong><i class="bi bi-check-circle"></i> Không tham gia</strong><small>Xác nhận hiện tại không tham gia dạy thêm ngoài nhà trường.</small></button>
-        <button type="button" id="yesBtn" onclick="setParticipate(true)"><strong><i class="bi bi-pencil-square"></i> Có tham gia</strong><small>Kê khai thông tin theo Mẫu 03 hiện hành.</small></button>
+    <div id="participation" class="hidden participation-box">
+      <div class="question-title">Thầy/Cô có tham gia dạy thêm ngoài nhà trường không?</div>
+      <div class="choice choice-premium">
+        <button type="button" id="noBtn" onclick="setParticipate(false)">
+          <span class="choice-icon"><i class="bi bi-x-circle"></i></span>
+          <span><strong>Không tham gia</strong><small>Kê khai xác nhận hiện tại không tham gia dạy thêm ngoài nhà trường.</small></span>
+        </button>
+        <button type="button" id="yesBtn" onclick="setParticipate(true)">
+          <span class="choice-icon"><i class="bi bi-check-circle"></i></span>
+          <span><strong>Có tham gia</strong><small>Kê khai đầy đủ các nội dung theo Mẫu số 03 hiện hành.</small></span>
+        </button>
       </div>
     </div>
 
-    <form id="reportForm" class="hidden" onsubmit="event.preventDefault();previewReport()">
+    <form id="reportForm" class="hidden report-form" onsubmit="event.preventDefault();previewReport()">
+      <div class="form-heading"><span>THÔNG TIN BÁO CÁO THEO MẪU SỐ 03</span></div>
       <div class="grid">
-        <div class="field"><label>Họ và tên giáo viên</label><input id="fullName" readonly></div>
-        <div class="field"><label>Môn học được phân công dạy học <b>*</b></label><input id="assignedSubject" required placeholder="Ví dụ: Toán"></div>
-        <div class="field"><label>1. Môn học dạy thêm <b>*</b></label><input id="tutorSubject" required></div>
-        <div class="field"><label>2. Thời gian dạy thêm <b>*</b></label><input id="tutorTime" required placeholder="Ngày trong tuần, khung giờ, thời điểm bắt đầu"></div>
-        <div class="field full"><label>3. Hình thức dạy thêm <b>*</b></label><input id="tutorForm" required placeholder="Trực tiếp / trực tuyến / hình thức khác"></div>
-        <div class="field full"><label>4. Địa điểm dạy thêm <b>*</b></label><textarea id="tutorPlace" required placeholder="Ghi địa chỉ và số điện thoại của cơ sở dạy thêm"></textarea></div>
-        <div class="field full"><label>5. Mối quan hệ với chủ thể đứng tên đăng ký kinh doanh cơ sở dạy thêm <b>*</b></label><textarea id="relationship" required></textarea></div>
+        <div class="field full">
+          <label>Môn học được phân công dạy học <b>*</b></label>
+          <input id="assignedSubject" required placeholder="Ví dụ: Toán">
+        </div>
+        <div class="field">
+          <label>1. Môn học dạy thêm <b>*</b></label>
+          <input id="tutorSubject" required placeholder="Ghi tên môn học">
+        </div>
+        <div class="field">
+          <label>2. Thời gian dạy thêm <b>*</b></label>
+          <input id="tutorTime" required placeholder="Ngày trong tuần, khung giờ, thời điểm bắt đầu">
+        </div>
+        <div class="field full">
+          <label>3. Hình thức dạy thêm <b>*</b></label>
+          <input id="tutorForm" required placeholder="Ví dụ: Trực tiếp">
+        </div>
+        <div class="field full">
+          <label>4. Địa điểm dạy thêm <b>*</b></label>
+          <textarea id="tutorPlace" required placeholder="Ghi rõ địa chỉ, số điện thoại của cơ sở dạy thêm"></textarea>
+        </div>
+        <div class="field full">
+          <label>5. Mối quan hệ với chủ thể đứng tên đăng kí kinh doanh cơ sở dạy thêm <b>*</b></label>
+          <textarea id="relationship" required placeholder="Ghi rõ mối quan hệ theo thực tế"></textarea>
+        </div>
       </div>
-      <div class="actions"><button class="btn primary" type="submit"><i class="bi bi-eye"></i> Xem trước Mẫu 03</button><button class="btn secondary" type="button" onclick="resetDeclaration()">Nhập lại</button></div>
+      <div class="actions">
+        <button class="btn primary" type="submit"><i class="bi bi-file-earmark-text"></i> Xem bản kê khai</button>
+        <button class="btn secondary" type="button" onclick="resetDeclaration()"><i class="bi bi-arrow-counterclockwise"></i> Nhập lại</button>
+      </div>
     </form>
 
-    <div id="noActions" class="actions hidden"><button class="btn primary" type="button" onclick="submitNoTutor()"><i class="bi bi-send-check"></i> Xác nhận & gửi</button></div>
-    <div id="apiStatus" class="status">Module giao diện đang sẵn sàng. Khi ghép HVA, dữ liệu sẽ gọi qua HVA_API.dtht.</div>
+    <div id="noActions" class="actions hidden">
+      <button class="btn primary" type="button" onclick="previewNoTutor()"><i class="bi bi-file-earmark-text"></i> Xem bản kê khai</button>
+    </div>
+
+    <div id="apiStatus" class="status subtle-status">HVA đang sẵn sàng.</div>
   </section>
 
-  <section class="card hidden" id="previewCard">
-    <div class="preview" id="paper">
-      <div class="top">
-        <div><b>TRƯỜNG THPT HÒA VANG</b><span class="under">________________</span></div>
-        <div><b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b><b>Độc lập - Tự do - Hạnh phúc</b><span class="under">________________</span></div>
+  <section class="card hidden preview-shell" id="previewCard">
+    <div class="preview-toolbar">
+      <div><b>BẢN XEM TRƯỚC</b><span>Kiểm tra nội dung trước khi xác nhận và gửi</span></div>
+      <button class="btn secondary" type="button" onclick="backEdit()"><i class="bi bi-pencil"></i> Chỉnh sửa</button>
+    </div>
+
+    <article class="preview official-paper" id="paper">
+      <div class="official-head">
+        <div class="agency">
+          <div>SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div>
+          <b>TRƯỜNG THPT HÒA VANG</b>
+          <span class="official-line short"></span>
+        </div>
+        <div class="nation">
+          <b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b>
+          <b>Độc lập - Tự do - Hạnh phúc</b>
+          <span class="official-line"></span>
+        </div>
       </div>
-      <h2>BÁO CÁO<br><span style="font-size:15px">Về việc tham gia dạy thêm ngoài nhà trường</span></h2>
+
+      <div class="official-title">BÁO CÁO</div>
+      <div class="official-subtitle" id="previewSubtitle">Về việc tham gia dạy thêm ngoài nhà trường</div>
+
       <p><b>Kính gửi:</b> Hiệu trưởng Trường THPT Hòa Vang</p>
       <p>Họ và tên giáo viên: <b id="pName"></b></p>
       <p>Môn học được phân công dạy học: <b id="pAssigned"></b></p>
-      <p>Tôi báo cáo việc tham gia dạy thêm ngoài nhà trường trong năm học 2026–2027 như sau:</p>
-      <p class="indent"><b>1. Môn học dạy thêm:</b> <span id="pSubject"></span></p>
-      <p class="indent"><b>2. Thời gian dạy thêm:</b> <span id="pTime"></span></p>
-      <p class="indent"><b>3. Hình thức dạy thêm:</b> <span id="pForm"></span></p>
-      <p class="indent"><b>4. Địa điểm dạy thêm:</b> <span id="pPlace"></span></p>
-      <p class="indent"><b>5. Mối quan hệ với chủ thể đứng tên đăng ký kinh doanh cơ sở dạy thêm:</b> <span id="pRelation"></span></p>
+
+      <div id="previewYesBody">
+        <p>Trân trọng báo cáo với Hiệu trưởng Trường THPT Hòa Vang về việc tham gia dạy thêm ngoài nhà trường của tôi trong năm học <b>2026–2027</b> như sau:</p>
+        <p><b>1. Môn học dạy thêm:</b> <span id="pSubject"></span></p>
+        <p><b>2. Thời gian dạy thêm:</b> <span id="pTime"></span></p>
+        <p><b>3. Hình thức dạy thêm:</b> <span id="pForm"></span></p>
+        <p><b>4. Địa điểm dạy thêm:</b> <span id="pPlace"></span></p>
+        <p><b>5. Mối quan hệ với chủ thể đứng tên đăng kí kinh doanh cơ sở dạy thêm:</b> <span id="pRelation"></span></p>
+      </div>
+
+      <div id="previewNoBody" class="hidden">
+        <p>Trân trọng báo cáo với Hiệu trưởng Trường THPT Hòa Vang: hiện tại tôi <b>không tham gia dạy thêm ngoài nhà trường</b> trong năm học <b>2026–2027</b>.</p>
+      </div>
+
       <p>Tôi xin chịu trách nhiệm hoàn toàn về những nội dung báo cáo nêu trên.</p>
-      <div class="sign"><i>Cẩm Lệ, ngày ..... tháng ..... năm 2026</i><br><b>NGƯỜI BÁO CÁO</b><br><i>(Ký và ghi rõ họ tên)</i><div class="name" id="pSignName"></div></div>
-    </div>
+
+      <div class="official-sign">
+        <div><i>Cẩm Lệ, ngày <span id="pDay">.....</span> tháng <span id="pMonth">.....</span> năm <span id="pYear">2026</span></i></div>
+        <b>NGƯỜI BÁO CÁO</b>
+        <i>(Ký và ghi rõ họ tên)</i>
+        <div class="signature-space"></div>
+        <b id="pSignName"></b>
+      </div>
+    </article>
+
     <div class="actions previewActions">
-      <button class="btn secondary" onclick="backEdit()"><i class="bi bi-pencil"></i> Quay lại chỉnh sửa</button>
+      <button class="btn secondary" onclick="backEdit()"><i class="bi bi-arrow-left"></i> Quay lại chỉnh sửa</button>
       <button class="btn primary" onclick="submitReport()"><i class="bi bi-send-check"></i> Xác nhận & gửi</button>
       <button class="btn secondary" onclick="window.print()"><i class="bi bi-printer"></i> In / lưu PDF</button>
     </div>
@@ -426,30 +519,31 @@ async function dthtStandaloneLogin(){
 }
 function bindCurrentTeacher(){
   const me=dthtCurrentUser();
-  const username=String(me.username||me.userName||me.maGV||'').trim().toLowerCase();
+  const username=String(me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
   if(!username){
     $('apiStatus').textContent='Không xác định được tài khoản HVA đang đăng nhập.';
     return false;
   }
-  const teacher=(state.allTeachers||[]).find(x=>String(x.key||'').trim().toLowerCase()===username);
-  if(!teacher){
-    $('identityName').value=String(me.hoTen||me.fullName||me.name||'');
-    $('identityTeam').value=String(me.to||me.toBoPhan||me.tenTo||'');
-    $('identityUsername').value=username;
-    $('teacherInfo').innerHTML='<b>Chưa đối chiếu được tài khoản này với HVA Personnel.</b>';
-    $('apiStatus').textContent='Tài khoản HVA hiện tại chưa được đối chiếu với danh sách giáo viên HVA Personnel.';
-    return false;
-  }
+
+  const person=(state.allTeachers||[]).find(x=>String(x.key||'').trim().toLowerCase()===username.toLowerCase());
+  const teacher=person || {
+    key:username,
+    name:String(me.hoTen||me.fullName||me.name||username).trim(),
+    team:String(me.tenTo||me.toBoPhan||me.to||me.donVi||'').trim() || 'Chưa xác định'
+  };
 
   state.team=teacher.team;
   state.teacher=teacher;
-  $('identityName').value=teacher.name;
-  $('identityTeam').value=teacher.team;
-  $('identityUsername').value=teacher.key;
-  $('fullName').value=teacher.name;
-  $('teacherInfo').innerHTML=`<b>${esc(teacher.name)}</b> · ${esc(teacher.team)}<div class="dtht-self-note">Đã xác thực bằng tài khoản HVA: ${esc(teacher.key)}</div>`;
+
+  $('identityName').textContent=teacher.name;
+  $('identityTeam').textContent=teacher.team;
+  $('identityUsername').textContent='@'+teacher.key;
+  $('teacherInfo').innerHTML=person
+    ? '<i class="bi bi-shield-check"></i> Hồ sơ đã được đối chiếu với HVA Personnel.'
+    : '<i class="bi bi-shield-check"></i> Danh tính được xác thực từ phiên đăng nhập HVA.';
   $('participation').classList.remove('hidden');
-  $('apiStatus').textContent='Đã xác định người kê khai từ HVA Personnel.';
+  $('apiStatus').textContent='Sẵn sàng kê khai.';
+  setStep(1);
   return true;
 }
 /* HVA_Personnel.js — CORE nhân sự dùng chung HVA
@@ -826,80 +920,115 @@ let state={allTeachers:[],teachers:[],reports:[],team:'',teacher:null,participat
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function goBackHVA(){ if(history.length>1) history.back(); else location.href='main.html'; }
-function setStep(n){for(let i=1;i<=4;i++)$('s'+i).classList.toggle('on',i<=n)}
+function setStep(n){for(let i=1;i<=3;i++)$('s'+i).classList.toggle('on',i<=n)}
 function norm(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase().replace(/[^a-z0-9]/g,'')}
 function teamMatch(a,b){return norm(a)===norm(b)}
 
 function initTeams(){
   $('team').innerHTML='<option value="">Chọn tổ chuyên môn</option>'+TEAMS.map(t=>`<option>${esc(t)}</option>`).join('');
 }
-async function onTeamSelect(){
-  state.team=$('team').value;
-  state.teacher=null;
-  $('participation').classList.add('hidden');
-  $('reportForm').classList.add('hidden');
-  $('noActions').classList.add('hidden');
-  $('teacher').innerHTML='<option value="">'+(state.team?'Chọn giáo viên':'Chọn tổ trước')+'</option>';
-  $('teacherInfo').textContent=state.team?'Đang lọc danh sách giáo viên...':'Vui lòng chọn tổ chuyên môn để tải danh sách giáo viên.';
-  setStep(1);
-  if(!state.team) return;
+async function onTeamSelect(){ return; }
+async function onTeacherSelect(){ return; }
 
-  const list=(state.allTeachers||[])
-    .filter(x=>teamMatch(x.team,state.team))
-    .map(x=>({
-      key:String(x.key||x.username||x.maGV||'').trim(),
-      name:String(x.name||x.hoTen||'').trim(),
-      team:String(x.team||state.team).trim(),
-      subject:String(x.subject||'').trim(),
-      raw:x
-    }))
-    .filter(x=>x.key&&x.name)
-    .sort((a,b)=>a.name.localeCompare(b.name,'vi'));
-
-  state.teachers=list;
-  $('teacher').innerHTML='<option value="">Chọn giáo viên</option>'+
-    list.map(x=>`<option value="${esc(x.key)}">${esc(x.name)}</option>`).join('');
-  $('teacherInfo').textContent=list.length
-    ? `Đã tải ${list.length} giáo viên · ${state.team}.`
-    : `Chưa tìm thấy giáo viên của tổ ${state.team} trong dữ liệu nhân sự HVA.`;
-}
-async function onTeacherSelect(){
-  const key=$('teacher').value;state.teacher=state.teachers.find(x=>String(x.key)===key)||null;
-  if(!state.teacher){$('participation').classList.add('hidden');return}
-  $('teacherInfo').innerHTML=`<b>${esc(state.teacher.name)}</b> · ${esc(state.teacher.team)}${state.teacher.subject?' · Môn: '+esc(state.teacher.subject):''}`;
-  $('fullName').value=state.teacher.name||'';$('assignedSubject').value=state.teacher.subject||'';
-  $('participation').classList.remove('hidden');setStep(2);
-}
 function setParticipate(v){
-  state.participates=v;$('yesBtn').classList.toggle('on',v===true);$('noBtn').classList.toggle('on',v===false);
-  $('reportForm').classList.toggle('hidden',v!==true);$('noActions').classList.toggle('hidden',v!==false);
-  setStep(2)
+  state.participates=v;
+  $('yesBtn').classList.toggle('on',v===true);
+  $('noBtn').classList.toggle('on',v===false);
+  $('reportForm').classList.toggle('hidden',v!==true);
+  $('noActions').classList.toggle('hidden',v!==false);
+  if(v===false){
+    ['tutorSubject','tutorTime','tutorForm','tutorPlace','relationship'].forEach(id=>$(id).value='');
+  }
+  setStep(1);
 }
-function resetDeclaration(){['tutorSubject','tutorTime','tutorForm','tutorPlace','relationship'].forEach(id=>$(id).value='');}
+
+function resetDeclaration(){
+  ['assignedSubject','tutorSubject','tutorTime','tutorForm','tutorPlace','relationship'].forEach(id=>$(id).value='');
+}
+
 function payload(){
- return {teacherKey:state.teacher?.key||'',teacherName:state.teacher?.name||'',team:state.teacher?.team||state.team,participates:state.participates,
- assignedSubject:$('assignedSubject').value.trim(),tutorSubject:$('tutorSubject').value.trim(),tutorTime:$('tutorTime').value.trim(),tutorForm:$('tutorForm').value.trim(),tutorPlace:$('tutorPlace').value.trim(),relationship:$('relationship').value.trim(),schoolYear:'2026-2027'};
+  return {
+    teacherKey:state.teacher?.key||'',
+    teacherName:state.teacher?.name||'',
+    team:state.teacher?.team||state.team||'',
+    participates:state.participates,
+    assignedSubject:$('assignedSubject').value.trim(),
+    tutorSubject:$('tutorSubject').value.trim(),
+    tutorTime:$('tutorTime').value.trim(),
+    tutorForm:$('tutorForm').value.trim(),
+    tutorPlace:$('tutorPlace').value.trim(),
+    relationship:$('relationship').value.trim(),
+    schoolYear:'2026-2027'
+  };
 }
+
+function fillPreview(p){
+  $('pName').textContent=p.teacherName||'';
+  $('pAssigned').textContent=p.assignedSubject||'';
+  $('pSignName').textContent=p.teacherName||'';
+  const d=new Date();
+  $('pDay').textContent=String(d.getDate()).padStart(2,'0');
+  $('pMonth').textContent=String(d.getMonth()+1).padStart(2,'0');
+  $('pYear').textContent=String(d.getFullYear());
+
+  const yes=p.participates===true;
+  $('previewYesBody').classList.toggle('hidden',!yes);
+  $('previewNoBody').classList.toggle('hidden',yes);
+  $('previewSubtitle').textContent=yes
+    ? 'Về việc tham gia dạy thêm ngoài nhà trường'
+    : 'Về việc không tham gia dạy thêm ngoài nhà trường';
+
+  if(yes){
+    $('pSubject').textContent=p.tutorSubject;
+    $('pTime').textContent=p.tutorTime;
+    $('pForm').textContent=p.tutorForm;
+    $('pPlace').textContent=p.tutorPlace;
+    $('pRelation').textContent=p.relationship;
+  }
+  $('previewCard').classList.remove('hidden');
+  $('declareCard').classList.add('hidden');
+  setStep(2);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
 function previewReport(){
- if(!$('reportForm').reportValidity())return;
- const p=payload();$('pName').textContent=p.teacherName;$('pAssigned').textContent=p.assignedSubject;$('pSubject').textContent=p.tutorSubject;$('pTime').textContent=p.tutorTime;$('pForm').textContent=p.tutorForm;$('pPlace').textContent=p.tutorPlace;$('pRelation').textContent=p.relationship;$('pSignName').textContent=p.teacherName;
- $('previewCard').classList.remove('hidden');$('declareCard').classList.add('hidden');setStep(3);window.scrollTo({top:0,behavior:'smooth'})
+  if(state.participates!==true) return;
+  if(!$('reportForm').reportValidity()) return;
+  fillPreview(payload());
 }
-function backEdit(){$('previewCard').classList.add('hidden');$('declareCard').classList.remove('hidden');setStep(2)}
+
+function previewNoTutor(){
+  if(state.participates!==false) return;
+  fillPreview(payload());
+}
+
+function backEdit(){
+  $('previewCard').classList.add('hidden');
+  $('declareCard').classList.remove('hidden');
+  setStep(1);
+}
+
 async function callAPI(method,...args){
- const fn=window.HVA_API?.dtht?.[method];
- if(typeof fn!=='function') throw new Error('Chưa nối backend HVA: HVA_API.dtht.'+method);
- return await fn(...args);
+  const fn=window.HVA_API?.dtht?.[method];
+  if(typeof fn!=='function') throw new Error('Chưa nối backend HVA: HVA_API.dtht.'+method);
+  return await fn(...args);
 }
+
 async function submitReport(){
- try{setStep(4);$('apiStatus').textContent='Đang gửi hồ sơ...';const r=await callAPI('submitReport',payload());$('apiStatus').textContent='Đã lưu hồ sơ DTHT vào dữ liệu HVA.';await loadData();alert('Đã xác nhận và gửi báo cáo.');}
- catch(e){$('apiStatus').textContent='Lỗi gửi hồ sơ: '+(e.message||e);alert('Không gửi được hồ sơ: '+(e.message||e));}
+  try{
+    setStep(3);
+    $('apiStatus').textContent='Đang gửi hồ sơ...';
+    await callAPI('submitReport',payload());
+    $('apiStatus').textContent='Đã lưu hồ sơ kê khai vào HVA.';
+    await loadData();
+    alert('Đã xác nhận và gửi bản kê khai.');
+  }catch(e){
+    setStep(2);
+    $('apiStatus').textContent='Lỗi gửi hồ sơ: '+(e.message||e);
+    alert('Không gửi được hồ sơ: '+(e.message||e));
+  }
 }
-async function submitNoTutor(){
- const p=payload();
- try{$('apiStatus').textContent='Đang gửi xác nhận...';await callAPI('submitReport',p);$('apiStatus').textContent='Đã ghi nhận: Không tham gia DTHT ngoài nhà trường.';await loadData();}
- catch(e){$('apiStatus').textContent='Lỗi gửi xác nhận: '+(e.message||e);alert('Không gửi được xác nhận: '+(e.message||e));}
-}
+
 function renderHistory(){
  const rows=state.reports||[];$('historyRows').innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.teacherName)}</td><td>${esc(x.team)}</td><td>${x.participates?'Có tham gia':'Không tham gia'}</td><td>${esc(x.version||1)}</td><td>${esc(x.updatedAt||'')}</td><td>${x.participates?'<button class="btn secondary" onclick="viewReport(\''+esc(x.id)+'\')">Xem</button>':'—'}</td></tr>`).join(''):'<tr><td colspan="6">Chưa có hồ sơ kê khai.</td></tr>';
 }
@@ -908,41 +1037,42 @@ async function loadData(){
   try{
     const fn=window.HVA_API?.dtht?.getInitial;
     if(typeof fn!=='function') throw new Error('DTHT_API_NOT_READY');
-    const me=dthtCurrentUser();
-    const teacherKey=String(me.username||me.userName||me.maGV||'').trim();
 
-    // Lịch sử kê khai vẫn lấy từ DTHT backend.
+    const me=dthtCurrentUser();
+    const teacherKey=String(me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
     const data=await fn(teacherKey);
     state.reports=Array.isArray(data&&data.reports)?data.reports:[];
 
-    // Nhân sự dùng đúng HVA_Personnel.js CORE dùng chung HVA.
     if(!window.HVAPersonnel) throw new Error('HVA_PERSONNEL_NOT_READY');
     const groups=await window.HVAPersonnel.buildGroups();
-    const teachers=[];
-    (groups||[]).filter(g=>g&&g.kind==='TEAM').forEach(g=>{
-      (g.members||[]).forEach(person=>{
-        const key=String(person.username||person.maGV||'').trim();
-        const name=String(person.hoTen||'').trim();
-        const team=String(g.tenTo||person.tenTo||'').trim();
-        if(key&&name) teachers.push({key,name,team});
+    const people=[];
+
+    (groups||[]).forEach(g=>{
+      if(!g || !Array.isArray(g.members)) return;
+      g.members.forEach(person=>{
+        const key=String(person.username||person.maGV||person.taiKhoan||'').trim();
+        const name=String(person.hoTen||person.name||'').trim();
+        const unit=String(g.tenTo||person.tenTo||person.toBoPhan||g.label||'').trim();
+        if(key&&name) people.push({key,name,team:unit});
       });
     });
+
     const seen=new Set();
-    state.allTeachers=teachers.filter(t=>{
+    state.allTeachers=people.filter(t=>{
       const k=String(t.key||'').toLowerCase();
       if(!k||seen.has(k)) return false;
       seen.add(k); return true;
     });
 
-    $('apiStatus').textContent=state.allTeachers.length
-      ? `Đã kết nối HVA Personnel · ${state.allTeachers.length} giáo viên.`
-      : 'Đã kết nối HVA Personnel nhưng chưa nhận được danh sách giáo viên.';
+    renderHistory();
+    $('apiStatus').textContent='Đã kết nối HVA.';
   }catch(e){
+    console.error(e);
     state.allTeachers=[];
     state.reports=[];
+    renderHistory();
     $('apiStatus').textContent='Chưa tải được dữ liệu HVA: '+(e&&e.message?e.message:'Lỗi không xác định');
   }
-  renderHistory();
 }
 (async function initDTHT(){
   if(!dthtSessionToken()){
