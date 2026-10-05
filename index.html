@@ -296,6 +296,10 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   .hva-modal-school{font-size:11px}
   .hva-modal-body{padding:28px 20px 22px}
 }
+
+#submitReportBtn:disabled{cursor:not-allowed;opacity:.72;pointer-events:none}
+#submitReportBtn[aria-busy="true"] .bi-arrow-repeat{display:inline-block;animation:dthtSpin .8s linear infinite}
+@keyframes dthtSpin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -484,7 +488,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
     <div class="actions previewActions">
       <button class="btn secondary" onclick="backEdit()"><i class="bi bi-arrow-left"></i> Quay lại chỉnh sửa</button>
-      <button class="btn primary" onclick="submitReport()"><i class="bi bi-send-check"></i> Xác nhận & gửi</button>
+      <button id="submitReportBtn" class="btn primary" onclick="submitReport()"><i class="bi bi-send-check"></i> Xác nhận & gửi</button>
       <button class="btn secondary" onclick="window.print()"><i class="bi bi-printer"></i> In / lưu PDF</button>
     </div>
   </section>
@@ -1202,14 +1206,40 @@ async function callAPI(method,...args){
 }
 
 async function submitReport(){
+  if(window.__dthtSubmitting) return;
+
+  const btn=$('submitReportBtn');
+  const originalHtml=btn ? btn.innerHTML : '';
+  window.__dthtSubmitting=true;
+
+  if(btn){
+    btn.disabled=true;
+    btn.setAttribute('aria-busy','true');
+    btn.innerHTML='<i class="bi bi-arrow-repeat"></i> Đang gửi...';
+  }
+
   try{
     setStep(3);
     $('apiStatus').textContent='Đang gửi hồ sơ...';
+
     await callAPI('submitReport',payload());
+
     $('apiStatus').textContent='Đã lưu hồ sơ kê khai vào HVA.';
+    if(btn){
+      btn.disabled=true;
+      btn.removeAttribute('aria-busy');
+      btn.innerHTML='<i class="bi bi-check-circle-fill"></i> Đã gửi';
+    }
+
     await loadData();
     showHvaNotice('success','Gửi bản kê khai thành công','Hồ sơ kê khai đã được ghi nhận trên hệ thống HVA.');
   }catch(e){
+    window.__dthtSubmitting=false;
+    if(btn){
+      btn.disabled=false;
+      btn.removeAttribute('aria-busy');
+      btn.innerHTML=originalHtml||'<i class="bi bi-send-check"></i> Xác nhận & gửi';
+    }
     setStep(2);
     $('apiStatus').textContent='Lỗi gửi hồ sơ: '+(e.message||e);
     showHvaNotice('error','Chưa gửi được bản kê khai','Hệ thống chưa thể ghi nhận hồ sơ. Chi tiết: '+(e.message||e));
