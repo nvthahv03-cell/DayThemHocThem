@@ -1309,8 +1309,13 @@ async function submitReport(){
   }
 }
 
+function canonicalTeamForReport(x){
+  const key=String(x&&x.teacherKey||'').trim().toLowerCase();
+  const person=(state.allTeachers||[]).find(t=>String(t.key||'').trim().toLowerCase()===key);
+  return String(person&&person.team||x&&x.team||'').trim();
+}
 function renderHistory(){
- const rows=state.reports||[];$('historyRows').innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.teacherName)}</td><td>${esc(x.team)}</td><td>${x.participates?'Có tham gia':'Không tham gia'}</td><td>${esc(x.version||1)}</td><td>${esc(x.updatedAt||'')}</td><td><button class="btn secondary" onclick="viewReport('${esc(x.id)}')">Xem</button></td></tr>`).join(''):'<tr><td colspan="6">Chưa có hồ sơ kê khai.</td></tr>';
+ const rows=state.reports||[];$('historyRows').innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.teacherName)}</td><td>${esc(canonicalTeamForReport(x))}</td><td>${x.participates?'Có tham gia':'Không tham gia'}</td><td>${esc(x.version||1)}</td><td>${esc(x.updatedAt||'')}</td><td><button class="btn secondary" onclick="viewReport('${esc(x.id)}')">Xem</button></td></tr>`).join(''):'<tr><td colspan="6">Chưa có hồ sơ kê khai.</td></tr>';
 }
 function viewReport(id){
   const x=(state.reports||[]).find(r=>String(r.id||'')===String(id||''));
@@ -1320,7 +1325,7 @@ function viewReport(id){
   state.teacher={
     key:String(x.teacherKey||state.teacher?.key||''),
     name:String(x.teacherName||state.teacher?.name||''),
-    team:String(x.team||state.teacher?.team||'')
+    team:String(canonicalTeamForReport(x)||state.teacher?.team||'')
   };
 
   $('assignedSubject').value=x.assignedSubject||'';
@@ -1330,7 +1335,18 @@ function viewReport(id){
   $('tutorPlace').value=x.tutorPlace||'';
   $('relationship').value=x.relationship||'';
 
-  fillPreview(x);
+  fillPreview({
+    teacherKey:state.teacher.key,
+    teacherName:state.teacher.name,
+    team:state.teacher.team,
+    participates:state.participates,
+    assignedSubject:x.assignedSubject||'',
+    tutorSubject:x.tutorSubject||'',
+    tutorTime:x.tutorTime||'',
+    tutorForm:x.tutorForm||'',
+    tutorPlace:x.tutorPlace||'',
+    relationship:x.relationship||''
+  });
   $('declareCard').classList.add('hidden');
   $('previewCard').classList.remove('hidden');
 
@@ -1368,7 +1384,7 @@ async function loadData(){
       g.members.forEach(person=>{
         const key=String(person.username||person.maGV||person.taiKhoan||'').trim();
         const name=String(person.hoTen||person.name||'').trim();
-        const unit=String(g.tenTo||person.tenTo||person.toBoPhan||g.label||'').trim();
+        const unit=String(person.tenTo||person.toBoPhan||person.to||'').trim();
         if(key&&name) people.push({key,name,team:unit});
       });
     });
