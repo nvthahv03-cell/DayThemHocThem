@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HVA - Quản lý dạy thêm, học thêm</title>
-<!-- DTHT HVA UI V1_10 | Backend HVA + Personnel source + Sheet DTHT -->
+<!-- DTHT HVA UI V2_10 | Backend HVA + Personnel source + Sheet DTHT -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -14,9 +14,9 @@
   --hva-h-line:rgba(190,238,255,.58);--ink:#183249;--line:#d8e5ef;--soft:#f4f9fd;
 }
 *{box-sizing:border-box} body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f8fb;color:var(--ink)}
-.hva-pro-header{position:sticky;top:0;z-index:40;margin:12px 14px 0;min-height:126px;border-radius:16px;overflow:hidden;isolation:isolate;color:var(--hva-h-white);background:radial-gradient(circle at 82% 34%,rgba(24,225,255,.26),transparent 22%),radial-gradient(circle at 55% 110%,rgba(0,200,255,.36),transparent 31%),linear-gradient(108deg,var(--hva-h-navy) 0%,#064b96 29%,var(--hva-h-blue) 53%,#078fc0 77%,var(--hva-h-cyan) 100%);border:1px solid rgba(255,255,255,.18);box-shadow:0 10px 28px rgba(3,43,84,.18),inset 0 1px 0 rgba(255,255,255,.12)}
-.hva-pro-header::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;opacity:.55;background:radial-gradient(circle at 48% 25%,#67f4ff 0 1px,transparent 2px),radial-gradient(circle at 56% 70%,#3fe2ff 0 1.2px,transparent 2.2px),radial-gradient(circle at 64% 22%,#72f5ff 0 1.1px,transparent 2px),radial-gradient(circle at 72% 68%,#45e6ff 0 1.2px,transparent 2.2px),linear-gradient(60deg,transparent 49.5%,rgba(91,228,255,.30) 50%,transparent 50.5%) 44% 0/118px 82px,linear-gradient(120deg,transparent 49.5%,rgba(91,228,255,.24) 50%,transparent 50.5%) 48% 0/150px 96px}
-.hva-pro-header::after{content:"";position:absolute;z-index:-1;width:245px;height:245px;right:-22px;top:-58px;border-radius:50%;pointer-events:none;opacity:.20;border:1px solid rgba(129,239,255,.72);background:repeating-radial-gradient(circle,transparent 0 21px,rgba(128,238,255,.28) 22px 23px),repeating-linear-gradient(90deg,transparent 0 27px,rgba(128,238,255,.20) 28px 29px),repeating-linear-gradient(0deg,transparent 0 27px,rgba(128,238,255,.18) 28px 29px)}
+.hva-pro-header{position:sticky;top:0;z-index:40;margin:12px 14px 0;min-height:126px;border-radius:16px;overflow:hidden;isolation:isolate;color:var(--hva-h-white);background:radial-gradient(circle at 84% 38%,rgba(64,244,255,.46),transparent 24%),radial-gradient(circle at 58% 118%,rgba(0,221,255,.46),transparent 35%),linear-gradient(108deg,#073f82 0%,#0758ad 28%,#087bd0 54%,#08a8dc 78%,#12c8d9 100%);border:1px solid rgba(154,239,255,.34);box-shadow:0 12px 30px rgba(3,62,112,.22),inset 0 1px 0 rgba(255,255,255,.20)}
+.hva-pro-header::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;opacity:.78;background:radial-gradient(circle at 46% 24%,#8ff9ff 0 1.4px,transparent 2.5px),radial-gradient(circle at 53% 72%,#70efff 0 1.5px,transparent 2.6px),radial-gradient(circle at 61% 20%,#a0fbff 0 1.4px,transparent 2.5px),radial-gradient(circle at 70% 67%,#70efff 0 1.5px,transparent 2.6px),radial-gradient(circle at 77% 28%,#b0fdff 0 1.2px,transparent 2.3px),linear-gradient(60deg,transparent 49.4%,rgba(109,237,255,.40) 50%,transparent 50.6%) 42% 0/112px 80px,linear-gradient(120deg,transparent 49.4%,rgba(104,234,255,.34) 50%,transparent 50.6%) 47% 0/146px 94px}
+.hva-pro-header::after{content:"";position:absolute;z-index:-1;width:270px;height:270px;right:-28px;top:-70px;border-radius:50%;pointer-events:none;opacity:.38;border:1px solid rgba(160,248,255,.90);background:repeating-radial-gradient(circle,transparent 0 20px,rgba(145,244,255,.38) 21px 22px),repeating-linear-gradient(90deg,transparent 0 26px,rgba(145,244,255,.28) 27px 28px),repeating-linear-gradient(0deg,transparent 0 26px,rgba(145,244,255,.25) 27px 28px)}
 .hva-pro-header-inner{min-height:124px;max-width:1460px;margin:0 auto;padding:13px 24px;display:grid;grid-template-columns:58px minmax(570px,1fr) auto;align-items:center;gap:20px}
 .hva-pro-back{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#eaf8ff;background:linear-gradient(145deg,rgba(16,112,187,.95),rgba(7,73,141,.95));border:1.5px solid rgba(79,192,255,.50);box-shadow:0 6px 16px rgba(0,36,78,.20);cursor:pointer}.hva-pro-back i{font-size:27px}
 .hva-pro-brand{min-width:0;display:flex;align-items:center}.hva-pro-divider{width:1px;height:70px;flex:0 0 1px;background:linear-gradient(transparent,var(--hva-h-line) 16%,var(--hva-h-line) 84%,transparent)}
@@ -88,7 +88,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 @media(max-width:520px){.dtht-auth-box{padding:22px 18px}.dtht-auth-title{font-size:19px}}
 
 .steps.steps-3{grid-template-columns:repeat(3,1fr)}
-#identityName,#identityTeam,#identityUsername{background:#f8fbff;color:#0f3f70;font-weight:800}
+#identityName,#identityTeam,#identityRole{background:transparent!important;color:#0f3f70;font-weight:800}
 @media(max-width:720px){.steps.steps-3{grid-template-columns:1fr}.steps.steps-3 .step{min-height:44px}}
 
 /* ===== DTHT PREMIUM DECLARATION V7 ===== */
@@ -322,13 +322,13 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .submit-ack-title{font-size:17px;font-weight:900;color:#14532d;line-height:1.35}
 .submit-ack-sub{margin-top:4px;font-size:11px;font-weight:800;color:#4b7560;letter-spacing:.035em}
 
-/* ===== V1_10 · IDENTITY / SIGNATURE PATCH ===== */
-.identity-card{display:grid!important;grid-template-columns:minmax(0,1.35fr) minmax(250px,.9fr) minmax(250px,.85fr)!important;gap:0!important;padding:0!important;overflow:hidden!important;background:linear-gradient(118deg,#f2f8ff 0%,#eaf6ff 48%,#f5fcff 100%)!important;border:1px solid #c9e2f5!important;box-shadow:0 12px 30px rgba(7,92,173,.09)!important}
-.identity-col{min-width:0;padding:18px 20px;position:relative}.identity-col+.identity-col{border-left:1px solid rgba(92,153,201,.20)}
+/* ===== V2_10 · IDENTITY / SIGNATURE PATCH ===== */
+.identity-card{display:grid!important;grid-template-columns:minmax(0,1.35fr) minmax(250px,.9fr) minmax(250px,.85fr)!important;gap:0!important;padding:0!important;overflow:hidden!important;background:linear-gradient(118deg,#e5f4ff 0%,#d9f1ff 48%,#dff9fb 100%)!important;border:1px solid #a9d8ef!important;box-shadow:0 12px 30px rgba(7,92,173,.10)!important}
+.identity-col{min-width:0;padding:18px 20px;position:relative;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(9,169,214,.035))}.identity-col+.identity-col{border-left:1px solid rgba(52,142,197,.24)}
 .identity-person{display:flex;align-items:center;gap:14px}.identity-label-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .identity-auth-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;background:#e9f8ef;color:#14733a;font-size:9px;font-weight:900;letter-spacing:.02em}
 .identity-section-title{font-size:10px;font-weight:900;letter-spacing:.09em;color:#66829a;margin-bottom:9px}
-.signature-preview{height:58px;display:flex;align-items:center;justify-content:center;border:1px dashed #a9c9df;border-radius:11px;background:rgba(255,255,255,.68);overflow:hidden}
+.signature-preview{height:58px;display:flex;align-items:center;justify-content:center;border:1px dashed #79bddd;border-radius:11px;background:linear-gradient(135deg,rgba(214,241,255,.88),rgba(210,249,249,.82));box-shadow:inset 0 1px 0 rgba(255,255,255,.35);overflow:hidden}
 .signature-preview img{max-width:160px;max-height:52px;object-fit:contain}.signature-empty{font-size:11px;color:#7a8fa2;text-align:center;padding:8px}
 .signature-actions{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}.signature-actions .btn{padding:8px 10px;font-size:10px}
 .signer-status{font-size:11px;color:#61798e;line-height:1.4;margin:3px 0 10px}.signer-status.ok{color:#14733a;font-weight:800}
@@ -399,7 +399,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   <div class="hva-pro-header-inner">
     <button type="button" class="hva-pro-back" onclick="goBackHVA()" aria-label="Quay lại trang chủ HVA" title="Quay lại"><i class="bi bi-arrow-left"></i></button>
     <div class="hva-pro-brand"><span class="hva-pro-divider" aria-hidden="true"></span><div class="hva-pro-brandtext"><div class="hva-pro-kicker">TRUNG TÂM QUẢN TRỊ SỐ HVA</div><div class="hva-pro-school">Trường THPT Hòa Vang</div><div class="hva-pro-slogan">Quản trị thông minh <b>•</b> Giáo dục sáng tạo</div></div></div>
-    <div class="hva-pro-tools"><div class="hva-pro-online-wrap"><div class="hva-pro-online" title="Hệ thống đang trực tuyến"><span class="hva-pro-online-dot"></span><span>TRỰC TUYẾN</span></div><div class="hva-pro-version">V1_10</div></div></div>
+    <div class="hva-pro-tools"><div class="hva-pro-online-wrap"><div class="hva-pro-online" title="Hệ thống đang trực tuyến"><span class="hva-pro-online-dot"></span><span>TRỰC TUYẾN</span></div><div class="hva-pro-version">V2_10</div></div></div>
   </div>
 </header>
 
@@ -800,6 +800,16 @@ async function dthtStandaloneLogin(){
     btnText.textContent='ĐĂNG NHẬP';
   }
 }
+function dthtDisplayRole(teacher,me){
+  const raw=String(teacher.viTriViecLam||teacher.chucVu||me.viTriViecLam||me.chucVu||'').trim();
+  const low=raw.toLowerCase();
+  const team=String(teacher.team||'').toLowerCase();
+  if(!raw || ['user','member','người dùng'].includes(low)){
+    if(team.includes('ban giám hiệu')||team==='bgh') return 'Phó Hiệu trưởng';
+    return 'Giáo viên';
+  }
+  return raw.replace(/^phó hiệu trưởng$/i,'P. Hiệu trưởng');
+}
 function bindCurrentTeacher(){
   const me=dthtCurrentUser();
   const username=String(me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
@@ -821,7 +831,7 @@ function bindCurrentTeacher(){
 
   $('identityName').textContent=teacher.name;
   $('identityTeam').textContent=teacher.team;
-  const role=String(teacher.chucVu||teacher.viTriViecLam||me.chucVu||me.viTriViecLam||'Giáo viên').trim();
+  const role=dthtDisplayRole(teacher,me);
   $('identityRole').textContent=role;
   $('teacherInfo').innerHTML=person
     ? '<i class="bi bi-shield-check"></i> Hồ sơ đã được đối chiếu với HVA Personnel.'
