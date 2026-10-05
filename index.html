@@ -76,7 +76,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .dtht-input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;pointer-events:none}
 .dtht-auth-box input{display:block;width:100%;height:50px;margin:0;border:1.5px solid #cbd5e1;border-radius:12px;background:#fff;color:#1e293b;font-size:16px;font-weight:600;outline:none;box-sizing:border-box;transition:.18s}
 #dthtLoginUser{padding:0 14px 0 42px}
-#dthtLoginPass{padding:0 46px 0 82px}
+#dthtLoginPass{padding:0 46px 0 102px}
 .dtht-auth-box input:focus{border-color:#0a66c2;box-shadow:0 0 0 4px rgba(10,102,194,.10)}
 .dtht-pass-prefix{position:absolute;left:42px;top:50%;transform:translateY(-50%);color:#334155;font-size:14px;font-weight:900;pointer-events:none;user-select:none}
 .dtht-pass-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:transparent;color:#075cad;font-size:18px;cursor:pointer;border-radius:8px}
@@ -176,6 +176,63 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 @media(max-width:720px){
   .report-form .grid{gap:16px!important}
   .report-form input,.report-form textarea{font-size:16px!important;padding:12px 13px!important}
+}
+
+/* ===== HVA SYSTEM NOTICE V7.2 ===== */
+.hva-modal-backdrop{
+  position:fixed;inset:0;z-index:99999;
+  display:flex;align-items:center;justify-content:center;
+  padding:18px;background:rgba(8,27,47,.52);
+  backdrop-filter:blur(5px)
+}
+.hva-modal-backdrop.hidden{display:none!important}
+.hva-modal{
+  width:min(630px,calc(100vw - 32px));
+  overflow:hidden;border-radius:38px;background:#fff;
+  box-shadow:0 26px 70px rgba(3,25,48,.28);
+  border:1px solid rgba(255,255,255,.7)
+}
+.hva-modal-head{
+  display:flex;align-items:center;gap:18px;
+  padding:28px 32px;
+  background:linear-gradient(110deg,#14578c,#1689dc);
+  color:#fff
+}
+.hva-chip{
+  width:74px;height:74px;flex:0 0 74px;
+  display:grid;place-items:center;border-radius:25px;
+  background:rgba(255,255,255,.17);font-size:30px
+}
+.hva-modal-title{font-size:22px;font-weight:900;line-height:1.15;letter-spacing:.01em}
+.hva-modal-brand{margin-top:7px;font-size:14px;font-weight:900;opacity:.92}
+.hva-modal-school{margin-top:3px;font-size:13px;font-weight:800;opacity:.78}
+.hva-modal-body{text-align:center;padding:34px 34px 32px}
+.hva-modal-icon{
+  width:92px;height:92px;margin:0 auto 26px;
+  display:grid;place-items:center;border-radius:50%;
+  background:#edf5ff;color:#246be5;font-size:42px
+}
+.hva-modal-body h3{margin:0;color:#35465b;font-size:21px;font-weight:900}
+.hva-modal-body p{
+  margin:12px auto 28px;max-width:500px;
+  color:#64768a;font-size:14px;line-height:1.55
+}
+.hva-modal-ok{
+  width:100%;min-height:60px;border:0;border-radius:17px;
+  background:#13588d;color:#fff;font-size:15px;font-weight:900;
+  cursor:pointer;letter-spacing:.02em
+}
+.hva-modal-ok:hover{filter:brightness(1.05)}
+.hva-modal-backdrop[data-type="success"] .hva-modal-icon{background:#eaf8ef;color:#16834a}
+.hva-modal-backdrop[data-type="error"] .hva-modal-icon{background:#fff0f0;color:#d63b3b}
+@media(max-width:600px){
+  .hva-modal{border-radius:28px}
+  .hva-modal-head{padding:22px 20px;gap:13px}
+  .hva-chip{width:58px;height:58px;flex-basis:58px;border-radius:19px;font-size:24px}
+  .hva-modal-title{font-size:18px}
+  .hva-modal-brand{font-size:12px}
+  .hva-modal-school{font-size:11px}
+  .hva-modal-body{padding:28px 20px 22px}
 }
 </style>
 </head>
@@ -1086,11 +1143,11 @@ async function submitReport(){
     await callAPI('submitReport',payload());
     $('apiStatus').textContent='Đã lưu hồ sơ kê khai vào HVA.';
     await loadData();
-    alert('Đã xác nhận và gửi bản kê khai.');
+    showHvaNotice('success','Gửi bản kê khai thành công','Hồ sơ kê khai đã được ghi nhận trên hệ thống HVA.');
   }catch(e){
     setStep(2);
     $('apiStatus').textContent='Lỗi gửi hồ sơ: '+(e.message||e);
-    alert('Không gửi được hồ sơ: '+(e.message||e));
+    showHvaNotice('error','Chưa gửi được bản kê khai','Hệ thống chưa thể ghi nhận hồ sơ. Chi tiết: '+(e.message||e));
   }
 }
 
@@ -1151,6 +1208,43 @@ async function loadData(){
     dthtShowLogin('Phiên HVA không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.');
   }
 })();
+
+function showHvaNotice(type,title,message){
+  const box=$('hvaNotice');
+  const icon=$('hvaNoticeIcon');
+  $('hvaNoticeTitle').textContent=title||'Thông báo';
+  $('hvaNoticeMessage').textContent=message||'';
+  box.dataset.type=type||'info';
+  icon.innerHTML = type==='success'
+    ? '<i class="bi bi-check-lg"></i>'
+    : type==='error'
+      ? '<i class="bi bi-exclamation-lg"></i>'
+      : '<i class="bi bi-info-lg"></i>';
+  box.classList.remove('hidden');
+}
+function closeHvaNotice(){
+  $('hvaNotice').classList.add('hidden');
+}
 </script>
+
+<div class="hva-modal-backdrop hidden" id="hvaNotice" role="dialog" aria-modal="true" aria-labelledby="hvaNoticeTitle">
+  <div class="hva-modal">
+    <div class="hva-modal-head">
+      <div class="hva-chip"><i class="bi bi-cpu-fill"></i></div>
+      <div>
+        <div class="hva-modal-title">THÔNG BÁO HỆ THỐNG</div>
+        <div class="hva-modal-brand">TRUNG TÂM QUẢN TRỊ SỐ HVA</div>
+        <div class="hva-modal-school">TRƯỜNG THPT HÒA VANG</div>
+      </div>
+    </div>
+    <div class="hva-modal-body">
+      <div class="hva-modal-icon" id="hvaNoticeIcon"><i class="bi bi-info-lg"></i></div>
+      <h3 id="hvaNoticeTitle">Thông báo</h3>
+      <p id="hvaNoticeMessage"></p>
+      <button type="button" class="hva-modal-ok" onclick="closeHvaNotice()">ĐÃ HIỂU</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
