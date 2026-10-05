@@ -64,21 +64,28 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .teacher-picker select{padding-left:16px}
 @media(max-width:720px){.teacher-picker{padding:0 6px}}
 
-/* ===== DTHT STANDALONE AUTH V1 ===== */
-.dtht-auth{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#073b78,#075cad 52%,#08abc5);display:flex;align-items:center;justify-content:center;padding:18px}
+/* ===== DTHT LOGIN HVA PASS - DÙNG CƠ CHẾ HVA GỐC ===== */
+.dtht-auth{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#073b78,#075cad 52%,#08abc5);display:flex;align-items:center;justify-content:center;padding:18px;font-family:Inter,Arial,sans-serif}
 .dtht-auth.hidden{display:none!important}
-.dtht-auth-box{width:min(430px,100%);background:#fff;border-radius:20px;padding:24px;box-shadow:0 24px 70px rgba(0,31,72,.32)}
-.dtht-auth-title{font-size:20px;font-weight:900;color:#075cad;text-align:center}
-.dtht-auth-sub{font-size:12px;color:#607487;text-align:center;margin:6px 0 18px}
-.dtht-auth-box input{margin-bottom:11px}
-.dtht-pass-wrap{position:relative}
-.dtht-pass-wrap input{padding-right:48px}
-.dtht-pass-eye{position:absolute;right:8px;top:7px;width:38px;height:34px;border:0;background:transparent;color:#075cad;font-size:20px;cursor:pointer;border-radius:8px}
+.dtht-auth-box{width:min(430px,100%);background:#fff;border-radius:24px;padding:28px 30px;box-shadow:0 24px 70px rgba(0,31,72,.32)}
+.dtht-auth-title{font-size:22px;font-weight:900;color:#075cad;text-align:center;line-height:1.25}
+.dtht-auth-sub{font-size:13px;color:#607487;text-align:center;margin:8px 0 22px}
+.dtht-auth-field{margin-bottom:15px}
+.dtht-auth-field>label{display:block;margin:0 0 7px;color:#334155;font-size:12px;font-weight:800}
+.dtht-input-wrap{position:relative}
+.dtht-input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;pointer-events:none}
+.dtht-auth-box input{display:block;width:100%;height:50px;margin:0;border:1.5px solid #cbd5e1;border-radius:12px;background:#fff;color:#1e293b;font-size:16px;font-weight:600;outline:none;box-sizing:border-box;transition:.18s}
+#dthtLoginUser{padding:0 14px 0 42px}
+#dthtLoginPass{padding:0 46px 0 82px}
+.dtht-auth-box input:focus{border-color:#0a66c2;box-shadow:0 0 0 4px rgba(10,102,194,.10)}
+.dtht-pass-prefix{position:absolute;left:42px;top:50%;transform:translateY(-50%);color:#334155;font-size:14px;font-weight:900;pointer-events:none;user-select:none}
+.dtht-pass-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:transparent;color:#075cad;font-size:18px;cursor:pointer;border-radius:8px}
 .dtht-pass-eye:hover{background:#eaf4ff}
-.dtht-auth-btn{width:100%;height:44px;border:0;border-radius:11px;background:#075cad;color:#fff;font-weight:900;cursor:pointer}
-.dtht-auth-msg{min-height:20px;margin-top:10px;text-align:center;font-size:12px;font-weight:700;color:#be123c}
+.dtht-auth-btn{width:100%;height:48px;margin-top:3px;border:0;border-radius:12px;background:linear-gradient(100deg,#075296 0%,#0A68BD 58%,#0B8FD0 100%);color:#fff;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 12px 26px rgba(10,102,194,.22)}
+.dtht-auth-btn:disabled{opacity:.6;cursor:not-allowed}
+.dtht-auth-msg{min-height:20px;margin-top:12px;text-align:center;font-size:12px;font-weight:700;color:#be123c;line-height:1.45}
 .dtht-self-note{margin-top:8px;font-size:11px;color:#075cad;font-weight:700}
-
+@media(max-width:520px){.dtht-auth-box{padding:22px 18px}.dtht-auth-title{font-size:19px}}
 </style>
 </head>
 <body>
@@ -87,18 +94,31 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   <div class="dtht-auth-box">
     <div class="dtht-auth-title">KÊ KHAI DẠY THÊM – HỌC THÊM</div>
     <div class="dtht-auth-sub">Trường THPT Hòa Vang · Đăng nhập bằng tài khoản HVA</div>
-    <label>Tên đăng nhập</label>
-    <input id="dthtLoginUser" autocomplete="username" placeholder="Tên đăng nhập HVA">
-    <label>Mật khẩu</label>
-    <div class="dtht-pass-wrap">
-      <input id="dthtLoginPass" type="password" autocomplete="current-password" placeholder="Mật khẩu HVA"
-             onkeydown="if(event.key==='Enter') dthtStandaloneLogin()">
-      <button type="button" class="dtht-pass-eye" onclick="dthtTogglePassword()" aria-label="Hiện mật khẩu" title="Hiện/ẩn mật khẩu">
-        <i id="dthtPassEyeIcon" class="bi bi-eye"></i>
-      </button>
+
+    <div class="dtht-auth-field">
+      <label for="dthtLoginUser">Tên đăng nhập</label>
+      <div class="dtht-input-wrap">
+        <span class="dtht-input-icon"><i class="bi bi-person"></i></span>
+        <input id="dthtLoginUser" autocomplete="username" placeholder="Nhập tên đăng nhập">
+      </div>
     </div>
-    <button type="button" class="dtht-auth-btn" onclick="dthtStandaloneLogin()">
-      <i class="bi bi-box-arrow-in-right"></i> ĐĂNG NHẬP
+
+    <div class="dtht-auth-field">
+      <label for="dthtLoginPass">Mật khẩu</label>
+      <div class="dtht-input-wrap">
+        <span class="dtht-input-icon"><i class="bi bi-key"></i></span>
+        <span class="dtht-pass-prefix">HVA@</span>
+        <input id="dthtLoginPass" type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric"
+               autocomplete="current-password" placeholder="4 số bí mật"
+               onkeydown="if(event.key==='Enter') dthtStandaloneLogin()">
+        <button type="button" class="dtht-pass-eye" onclick="dthtTogglePassword()" aria-label="Hiện/ẩn mật khẩu">
+          <i id="dthtPassEyeIcon" class="bi bi-eye"></i>
+        </button>
+      </div>
+    </div>
+
+    <button id="dthtLoginBtn" type="button" class="dtht-auth-btn" onclick="dthtStandaloneLogin()">
+      <i class="bi bi-box-arrow-in-right"></i> <span id="dthtLoginBtnText">ĐĂNG NHẬP</span>
     </button>
     <div id="dthtAuthMsg" class="dtht-auth-msg"></div>
   </div>
@@ -308,8 +328,15 @@ function dthtCurrentUser(){
 function dthtShowLogin(message){
   const box=document.getElementById('dthtAuth');
   const msg=document.getElementById('dthtAuthMsg');
+  const userInput=document.getElementById('dthtLoginUser');
   if(msg) msg.textContent=message||'';
+  if(userInput && !userInput.value){
+    let saved=localStorage.getItem('hvaLastUsername')||'';
+    if(!saved){ try{ const u=JSON.parse(localStorage.getItem('user')||'{}'); saved=u.username||u.userName||u.taiKhoan||''; }catch(_){ } }
+    if(saved) userInput.value=saved;
+  }
   if(box) box.classList.remove('hidden');
+  setTimeout(()=>{ const p=document.getElementById('dthtLoginPass'); (userInput&&userInput.value?p:userInput)?.focus(); },50);
 }
 function dthtHideLogin(){
   const box=document.getElementById('dthtAuth');
@@ -323,41 +350,73 @@ function dthtTogglePassword(){
   icon.className=show?'bi bi-eye-slash':'bi bi-eye';
 }
 async function dthtStandaloneLogin(){
-  const u=(document.getElementById('dthtLoginUser').value||'').trim();
-  const p=(document.getElementById('dthtLoginPass').value||'').trim();
+  const userInput=document.getElementById('dthtLoginUser');
+  const passInput=document.getElementById('dthtLoginPass');
+  const btn=document.getElementById('dthtLoginBtn');
+  const btnText=document.getElementById('dthtLoginBtnText');
   const msg=document.getElementById('dthtAuthMsg');
-  if(!u||!p){msg.textContent='Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.';return;}
+  const username=(userInput.value||'').trim();
+  const rawPassword=(passInput.value||'').trim();
+
+  if(!username||!rawPassword){
+    msg.style.color='#be123c';
+    msg.textContent='Vui lòng nhập đầy đủ tên đăng nhập và 4 số của mật khẩu.';
+    return;
+  }
+  if(!/^\d{4}$/.test(rawPassword)){
+    msg.style.color='#be123c';
+    msg.textContent='Mật khẩu HVA gồm đúng 4 chữ số.';
+    passInput.focus();
+    return;
+  }
+
+  const password='HVA@'+rawPassword;
+  btn.disabled=true; userInput.disabled=true; passInput.disabled=true;
+  btnText.textContent='ĐANG XÁC THỰC...';
   msg.style.color='#075cad'; msg.textContent='Đang xác thực tài khoản HVA...';
+
+  const controller=new AbortController();
+  const timeoutId=setTimeout(()=>controller.abort(),30000);
   try{
-    const form=new URLSearchParams();
-    form.set('action','login');
-    form.set('username',u);
-    form.set('password',p);
+    // Dùng đúng transport của Login HVA đang PASS: POST JSON dưới text/plain.
     const r=await fetch(DTHT_STANDALONE_BACKEND,{
       method:'POST',
-      headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8','Accept':'text/plain,application/json'},
-      body:form.toString(),
+      headers:{'Content-Type':'text/plain;charset=UTF-8'},
+      body:JSON.stringify({action:'login',username,password}),
       cache:'no-store',
-      redirect:'follow'
+      signal:controller.signal
     });
-    const raw=await r.text();
-    let data;
-    try{ data=JSON.parse(raw); }
-    catch(_){ throw new Error('Backend HVA chưa trả dữ liệu đăng nhập hợp lệ.'); }
-    if(!data||data.success!==true||!data.sessionToken||!data.user) throw new Error((data&&data.message)||'Đăng nhập không thành công.');
-    localStorage.setItem('hvaSessionToken',String(data.sessionToken));
-    localStorage.setItem('hvaSessionExpiresAt',String(data.expiresAt||''));
+    if(!r.ok) throw new Error('HTTP_'+r.status);
+    const data=await r.json();
+
+    if(!data||data.success!==true||!data.user){
+      throw new Error((data&&data.message)||'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+    }
+    if(!data.sessionToken||!data.expiresAt){
+      localStorage.removeItem('hvaSessionToken');
+      localStorage.removeItem('hvaSessionExpiresAt');
+      throw new Error('Phiên đăng nhập HVA không hợp lệ. Vui lòng đăng nhập lại.');
+    }
+
     localStorage.setItem('user',JSON.stringify(data.user));
-    document.getElementById('dthtLoginPass').value='';
+    localStorage.setItem('hvaSessionToken',String(data.sessionToken));
+    localStorage.setItem('hvaSessionExpiresAt',String(data.expiresAt));
+    localStorage.setItem('hvaLastUsername',username);
+
+    passInput.value='';
     dthtHideLogin();
     await loadData();
     bindCurrentTeacher();
   }catch(e){
+    console.error('[DTHT HVA Login]',e);
     msg.style.color='#be123c';
-    const m=String(e&&e.message||e||'');
-    msg.textContent=/Failed to fetch|NetworkError|Load failed/i.test(m)
-      ? 'Không kết nối được máy chủ HVA. Vui lòng mở bằng link Web đã triển khai, không mở trực tiếp file trên thiết bị.'
-      : m;
+    msg.textContent=e&&e.name==='AbortError'
+      ? 'Máy chủ HVA phản hồi quá lâu. Vui lòng kiểm tra kết nối mạng và thử lại.'
+      : String(e&&e.message||'Đã xảy ra lỗi mạng hoặc không thể kết nối máy chủ HVA.');
+  }finally{
+    clearTimeout(timeoutId);
+    btn.disabled=false; userInput.disabled=false; passInput.disabled=false;
+    btnText.textContent='ĐĂNG NHẬP';
   }
 }
 function bindCurrentTeacher(){
