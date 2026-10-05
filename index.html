@@ -113,6 +113,70 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .steps.steps-3{grid-template-columns:repeat(3,1fr)!important}
 @media(max-width:720px){.declaration-card{padding:20px 16px}.identity-card{align-items:flex-start}.identity-verified{display:none}.identity-name{font-size:18px}.identity-meta{gap:7px;flex-direction:column}.choice-premium{grid-template-columns:1fr}.official-paper{padding:34px 22px!important;font-size:14px!important}.official-head{grid-template-columns:1fr;gap:18px}.official-sign{width:62%}.preview-toolbar{align-items:flex-start}.steps.steps-3{grid-template-columns:repeat(3,1fr)!important}.steps.steps-3 .step{font-size:10px!important}}
 @media print{body>*{display:none!important}#previewCard{display:block!important;padding:0!important;background:#fff!important}#previewCard .preview-toolbar,#previewCard .previewActions{display:none!important}#paper{display:block!important;box-shadow:none!important;max-width:none!important;margin:0!important;padding:18mm 20mm!important}}
+
+/* ===== PASS UI FORM INPUT V7.1 ===== */
+.report-form .grid{gap:20px 24px!important}
+.report-form .field{min-width:0}
+.report-form .field label{
+  display:block!important;
+  margin:0 0 9px!important;
+  padding-left:2px;
+  font-size:14px!important;
+  line-height:1.35!important;
+  font-weight:800!important;
+  color:#173f62!important
+}
+.report-form input,
+.report-form textarea{
+  width:100%!important;
+  box-sizing:border-box!important;
+  border:1.8px solid #b8ccdf!important;
+  border-radius:12px!important;
+  background:#fff!important;
+  color:#17324b!important;
+  font-size:15px!important;
+  line-height:1.45!important;
+  padding:13px 15px!important;
+  min-height:48px!important;
+  outline:none!important;
+  transition:border-color .18s,box-shadow .18s,background .18s!important
+}
+.report-form textarea{
+  min-height:92px!important;
+  resize:vertical!important
+}
+.report-form textarea.time-detail{
+  min-height:82px!important
+}
+.report-form input::placeholder,
+.report-form textarea::placeholder{
+  color:#8a9bad!important;
+  opacity:1!important
+}
+.report-form input:hover,
+.report-form textarea:hover{
+  border-color:#86abc9!important
+}
+.report-form input:focus,
+.report-form textarea:focus{
+  border-color:#0877c6!important;
+  box-shadow:0 0 0 3px rgba(8,119,198,.10)!important;
+  background:#fcfeff!important
+}
+.field-help{
+  margin:8px 2px 0!important;
+  padding:9px 11px!important;
+  border-radius:9px!important;
+  background:#f3f8fc!important;
+  color:#526d83!important;
+  font-size:12px!important;
+  line-height:1.45!important
+}
+.field-help i{color:#0b78c9;margin-right:5px}
+@media(max-width:720px){
+  .report-form .grid{gap:16px!important}
+  .report-form input,.report-form textarea{font-size:16px!important;padding:12px 13px!important}
+}
 </style>
 </head>
 <body>
@@ -219,7 +283,8 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
         </div>
         <div class="field">
           <label>2. Thời gian dạy thêm <b>*</b></label>
-          <input id="tutorTime" required placeholder="Ngày trong tuần, khung giờ, thời điểm bắt đầu">
+          <textarea id="tutorTime" class="time-detail" required placeholder="Ví dụ: Thứ Hai: 17h30–19h00; Thứ Tư: 17h30–19h00; bắt đầu dạy từ ngày 12/10/2026."></textarea>
+          <div class="field-help"><i class="bi bi-info-circle"></i> Giáo viên kê khai chi tiết các thời gian dạy trong tuần: ngày/thứ, khung giờ và thời điểm bắt đầu dạy thêm.</div>
         </div>
         <div class="field full">
           <label>3. Hình thức dạy thêm <b>*</b></label>
