@@ -2023,9 +2023,10 @@ function dthtVerifyCccdFromSheet(username,inputCccd){
         for(const row of rows){
           const cells=row?.c||[];
           const login=String(cells[0]?.v??cells[0]?.f??'').trim();
-          const stored=String(cells[1]?.v??cells[1]?.f??'').replace(/\D/g,'');
+          const storedRaw=String(cells[1]?.v??cells[1]?.f??'').replace(/\D/g,'');
+          const stored=storedRaw.padStart(12,'0');
           if(login.toLowerCase()===user.toLowerCase()){
-            finish(stored.length===12 && stored===entered);
+            finish(stored===entered);
             return;
           }
         }
