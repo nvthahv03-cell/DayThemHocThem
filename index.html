@@ -1987,13 +1987,13 @@ async function loadData(){
 
     if(key&&name){
       people.push({
-        key,
-        name,
-        team:unit,
-        subject:subject,
-        chucVu:String(person.chucVu||person.viTriViecLam||'').trim(),
-        viTriViecLam:String(person.viTriViecLam||'').trim()
-      });
+  key,
+  name,
+  team:unit,
+  subject:String(person.subject||'').trim(),
+  chucVu:String(person.chucVu||person.viTriViecLam||'').trim(),
+  viTriViecLam:String(person.viTriViecLam||'').trim()
+});
     }
   });
 });
