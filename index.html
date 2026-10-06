@@ -1933,6 +1933,65 @@ function viewReport(id){
   setStep(3);
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
+/* ===== DTHT SUBJECT SOURCE · FRONTEND ONLY · 06/10/2026 =====
+   Nguồn chính thức: Du_lieu_NhanSu_HVA
+   Cột M = Môn dạy; cột N = Tên đăng nhập.
+   Không sửa Backend, HVA_Personnel, Auth/Session/CCCD. */
+function dthtLoadAssignedSubjectFromSheet(username){
+  const user=String(username||'').trim();
+  if(!user) return Promise.resolve('');
+
+  return new Promise(resolve=>{
+    const cb='__dthtSubject_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const script=document.createElement('script');
+    let done=false;
+
+    const finish=value=>{
+      if(done) return;
+      done=true;
+      try{ delete window[cb]; }catch(_){ window[cb]=undefined; }
+      try{ script.remove(); }catch(_){}
+      resolve(String(value||'').trim());
+    };
+
+    const timer=setTimeout(()=>finish(''),8000);
+
+    window[cb]=payload=>{
+      clearTimeout(timer);
+      try{
+        const rows=payload?.table?.rows||[];
+        for(const row of rows){
+          const cells=row?.c||[];
+          const subject=String(cells[0]?.v??cells[0]?.f??'').trim();
+          const login=String(cells[1]?.v??cells[1]?.f??'').trim();
+          if(login.toLowerCase()===user.toLowerCase()){
+            finish(subject);
+            return;
+          }
+        }
+      }catch(e){
+        console.warn('[DTHT Subject]',e);
+      }
+      finish('');
+    };
+
+    const tq="select M,N where lower(N) = '"+user.toLowerCase().replace(/'/g,"''")+"'";
+    const url=
+      'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq'
+      +'?sheet='+encodeURIComponent('Du_lieu_NhanSu_HVA')
+      +'&headers=6'
+      +'&tqx='+encodeURIComponent('responseHandler:'+cb)
+      +'&tq='+encodeURIComponent(tq)
+      +'&_='+Date.now();
+
+    script.src=url;
+    script.async=true;
+    script.onerror=()=>{ clearTimeout(timer); finish(''); };
+    document.head.appendChild(script);
+  });
+}
+
 async function loadData(){
   try{
     const fn=window.HVA_API?.dtht?.getInitial;
@@ -1976,10 +2035,7 @@ async function loadData(){
             ? person.raw
             : {};
 
-        /* Cột M của Du_lieu_NhanSu_HVA = Môn dạy.
-           raw của HVA Personnel hiện là mảng dữ liệu dòng nên M = index 12. */
         const subject=String(
-          (Array.isArray(raw) ? raw[12] : '') ||
           raw['Môn dạy']||
           raw.monDay||
           raw.mon||
@@ -2007,6 +2063,15 @@ async function loadData(){
       if(!k||seen.has(k)) return false;
       seen.add(k); return true;
     });
+
+    /* Chỉ bổ sung Môn dạy cho đúng tài khoản đang đăng nhập. */
+    const assignedSubject=await dthtLoadAssignedSubjectFromSheet(teacherKey);
+    if(assignedSubject){
+      const current=state.allTeachers.find(t=>
+        String(t.key||'').trim().toLowerCase()===teacherKey.toLowerCase()
+      );
+      if(current) current.subject=assignedSubject;
+    }
 
     renderHistory();
     $('apiStatus').textContent='Đã kết nối HVA.';
