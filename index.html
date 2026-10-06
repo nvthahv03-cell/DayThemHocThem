@@ -1939,80 +1939,53 @@ async function loadData(){
     if(typeof fn!=='function') throw new Error('DTHT_API_NOT_READY');
 
     const me=dthtCurrentUser();
-    const teacherKey=String(me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
+    const teacherKey=String(
+      me.username||
+      me.userName||
+      me.maGV||
+      me.taiKhoan||
+      ''
+    ).trim();
+
     const data=await fn(teacherKey);
-    state.reports=Array.isArray(data&&data.reports)?data.reports:[];
 
-    if(!window.HVAPersonnel) throw new Error('HVA_PERSONNEL_NOT_READY');
-    const groups=await window.HVAPersonnel.buildGroups();
-    const people=[];
+    state.reports=Array.isArray(data&&data.reports)
+      ? data.reports
+      : [];
 
-    (groups||[]).forEach(g=>{
-  if(!g || !Array.isArray(g.members)) return;
-
-  g.members.forEach(person=>{
-    const key=String(
-      person.username||
-      person.maGV||
-      person.taiKhoan||
-      ''
-    ).trim();
-
-    const name=String(
-      person.hoTen||
-      person.name||
-      ''
-    ).trim();
-
-    const unit=String(
-      person.tenTo||
-      person.toBoPhan||
-      person.to||
-      ''
-    ).trim();
-
-    const raw=
-      person.raw && typeof person.raw==='object'
-        ? person.raw
-        : {};
-
-    const subject=String(
-      raw['Môn dạy']||
-      raw.monDay||
-      raw.mon||
-      raw.monHoc||
-      raw.subject||
-      ''
-    ).trim();
-
-    if(key&&name){
-      people.push({
-  key,
-  name,
-  team:unit,
-  subject:subject,
-  chucVu:String(person.chucVu||person.viTriViecLam||'').trim(),
-  viTriViecLam:String(person.viTriViecLam||'').trim()
-});
-    }
-  });
-});
+    const people=Array.isArray(data&&data.teachers)
+      ? data.teachers
+      : [];
 
     const seen=new Set();
-    state.allTeachers=people.filter(t=>{
-      const k=String(t.key||'').toLowerCase();
-      if(!k||seen.has(k)) return false;
-      seen.add(k); return true;
-    });
+
+    state.allTeachers=people
+      .map(person=>({
+        key:String(person.key||'').trim(),
+        name:String(person.name||'').trim(),
+        team:String(person.team||'').trim(),
+        subject:String(person.subject||'').trim(),
+        chucVu:String(person.chucVu||'').trim(),
+        viTriViecLam:String(person.viTriViecLam||'').trim()
+      }))
+      .filter(person=>{
+        const key=String(person.key||'').toLowerCase();
+        if(!key||seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
 
     renderHistory();
     $('apiStatus').textContent='Đã kết nối HVA.';
+
   }catch(e){
     console.error(e);
     state.allTeachers=[];
     state.reports=[];
     renderHistory();
-    $('apiStatus').textContent='Chưa tải được dữ liệu HVA: '+(e&&e.message?e.message:'Lỗi không xác định');
+    $('apiStatus').textContent=
+      'Chưa tải được dữ liệu HVA: '+
+      (e&&e.message?e.message:'Lỗi không xác định');
   }
 }
 (async function initDTHT(){
