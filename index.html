@@ -847,9 +847,32 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   </section>
 
   <section class="card" id="historyCard">
-    <h2>Hồ sơ kê khai</h2><p class="muted">Khi nối backend HVA, khu vực này hiển thị hồ sơ hiện hành và lịch sử các lần cập nhật.</p>
-    <div style="overflow:auto"><table class="history"><thead><tr><th>Giáo viên</th><th>Tổ</th><th>Trạng thái</th><th>Phiên bản</th><th>Cập nhật</th><th>Thao tác</th></tr></thead><tbody id="historyRows"><tr><td colspan="6">Chưa tải dữ liệu từ HVA.</td></tr></tbody></table></div>
-  </section>
+  <h2>Hồ sơ kê khai</h2>
+  <p class="muted">
+    Hệ thống lưu Báo cáo lần đầu và toàn bộ các bản cập nhật; bản mới nhất là hồ sơ hiện hành.
+  </p>
+
+  <div style="overflow:auto">
+    <table class="history">
+      <thead>
+        <tr>
+          <th>Giáo viên</th>
+          <th>Tổ</th>
+          <th>Trạng thái</th>
+          <th>Lần báo cáo</th>
+          <th>Cập nhật</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+
+      <tbody id="historyRows">
+        <tr>
+          <td colspan="6">Chưa tải dữ liệu từ HVA.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 </main>
 
 <script>
@@ -1776,7 +1799,51 @@ function canonicalTeamForReport(x){
   return String(person&&person.team||x&&x.team||'').trim();
 }
 function renderHistory(){
- const rows=state.reports||[];$('historyRows').innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.teacherName)}</td><td>${esc(canonicalTeamForReport(x))}</td><td>${x.participates?'Có tham gia':'Không tham gia'}</td><td>${esc(x.version||1)}</td><td>${esc(x.updatedAt||'')}</td><td><button class="btn secondary" onclick="viewReport('${esc(x.id)}')">Xem</button></td></tr>`).join(''):'<tr><td colspan="6">Chưa có hồ sơ kê khai.</td></tr>';
+  const rows=state.reports||[];
+
+  if(!rows.length){
+    $('historyRows').innerHTML=
+      '<tr><td colspan="6">Chưa có hồ sơ kê khai.</td></tr>';
+    return;
+  }
+
+  const maxVersion=Math.max(
+    ...rows.map(x=>Number(x.version)||1)
+  );
+
+  $('historyRows').innerHTML=rows.map(x=>{
+    const version=Number(x.version)||1;
+
+    const versionLabel=
+      version===1
+        ? 'Báo cáo lần đầu'
+        : 'Bản cập nhật lần '+(version-1);
+
+    const currentLabel=
+      version===maxVersion
+        ? ' <b style="color:#15803d;">· Hiện hành</b>'
+        : '';
+
+    return `
+      <tr>
+        <td>${esc(x.teacherName)}</td>
+        <td>${esc(canonicalTeamForReport(x))}</td>
+        <td>${x.participates?'Có tham gia':'Không tham gia'}</td>
+        <td>
+          ${versionLabel}${currentLabel}
+        </td>
+        <td>${esc(x.updatedAt||'')}</td>
+        <td>
+          <button
+            class="btn secondary"
+            onclick="viewReport('${esc(x.id)}')"
+          >
+            Xem
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
 }
 function viewReport(id){
   const x=(state.reports||[]).find(r=>String(r.id||'')===String(id||''));
