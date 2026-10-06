@@ -9,34 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
-.cccd-input-wrap{
-  position:relative;
-  width:100%;
-}
-
-.cccd-input-wrap input{
-  width:100%;
-  box-sizing:border-box;
-  padding:14px 52px 14px 16px !important;
-}
-
-.cccd-eye{
-  position:absolute;
-  right:10px;
-  top:50%;
-  transform:translateY(-50%);
-  width:38px;
-  height:38px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border:0;
-  background:transparent;
-  color:#0871bd;
-  font-size:20px;
-  cursor:pointer;
-}
-  
   <style>
 :root{
   --hva-h-navy:#073b78;--hva-h-blue:#075cad;--hva-h-cyan:#08abc5;--hva-h-white:#f8fdff;
@@ -404,6 +376,61 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 @media(max-width:720px){.official-paper{width:210mm!important;min-height:297mm!important;padding:30mm 20mm 20mm 20mm!important}}
 @media print{#paper{padding:30mm 20mm 20mm 20mm!important}}
 
+
+/* ===== V2_10 PATCH 06/10 · 5 ĐIỂM ĐÃ CHỐT · KHÔNG ĐỤNG NGHIỆP VỤ ===== */
+/* 1) Card 3 cột: xanh dương nhạt nhưng nét, tách cấp thị giác */
+.identity-card{
+  background:#dceeff!important;
+  border:1px solid #67afe3!important;
+  box-shadow:0 10px 26px rgba(6,83,150,.10)!important;
+}
+.identity-col{background:#f5faff!important;padding:20px 22px!important}
+.identity-col:nth-child(2){background:#f0f8ff!important}
+.identity-col:nth-child(3){background:#edf7ff!important}
+.identity-col+.identity-col{border-left:1px solid #7dbce6!important}
+.identity-section-title{font-size:12px!important;font-weight:900!important;letter-spacing:.075em!important;color:#1e5f91!important;margin-bottom:10px!important}
+.identity-label{color:#4d6f8d!important;font-weight:900!important}
+.identity-name,#identityName{font-size:20px!important;font-weight:900!important;color:#003f7a!important}
+.identity-meta{font-size:12px!important;color:#385d7b!important;gap:10px!important}
+.identity-meta b{color:#073f70!important}
+.identity-auth-chip{background:#dff6e7!important;color:#0c7138!important;border:1px solid #bfe9cf!important}
+.signature-preview{height:68px!important;background:#fff!important;border:1.5px dashed #4e9fd5!important;border-radius:11px!important;box-shadow:0 1px 0 rgba(255,255,255,.8)!important}
+.signature-empty{color:#55738b!important;font-size:11.5px!important}
+.signature-hint{margin-top:6px;font-size:10.5px;line-height:1.35;color:#55738b;font-weight:600}
+.signer-status{font-size:12px!important;color:#355f7f!important;font-weight:600!important}
+.identity-col .btn{font-size:11px!important;font-weight:800!important;border-color:#a8cee9!important;background:#fff!important;color:#075f9f!important}
+.identity-col .btn:hover:not(:disabled){background:#e4f3ff!important;border-color:#69afe0!important}
+.signer-buttons .sign-ready:not(:disabled){background:#dff1ff!important;color:#075f9f!important;border-color:#83bfe8!important}
+.signer-buttons .sign-ready:disabled{background:#e4edf4!important;color:#91a5b5!important;border-color:#d6e2eb!important}
+
+/* 2) CCCD: mắt nằm TRONG ô bên phải; chữ thụt trái 16px */
+.cccd-input-wrap{position:relative!important;width:100%!important;display:block!important}
+.cccd-input-wrap input{width:100%!important;box-sizing:border-box!important;padding:14px 52px 14px 16px!important}
+.cccd-eye{
+  position:absolute!important;right:8px!important;top:50%!important;transform:translateY(-50%)!important;
+  width:38px!important;height:38px!important;margin:0!important;padding:0!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  border:0!important;background:transparent!important;color:#0871bd!important;font-size:18px!important;
+  cursor:pointer!important;z-index:5!important;box-shadow:none!important;
+}
+
+/* 3) Nút ký ở Bản xem trước: sáng, không thành mảng xanh đậm */
+.preview-sign-action{
+  background:#e5f3ff!important;color:#075f9f!important;border:1px solid #83bfe8!important;
+  box-shadow:0 4px 12px rgba(7,93,168,.07)!important;font-weight:800!important;
+}
+.preview-sign-action:hover{background:#d9eeff!important;border-color:#5aa9df!important;color:#034f89!important}
+
+/* 4) Hai gạch đầu văn bản theo mẫu thể thức đã chốt */
+.agency b{display:inline-block!important;position:relative!important;padding-bottom:3px!important}
+.agency b::after{content:"";position:absolute;left:25%;bottom:0;width:50%;border-bottom:1px solid #111}
+.nation b:last-of-type{display:inline-block!important;position:relative!important;padding-bottom:3px!important;border-bottom:1px solid #111!important}
+.official-head .official-line{display:none!important}
+
+@media(max-width:900px){
+  .identity-col+.identity-col{border-left:0!important;border-top:1px solid #7dbce6!important}
+}
+
 </style>
 </head>
 <body>
@@ -520,6 +547,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
       <div class="identity-col">
         <div class="identity-section-title">CHỮ KÝ CÁ NHÂN</div>
         <div class="signature-preview" id="signaturePreview"><div class="signature-empty">Thầy/Cô vui lòng tải hình ảnh chữ ký.</div></div>
+        <div class="signature-hint">Ưu tiên ảnh chữ ký đã xóa nền (có thể dùng chữ ký đã cập nhật trên CSDL ngành).</div>
         <input id="signatureFile" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="handleSignatureUpload(event)">
         <div class="signature-actions">
           <button type="button" class="btn secondary" onclick="document.getElementById('signatureFile').click()"><i class="bi bi-upload"></i> Tải chữ ký</button>
