@@ -620,52 +620,155 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
     <div id="teacherInfo" class="identity-note">Đang đồng bộ hồ sơ nhân sự HVA...</div>
 
-    <div id="participation" class="hidden participation-box">
-      <div class="question-title">Thầy/Cô có tham gia dạy thêm ngoài nhà trường không?</div>
+       <div id="participation" class="hidden participation-box">
+
+      <div class="field-help" style="margin:0 0 18px!important;padding:13px 15px!important;">
+        <i class="bi bi-info-circle"></i>
+        <b>Hướng dẫn thực hiện:</b>
+        Giáo viên đang dạy học tại Trường THPT Hòa Vang có tham gia dạy thêm ngoài nhà trường
+        thực hiện báo cáo với Hiệu trưởng theo Mẫu số 03 và cập nhật kịp thời khi có thay đổi
+        đối với các nội dung đã báo cáo.
+        <div style="margin-top:6px;">
+          Vui lòng kê khai đầy đủ, chính xác các nội dung theo Mẫu số 03.
+          Thông tin báo cáo là căn cứ để nhà trường thực hiện công tác quản lý theo quy định.
+        </div>
+      </div>
+
+      <div class="question-title">
+        Thầy/Cô có tham gia dạy thêm ngoài nhà trường không?
+      </div>
+
       <div class="choice choice-premium">
         <button type="button" id="noBtn" onclick="setParticipate(false)">
-          <span class="choice-icon"><i class="bi bi-x-circle"></i></span>
-          <span><strong>Không tham gia</strong><small>Kê khai xác nhận hiện tại không tham gia dạy thêm ngoài nhà trường.</small></span>
+          <span class="choice-icon">
+            <i class="bi bi-x-circle"></i>
+          </span>
+          <span>
+            <strong>Không tham gia</strong>
+            <small>
+              Kê khai xác nhận hiện tại không tham gia dạy thêm ngoài nhà trường.
+            </small>
+          </span>
         </button>
+
         <button type="button" id="yesBtn" onclick="setParticipate(true)">
-          <span class="choice-icon"><i class="bi bi-check-circle"></i></span>
-          <span><strong>Có tham gia</strong><small>Kê khai đầy đủ các nội dung theo Mẫu số 03 hiện hành.</small></span>
+          <span class="choice-icon">
+            <i class="bi bi-check-circle"></i>
+          </span>
+          <span>
+            <strong>Có tham gia</strong>
+            <small>
+              Kê khai đầy đủ các nội dung theo Mẫu số 03 hiện hành.
+            </small>
+          </span>
         </button>
       </div>
     </div>
 
-    <form id="reportForm" class="hidden report-form" onsubmit="event.preventDefault();previewReport()">
-      <div class="form-heading"><span>THÔNG TIN BÁO CÁO THEO MẪU SỐ 03</span></div>
-      <div class="grid">
-        <div class="field full">
-          <label>Môn học được phân công dạy học <b>*</b></label>
-          <input id="assignedSubject" required placeholder="Ví dụ: Toán">
-        </div>
-        <div class="field">
-          <label>1. Môn học dạy thêm <b>*</b></label>
-          <input id="tutorSubject" required placeholder="Ghi tên môn học">
-        </div>
-        <div class="field">
-          <label>2. Thời gian dạy thêm <b>*</b></label>
-          <textarea id="tutorTime" class="time-detail" required placeholder="Ví dụ: Thứ Hai: 17h30–19h00; Thứ Tư: 17h30–19h00; bắt đầu dạy từ ngày 12/10/2026."></textarea>
-          <div class="field-help"><i class="bi bi-info-circle"></i> Giáo viên kê khai chi tiết các thời gian dạy trong tuần: ngày/thứ, khung giờ và thời điểm bắt đầu dạy thêm.</div>
-        </div>
-        <div class="field full">
-          <label>3. Hình thức dạy thêm <b>*</b></label>
-          <input id="tutorForm" required placeholder="Ví dụ: Trực tiếp">
-        </div>
-        <div class="field full">
-          <label>4. Địa điểm dạy thêm <b>*</b></label>
-          <textarea id="tutorPlace" required placeholder="Ghi rõ địa chỉ, số điện thoại của cơ sở dạy thêm"></textarea>
-        </div>
-        <div class="field full">
-          <label>5. Mối quan hệ với chủ thể đứng tên đăng kí kinh doanh cơ sở dạy thêm <b>*</b></label>
-          <textarea id="relationship" required placeholder="Ghi rõ mối quan hệ theo thực tế"></textarea>
-        </div>
+    <form
+      id="reportForm"
+      class="hidden report-form"
+      onsubmit="event.preventDefault();previewReport()"
+    >
+      <div class="form-heading">
+        <span>THÔNG TIN BÁO CÁO THEO MẪU SỐ 03</span>
       </div>
+
+      <div class="grid">
+
+        <div class="field full">
+          <label>
+            Môn học được phân công dạy học <b>*</b>
+          </label>
+          <input
+            id="assignedSubject"
+            required
+            placeholder="Ví dụ: Toán"
+          >
+        </div>
+
+        <div class="field">
+          <label>
+            1. Môn học dạy thêm <b>*</b>
+          </label>
+          <input
+            id="tutorSubject"
+            required
+            placeholder="Ghi tên môn học dạy thêm"
+          >
+        </div>
+
+        <div class="field">
+          <label>
+            2. Thời gian dạy thêm <b>*</b>
+          </label>
+          <textarea
+            id="tutorTime"
+            class="time-detail"
+            required
+            placeholder="Ví dụ: Thứ Hai: 17h30–19h00; Thứ Tư: 17h30–19h00; bắt đầu dạy từ ngày 12/10/2026."
+          ></textarea>
+
+          <div class="field-help">
+            <i class="bi bi-info-circle"></i>
+            Ghi ngày trong tuần, khung giờ và thời điểm bắt đầu dạy thêm.
+          </div>
+        </div>
+
+        <div class="field full">
+          <label>
+            3. Hình thức dạy thêm <b>*</b>
+          </label>
+          <input
+            id="tutorForm"
+            required
+            placeholder="Ví dụ: Trực tiếp"
+          >
+        </div>
+
+        <div class="field full">
+          <label>
+            4. Địa điểm dạy thêm <b>*</b>
+          </label>
+          <textarea
+            id="tutorPlace"
+            required
+            placeholder="Ghi rõ địa chỉ, số điện thoại của cơ sở dạy thêm"
+          ></textarea>
+
+          <div class="field-help">
+            <i class="bi bi-info-circle"></i>
+            Ghi rõ địa chỉ và số điện thoại của cơ sở dạy thêm.
+          </div>
+        </div>
+
+        <div class="field full">
+          <label>
+            5. Mối quan hệ với chủ thể đứng tên đăng kí kinh doanh cơ sở dạy thêm <b>*</b>
+          </label>
+          <textarea
+            id="relationship"
+            required
+            placeholder="Ghi rõ mối quan hệ theo thực tế"
+          ></textarea>
+        </div>
+
+      </div>
+
       <div class="actions">
-        <button class="btn primary" type="submit"><i class="bi bi-file-earmark-text"></i> Xem bản kê khai</button>
-        <button class="btn secondary" type="button" onclick="resetDeclaration()"><i class="bi bi-arrow-counterclockwise"></i> Nhập lại</button>
+        <button class="btn primary" type="submit">
+          <i class="bi bi-file-earmark-text"></i>
+          Xem bản kê khai
+        </button>
+
+        <button
+          class="btn secondary"
+          type="button"
+          onclick="resetDeclaration()"
+        >
+          <i class="bi bi-arrow-counterclockwise"></i>
+          Nhập lại
+        </button>
       </div>
     </form>
 
