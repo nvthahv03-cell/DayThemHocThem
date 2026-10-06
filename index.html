@@ -24,7 +24,7 @@
 .hva-pro-brand{min-width:0;display:flex;align-items:center}.hva-pro-divider{width:1px;height:70px;flex:0 0 1px;background:linear-gradient(transparent,var(--hva-h-line) 16%,var(--hva-h-line) 84%,transparent)}
 .hva-pro-brandtext{min-width:0;width:min(620px,100%);text-align:center;line-height:1.06}.hva-pro-kicker{font-size:14px;font-weight:800;letter-spacing:.17em;color:rgba(226,244,255,.90);white-space:nowrap}.hva-pro-school{margin-top:7px;font-size:30px;font-weight:800;letter-spacing:-.025em;color:#fff;white-space:nowrap;text-shadow:0 2px 10px rgba(0,31,72,.28)}.hva-pro-slogan{margin-top:8px;font-size:15px;font-weight:600;color:rgba(235,248,255,.90);white-space:nowrap}.hva-pro-slogan b{font-weight:800;padding:0 5px;color:#d9f7ff}
 .hva-pro-tools{display:flex;align-items:center;justify-content:flex-end;gap:9px;white-space:nowrap}.hva-pro-online-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}.hva-pro-online{height:42px;padding:0 17px;display:flex;align-items:center;gap:10px;border-radius:22px;border:1.5px solid rgba(83,246,237,.88);background:rgba(2,77,119,.40);font-size:12px;font-weight:800}.hva-pro-online-dot{width:11px;height:11px;border-radius:50%;background:#19e98a;box-shadow:0 0 0 5px rgba(25,233,138,.12),0 0 13px rgba(25,233,138,.82)}.hva-pro-version{font-size:9px;font-weight:900;letter-spacing:.14em;color:rgba(235,251,255,.86);line-height:1}
-.shell{max-width:1220px;margin:20px auto 50px;padding:0 16px}.hero{background:#fff;border:1px solid #dce8f1;border-radius:18px;padding:20px 22px;box-shadow:0 7px 22px rgba(15,76,129,.07);display:flex;justify-content:space-between;gap:16px;align-items:center}.hero h1{margin:0;color:#0b4f8a;font-size:24px}.hero p{margin:6px 0 0;color:#294d6b!important;font-size:13px;font-weight:600!important;opacity:1!important}.legal{font-size:12px;background:#e6f5ff;color:#003b6f!important;border:1px solid #9fd5f3;padding:8px 12px;border-radius:999px;font-weight:800!important;white-space:nowrap}
+.shell{max-width:1220px;margin:20px auto 50px;padding:0 16px}.hero{background:#fff;border:1px solid #dce8f1;border-radius:18px;padding:20px 22px;box-shadow:0 7px 22px rgba(15,76,129,.07);display:flex;justify-content:space-between;gap:16px;align-items:center}.hero h1{margin:0;color:#003b6f;font-size:24px;font-weight:800!important}.hero p{margin:6px 0 0;color:#294d6b!important;font-size:13px;font-weight:600!important;opacity:1!important}.legal{font-size:12px;background:#e6f5ff;color:#003b6f!important;border:1px solid #9fd5f3;padding:8px 12px;border-radius:999px;font-weight:800!important;white-space:nowrap}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:15px 0}.step{padding:12px;border:1px solid #dbe7f0;border-radius:14px;background:#fff;font-size:12px;font-weight:800;color:#607487}.step.on{border-color:#6ebbe8;background:#edf8ff;color:#075cad}.step span{display:inline-flex;width:24px;height:24px;border-radius:50%;align-items:center;justify-content:center;background:#e5eef5;margin-right:7px}.step.on span{background:#075cad;color:#fff}
 .card{background:#fff;border:1px solid #dce8f1;border-radius:18px;padding:22px;box-shadow:0 6px 20px rgba(15,76,129,.06);margin-top:14px}.card h2{font-size:18px;color:#123b60;margin:0 0 6px}.muted{color:#6b7f91;font-size:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}.field.full{grid-column:1/-1}.lbl,label{display:block;font-size:12px;font-weight:800;color:#36556e;margin:0 0 6px}
 .lbl b,label b,.required-star{color:#dc2626;font-weight:900}
@@ -398,7 +398,21 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .nation .official-line{width:100%!important;max-width:none!important;margin-top:0!important}
 .preview-sign-action{display:inline-flex!important;align-items:center!important;gap:6px!important}
 @media(max-width:900px){.identity-card{grid-template-columns:1fr!important}.identity-col+.identity-col{border-left:0!important;border-top:1px solid #9bc9ea!important}}
-@media(max-width:720px){.official-paper{width:210mm!important;min-height:297mm!important;padding:30mm 20mm 20mm 20mm!important}}
+@media(max-width:720px){
+  .preview-shell{
+    overflow:hidden!important;
+    padding:8px!important;
+  }
+
+  .official-paper{
+    width:100%!important;
+    min-height:auto!important;
+    max-width:100%!important;
+    margin:0 auto!important;
+    padding:34px 18px 40px!important;
+    box-sizing:border-box!important;
+  }
+}
 @media print{#paper{padding:30mm 20mm 20mm 20mm!important}}
 
 
