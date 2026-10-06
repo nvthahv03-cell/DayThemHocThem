@@ -8,7 +8,36 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-<style>
+
+.cccd-input-wrap{
+  position:relative;
+  width:100%;
+}
+
+.cccd-input-wrap input{
+  width:100%;
+  box-sizing:border-box;
+  padding:14px 52px 14px 16px !important;
+}
+
+.cccd-eye{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  background:transparent;
+  color:#0871bd;
+  font-size:20px;
+  cursor:pointer;
+}
+  
+  <style>
 :root{
   --hva-h-navy:#073b78;--hva-h-blue:#075cad;--hva-h-cyan:#08abc5;--hva-h-white:#f8fdff;
   --hva-h-line:rgba(190,238,255,.58);--ink:#183249;--line:#d8e5ef;--soft:#f4f9fd;
@@ -396,7 +425,24 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     <h3 id="signerVerifyTitle"><i class="bi bi-shield-check"></i> Xác thực người ký</h3>
     <p>Nhập số CCCD của chính Thầy/Cô. HVA sẽ đối chiếu ở máy chủ với hồ sơ nhân sự của tài khoản đang đăng nhập.</p>
     <label for="signerCccd">Số CCCD <b>*</b></label>
-    <input id="signerCccd" type="password" inputmode="numeric" maxlength="12" autocomplete="off" placeholder="Nhập 12 chữ số CCCD">
+  <div class="cccd-input-wrap">
+  <input
+    id="signerCccd"
+    type="password"
+    inputmode="numeric"
+    maxlength="12"
+    autocomplete="off"
+    placeholder="Nhập 12 chữ số CCCD"
+  >
+  <button
+    type="button"
+    class="cccd-eye"
+    onclick="toggleSignerCccd()"
+    aria-label="Hiện hoặc ẩn số CCCD"
+  >
+    <i id="cccdEyeIcon" class="bi bi-eye"></i>
+  </button>
+</div>
     <div id="signerVerifyMsg" class="hva-sign-msg"></div>
     <div class="actions">
       <button type="button" class="btn secondary" onclick="closeSignerVerify()">Hủy</button>
@@ -706,6 +752,17 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     verifySigner: async cccd=>await post('verifyDTHTSignerIdentity',{cccd:String(cccd||'').trim()})
   };
 })(window);
+
+function toggleSignerCccd(){
+  const input = document.getElementById('signerCccd');
+  const icon = document.getElementById('cccdEyeIcon');
+
+  const isHidden = input.type === 'password';
+
+  input.type = isHidden ? 'text' : 'password';
+  icon.className = isHidden ? 'bi bi-eye-slash' : 'bi bi-eye';
+}
+  
 </script>
 <script>
 const DTHT_STANDALONE_BACKEND='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
