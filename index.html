@@ -203,6 +203,18 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   #paper .official-head{break-inside:avoid!important}
   #paper .official-sign{break-inside:avoid!important}
   /* KHÓA BỐ CỤC QUỐC HIỆU - TÊN TRƯỜNG KHI IN A4 */
+  #paper .form-code{
+  position:absolute;
+  top:8mm;
+  right:20mm;
+  font-family:"Times New Roman",Times,serif;
+  font-size:10pt;
+  font-style:italic;
+  font-weight:400;
+  line-height:1;
+  white-space:nowrap;
+}
+
 #paper .official-head{
   display:grid!important;
   grid-template-columns:1fr 1fr!important;
@@ -653,6 +665,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     </div>
 
     <article class="preview official-paper" id="paper">
+      <div class="form-code">Mẫu BC_01-HVA-DTHT</div>
       <div class="official-head">
         <div class="agency">
           <div>SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div>
@@ -666,7 +679,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
       <div class="official-title">BÁO CÁO</div>
       <div class="official-subtitle" id="previewSubtitle">Về việc tham gia dạy thêm ngoài nhà trường</div>
-
+<div class="report-body">
       <p><b>Kính gửi:</b> Hiệu trưởng Trường THPT Hòa Vang</p>
       <p>Họ và tên giáo viên: <b id="pName"></b></p>
       <p>Môn học được phân công dạy học: <b id="pAssigned"></b></p>
@@ -685,7 +698,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
       </div>
 
       <p>Tôi xin chịu trách nhiệm hoàn toàn về những nội dung báo cáo nêu trên.</p>
-
+</div>
       <div class="official-sign">
         <div><i>Cẩm Lệ, ngày <span id="pDay">.....</span> tháng <span id="pMonth">.....</span> năm <span id="pYear">2026</span></i></div>
         <b>NGƯỜI BÁO CÁO</b>
