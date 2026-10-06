@@ -1934,122 +1934,83 @@ function viewReport(id){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* ===== DTHT SUBJECT SOURCE · FRONTEND ONLY · 06/10/2026 =====
-   Nguồn chính thức: Du_lieu_NhanSu_HVA
-   Cột M = Môn dạy; cột N = Tên đăng nhập.
-   Không sửa Backend, HVA_Personnel, Auth/Session/CCCD. */
+/* ===== DTHT SUBJECT SOURCE · FRONTEND ONLY · 07/10/2026 =====
+   Du_lieu_NhanSu_HVA: M = Môn dạy; N = Tên đăng nhập.
+   Độc lập getDTHTInitial. KHÔNG sửa Backend/HVA_Personnel/Auth/CCCD/chữ ký. */
 function dthtLoadAssignedSubjectFromSheet(username){
   const user=String(username||'').trim();
   if(!user) return Promise.resolve('');
-
   return new Promise(resolve=>{
     const cb='__dthtSubject_'+Date.now()+'_'+Math.random().toString(36).slice(2);
     const script=document.createElement('script');
-    let done=false;
-
+    let finished=false;
     const finish=value=>{
-      if(done) return;
-      done=true;
-      try{ delete window[cb]; }catch(_){ window[cb]=undefined; }
-      try{ script.remove(); }catch(_){}
+      if(finished) return;
+      finished=true;
+      try{delete window[cb];}catch(_){window[cb]=undefined;}
+      try{script.remove();}catch(_){}
       resolve(String(value||'').trim());
     };
-
     const timer=setTimeout(()=>finish(''),8000);
-
     window[cb]=payload=>{
       clearTimeout(timer);
       try{
-        const rows=payload?.table?.rows||[];
-        for(const row of rows){
+        for(const row of (payload?.table?.rows||[])){
           const cells=row?.c||[];
           const subject=String(cells[0]?.v??cells[0]?.f??'').trim();
           const login=String(cells[1]?.v??cells[1]?.f??'').trim();
-          if(login.toLowerCase()===user.toLowerCase()){
-            finish(subject);
-            return;
-          }
+          if(login.toLowerCase()===user.toLowerCase()){finish(subject);return;}
         }
-      }catch(e){
-        console.warn('[DTHT Subject]',e);
-      }
+      }catch(e){console.warn('[DTHT Subject]',e);}
       finish('');
     };
-
     const tq="select M,N where lower(N) = '"+user.toLowerCase().replace(/'/g,"''")+"'";
-    const url=
-      'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq'
+    script.src='https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq'
       +'?sheet='+encodeURIComponent('Du_lieu_NhanSu_HVA')
       +'&headers=6'
       +'&tqx='+encodeURIComponent('responseHandler:'+cb)
       +'&tq='+encodeURIComponent(tq)
       +'&_='+Date.now();
-
-    script.src=url;
     script.async=true;
-    script.onerror=()=>{ clearTimeout(timer); finish(''); };
+    script.onerror=()=>{clearTimeout(timer);finish('');};
     document.head.appendChild(script);
   });
 }
 
 async function loadData(){
+  const me=dthtCurrentUser();
+  const teacherKey=String(me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
+
+  /* Lịch sử DTHT là nhánh riêng; lỗi action cũ không được chặn hồ sơ nhân sự. */
+  state.reports=[];
   try{
     const fn=window.HVA_API?.dtht?.getInitial;
-    if(typeof fn!=='function') throw new Error('DTHT_API_NOT_READY');
+    if(typeof fn==='function'){
+      const data=await fn(teacherKey);
+      state.reports=Array.isArray(data&&data.reports)?data.reports:[];
+    }
+  }catch(e){
+    console.warn('[DTHT History] getDTHTInitial chưa khả dụng:',e);
+  }
 
-    const me=dthtCurrentUser();
-    const teacherKey=String(me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
-    const data=await fn(teacherKey);
-    state.reports=Array.isArray(data&&data.reports)?data.reports:[];
-
+  try{
     if(!window.HVAPersonnel) throw new Error('HVA_PERSONNEL_NOT_READY');
-    const groups=await window.HVAPersonnel.buildGroups();
+
+    const [groups,assignedSubject]=await Promise.all([
+      window.HVAPersonnel.buildGroups(),
+      dthtLoadAssignedSubjectFromSheet(teacherKey)
+    ]);
+
     const people=[];
-
     (groups||[]).forEach(g=>{
-      if(!g || !Array.isArray(g.members)) return;
-
+      if(!g||!Array.isArray(g.members)) return;
       g.members.forEach(person=>{
-        const key=String(
-          person.username||
-          person.maGV||
-          person.taiKhoan||
-          ''
-        ).trim();
-
-        const name=String(
-          person.hoTen||
-          person.name||
-          ''
-        ).trim();
-
-        const unit=String(
-          person.tenTo||
-          person.toBoPhan||
-          person.to||
-          ''
-        ).trim();
-
-        const raw=
-          person.raw && typeof person.raw==='object'
-            ? person.raw
-            : {};
-
-        const subject=String(
-          raw['Môn dạy']||
-          raw.monDay||
-          raw.mon||
-          raw.monHoc||
-          raw.subject||
-          ''
-        ).trim();
-
+        const key=String(person.username||person.maGV||person.taiKhoan||'').trim();
+        const name=String(person.hoTen||person.name||'').trim();
+        const unit=String(person.tenTo||person.toBoPhan||person.to||'').trim();
         if(key&&name){
           people.push({
-            key,
-            name,
-            team:unit,
-            subject,
+            key,name,team:unit,subject:'',
             chucVu:String(person.chucVu||person.viTriViecLam||'').trim(),
             viTriViecLam:String(person.viTriViecLam||'').trim()
           });
@@ -2064,8 +2025,6 @@ async function loadData(){
       seen.add(k); return true;
     });
 
-    /* Chỉ bổ sung Môn dạy cho đúng tài khoản đang đăng nhập. */
-    const assignedSubject=await dthtLoadAssignedSubjectFromSheet(teacherKey);
     if(assignedSubject){
       const current=state.allTeachers.find(t=>
         String(t.key||'').trim().toLowerCase()===teacherKey.toLowerCase()
@@ -2074,13 +2033,14 @@ async function loadData(){
     }
 
     renderHistory();
-    $('apiStatus').textContent='Đã kết nối HVA.';
+    $('apiStatus').textContent=assignedSubject
+      ? 'Đã kết nối HVA.'
+      : 'Đã kết nối HVA · Chưa đọc được Môn dạy.';
   }catch(e){
     console.error(e);
     state.allTeachers=[];
-    state.reports=[];
     renderHistory();
-    $('apiStatus').textContent='Chưa tải được dữ liệu HVA: '+(e&&e.message?e.message:'Lỗi không xác định');
+    $('apiStatus').textContent='Chưa tải được hồ sơ nhân sự HVA: '+(e&&e.message?e.message:'Lỗi không xác định');
   }
 }
 (async function initDTHT(){
