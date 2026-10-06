@@ -4,11 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HVA - Quản lý dạy thêm, học thêm</title>
-<!-- DTHT HVA UI V2_10 | Backend HVA + Personnel source + Sheet DTHT -->
+<!-- DTHT HVA UI V3_10 | Backend HVA + Personnel source + Sheet DTHT -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
+.cccd-input-wrap{
+  position:relative;
+  width:100%;
+}
+
+.cccd-input-wrap input{
+  width:100%;
+  box-sizing:border-box;
+  padding:14px 52px 14px 16px !important;
+}
+
+.cccd-eye{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  background:transparent;
+  color:#0871bd;
+  font-size:20px;
+  cursor:pointer;
+}
+  
   <style>
 :root{
   --hva-h-navy:#073b78;--hva-h-blue:#075cad;--hva-h-cyan:#08abc5;--hva-h-white:#f8fdff;
@@ -377,59 +405,40 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 @media print{#paper{padding:30mm 20mm 20mm 20mm!important}}
 
 
-/* ===== V2_10 PATCH 06/10 · 5 ĐIỂM ĐÃ CHỐT · KHÔNG ĐỤNG NGHIỆP VỤ ===== */
-/* 1) Card 3 cột: xanh dương nhạt nhưng nét, tách cấp thị giác */
-.identity-card{
-  background:#dceeff!important;
-  border:1px solid #67afe3!important;
-  box-shadow:0 10px 26px rgba(6,83,150,.10)!important;
-}
-.identity-col{background:#f5faff!important;padding:20px 22px!important}
-.identity-col:nth-child(2){background:#f0f8ff!important}
-.identity-col:nth-child(3){background:#edf7ff!important}
-.identity-col+.identity-col{border-left:1px solid #7dbce6!important}
-.identity-section-title{font-size:12px!important;font-weight:900!important;letter-spacing:.075em!important;color:#1e5f91!important;margin-bottom:10px!important}
-.identity-label{color:#4d6f8d!important;font-weight:900!important}
-.identity-name,#identityName{font-size:20px!important;font-weight:900!important;color:#003f7a!important}
-.identity-meta{font-size:12px!important;color:#385d7b!important;gap:10px!important}
-.identity-meta b{color:#073f70!important}
-.identity-auth-chip{background:#dff6e7!important;color:#0c7138!important;border:1px solid #bfe9cf!important}
-.signature-preview{height:68px!important;background:#fff!important;border:1.5px dashed #4e9fd5!important;border-radius:11px!important;box-shadow:0 1px 0 rgba(255,255,255,.8)!important}
-.signature-empty{color:#55738b!important;font-size:11.5px!important}
-.signature-hint{margin-top:6px;font-size:10.5px;line-height:1.35;color:#55738b;font-weight:600}
-.signer-status{font-size:12px!important;color:#355f7f!important;font-weight:600!important}
-.identity-col .btn{font-size:11px!important;font-weight:800!important;border-color:#a8cee9!important;background:#fff!important;color:#075f9f!important}
-.identity-col .btn:hover:not(:disabled){background:#e4f3ff!important;border-color:#69afe0!important}
-.signer-buttons .sign-ready:not(:disabled){background:#dff1ff!important;color:#075f9f!important;border-color:#83bfe8!important}
-.signer-buttons .sign-ready:disabled{background:#e4edf4!important;color:#91a5b5!important;border-color:#d6e2eb!important}
+/* ===== V3_10 VISUAL PATCH 06/10/2026 · PASS LOGIC LOCKED ===== */
+/* 1. Card 3 cột: tăng độ nét, không đổi ID/hàm/nghiệp vụ */
+.identity-card{background:#f4f9ff!important;border:1px solid #6db7eb!important;box-shadow:0 10px 26px rgba(7,92,173,.10)!important}
+.identity-col{background:#f7fbff!important;padding:20px 22px!important}
+.identity-col:nth-child(1){background:#edf7ff!important}
+.identity-col:nth-child(2){background:#f8fcff!important}
+.identity-col:nth-child(3){background:#eef8ff!important}
+.identity-col+.identity-col{border-left:1px solid #86bfe6!important}
+.identity-section-title{font-size:12px!important;font-weight:900!important;letter-spacing:.08em!important;color:#245f8f!important}
+.identity-name,#identityName{font-size:20px!important;font-weight:900!important;color:#063f79!important}
+.identity-meta{font-size:12px!important;color:#365f7f!important}
+.identity-meta b{color:#123f67!important}
+.signer-status{font-size:12px!important;color:#365f7f!important}
+.signature-preview{height:68px!important;background:#fff!important;border:1.5px dashed #55a8dc!important;box-shadow:0 2px 8px rgba(7,92,173,.04)!important}
+.signature-preview img{max-width:175px!important;max-height:62px!important;object-fit:contain!important}
+.signature-empty{color:#55758f!important;font-size:11px!important}
+.signature-clean-note{margin-top:6px;font-size:10px;line-height:1.35;color:#456b89;font-weight:600}
+.identity-col .btn{font-weight:800!important}
 
-/* 2) CCCD: mắt nằm TRONG ô bên phải; chữ thụt trái 16px */
-.cccd-input-wrap{position:relative!important;width:100%!important;display:block!important}
+/* 2. CCCD: mắt nằm trong ô bên phải + nội dung thụt trái 16px */
+.cccd-input-wrap{position:relative!important;width:100%!important}
 .cccd-input-wrap input{width:100%!important;box-sizing:border-box!important;padding:14px 52px 14px 16px!important}
-.cccd-eye{
-  position:absolute!important;right:8px!important;top:50%!important;transform:translateY(-50%)!important;
-  width:38px!important;height:38px!important;margin:0!important;padding:0!important;
-  display:flex!important;align-items:center!important;justify-content:center!important;
-  border:0!important;background:transparent!important;color:#0871bd!important;font-size:18px!important;
-  cursor:pointer!important;z-index:5!important;box-shadow:none!important;
-}
+.cccd-eye{position:absolute!important;right:10px!important;top:50%!important;transform:translateY(-50%)!important;width:38px!important;height:38px!important;display:flex!important;align-items:center!important;justify-content:center!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;color:#0871bd!important;font-size:18px!important;z-index:3!important}
 
-/* 3) Nút ký ở Bản xem trước: sáng, không thành mảng xanh đậm */
-.preview-sign-action{
-  background:#e5f3ff!important;color:#075f9f!important;border:1px solid #83bfe8!important;
-  box-shadow:0 4px 12px rgba(7,93,168,.07)!important;font-weight:800!important;
-}
-.preview-sign-action:hover{background:#d9eeff!important;border-color:#5aa9df!important;color:#034f89!important}
+/* 3. Nút xác thực ở Bản xem trước: sáng, rõ, không thành mảng xanh đậm */
+.preview-sign-action{display:inline-flex!important;align-items:center!important;gap:6px!important;background:linear-gradient(135deg,#e9f5ff,#dff1ff)!important;color:#075da8!important;border:1px solid #86c5ee!important;box-shadow:0 4px 12px rgba(7,93,168,.07)!important}
+.preview-sign-action:hover{background:#d8efff!important;border-color:#55afe8!important;color:#004f94!important}
 
-/* 4) Hai gạch đầu văn bản theo mẫu thể thức đã chốt */
-.agency b{display:inline-block!important;position:relative!important;padding-bottom:3px!important}
-.agency b::after{content:"";position:absolute;left:25%;bottom:0;width:50%;border-bottom:1px solid #111}
-.nation b:last-of-type{display:inline-block!important;position:relative!important;padding-bottom:3px!important;border-bottom:1px solid #111!important}
-.official-head .official-line{display:none!important}
+/* 4. Gạch thể thức: bám đúng dòng chữ, không bám chiều rộng cột */
+.school-mark,.motto-mark{display:inline-flex!important;flex-direction:column!important;align-items:center!important;width:auto!important}
+.school-mark .official-line.short{display:block!important;width:50%!important;max-width:50%!important;border-top:1px solid #111!important;margin:1px auto 0!important}
+.motto-mark .official-line{display:block!important;width:100%!important;max-width:100%!important;border-top:1px solid #111!important;margin:1px auto 0!important}
 
-@media(max-width:900px){
-  .identity-col+.identity-col{border-left:0!important;border-top:1px solid #7dbce6!important}
-}
+@media(max-width:900px){.identity-card{grid-template-columns:1fr!important}.identity-col+.identity-col{border-left:0!important;border-top:1px solid #86bfe6!important}}
 
 </style>
 </head>
@@ -505,7 +514,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   <div class="hva-pro-header-inner">
     <button type="button" class="hva-pro-back" onclick="goBackHVA()" aria-label="Quay lại trang chủ HVA" title="Quay lại"><i class="bi bi-arrow-left"></i></button>
     <div class="hva-pro-brand"><span class="hva-pro-divider" aria-hidden="true"></span><div class="hva-pro-brandtext"><div class="hva-pro-kicker">TRUNG TÂM QUẢN TRỊ SỐ HVA</div><div class="hva-pro-school">Trường THPT Hòa Vang</div><div class="hva-pro-slogan">Quản trị thông minh <b>•</b> Giáo dục sáng tạo</div></div></div>
-    <div class="hva-pro-tools"><div class="hva-pro-online-wrap"><div class="hva-pro-online" title="Hệ thống đang trực tuyến"><span class="hva-pro-online-dot"></span><span>TRỰC TUYẾN</span></div><div class="hva-pro-version">V2_10</div></div></div>
+    <div class="hva-pro-tools"><div class="hva-pro-online-wrap"><div class="hva-pro-online" title="Hệ thống đang trực tuyến"><span class="hva-pro-online-dot"></span><span>TRỰC TUYẾN</span></div><div class="hva-pro-version">V3_10</div></div></div>
   </div>
 </header>
 
@@ -547,7 +556,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
       <div class="identity-col">
         <div class="identity-section-title">CHỮ KÝ CÁ NHÂN</div>
         <div class="signature-preview" id="signaturePreview"><div class="signature-empty">Thầy/Cô vui lòng tải hình ảnh chữ ký.</div></div>
-        <div class="signature-hint">Ưu tiên ảnh chữ ký đã xóa nền (có thể dùng chữ ký đã cập nhật trên CSDL ngành).</div>
+        <div class="signature-clean-note">Ưu tiên ảnh chữ ký đã xóa nền (có thể dùng chữ ký đã cập nhật trên CSDL ngành).</div>
         <input id="signatureFile" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="handleSignatureUpload(event)">
         <div class="signature-actions">
           <button type="button" class="btn secondary" onclick="document.getElementById('signatureFile').click()"><i class="bi bi-upload"></i> Tải chữ ký</button>
@@ -635,13 +644,11 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
       <div class="official-head">
         <div class="agency">
           <div>SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div>
-          <b>TRƯỜNG THPT HÒA VANG</b>
-          <span class="official-line short"></span>
+          <div class="school-mark"><b>TRƯỜNG THPT HÒA VANG</b><span class="official-line short"></span></div>
         </div>
         <div class="nation">
           <b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b>
-          <b>Độc lập - Tự do - Hạnh phúc</b>
-          <span class="official-line"></span>
+          <div class="motto-mark"><b>Độc lập - Tự do - Hạnh phúc</b><span class="official-line"></span></div>
         </div>
       </div>
 
