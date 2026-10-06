@@ -202,6 +202,18 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
   #paper .official-head{break-inside:avoid!important}
   #paper .official-sign{break-inside:avoid!important}
+  /* KHÓA BỐ CỤC QUỐC HIỆU - TÊN TRƯỜNG KHI IN A4 */
+#paper .official-head{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  align-items:start!important;
+}
+
+#paper .official-left,
+#paper .official-right{
+  width:auto!important;
+  min-width:0!important;
+}
   #paper p{orphans:3;widows:3}
 }
 
