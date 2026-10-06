@@ -381,6 +381,29 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .signature-empty{color:#52748c!important}.signer-status{color:#4d718b!important}
 .identity-avatar{background:#c5e7fb!important;color:#0569b6!important}.identity-auth-chip{background:#d9f5e4!important;color:#11703a!important}
 
+/* ===== V2_10 RELEASE PATCH 06/10/2026 · SURGICAL ONLY ===== */
+.identity-card{background:#e8f4ff!important;border:1px solid #79b9e8!important;box-shadow:0 10px 26px rgba(7,92,173,.10)!important}
+.identity-col{background:#e8f4ff!important;padding:20px 22px!important}
+.identity-col+.identity-col{border-left:1px solid #9bc9ea!important}
+.identity-name,#identityName{font-size:20px!important;font-weight:900!important;color:#06447f!important}
+.identity-section-title{font-size:11px!important;color:#376a91!important}
+.signature-preview{height:68px!important;background:#fff!important;border:1.5px dashed #69addc!important;box-shadow:none!important}
+.signature-preview img{max-width:175px!important;max-height:62px!important;object-fit:contain!important}
+.signer-status{font-size:12px!important;color:#466985!important}
+.identity-meta{font-size:12px!important}
+.identity-col .btn{font-weight:800!important}
+.cccd-input-wrap input{padding:14px 52px 14px 16px!important}
+.cccd-eye{right:8px!important;top:50%!important;transform:translateY(-50%)!important}
+.preview-shell{overflow:auto!important}
+.official-paper{width:210mm!important;min-height:297mm!important;max-width:none!important;box-sizing:border-box!important;padding:30mm 20mm 20mm 20mm!important}
+.official-head{align-items:start!important}
+.agency .official-line.short{width:50%!important;max-width:50%!important;margin-top:0!important}
+.nation .official-line{width:100%!important;max-width:none!important;margin-top:0!important}
+.preview-sign-action{display:inline-flex!important;align-items:center!important;gap:6px!important}
+@media(max-width:900px){.identity-card{grid-template-columns:1fr!important}.identity-col+.identity-col{border-left:0!important;border-top:1px solid #9bc9ea!important}}
+@media(max-width:720px){.official-paper{width:210mm!important;min-height:297mm!important;padding:30mm 20mm 20mm 20mm!important}}
+@media print{#paper{padding:30mm 20mm 20mm 20mm!important}}
+
 </style>
 </head>
 <body>
@@ -574,7 +597,10 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   <section class="card hidden preview-shell" id="previewCard">
     <div class="preview-toolbar">
       <div><b>BẢN XEM TRƯỚC</b><span>Kiểm tra nội dung trước khi xác nhận và gửi</span></div>
-      <button class="btn secondary" type="button" onclick="backEdit()"><i class="bi bi-pencil"></i> Chỉnh sửa</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+        <button class="btn secondary" type="button" onclick="backEdit()"><i class="bi bi-pencil"></i> Chỉnh sửa</button>
+        <button class="btn primary preview-sign-action" id="previewSignBtn" type="button" onclick="previewSignerAction()"><i class="bi bi-shield-check"></i> <span id="previewSignBtnText">Xác thực & ký xác nhận HVA</span></button>
+      </div>
     </div>
 
     <article class="preview official-paper" id="paper">
@@ -587,7 +613,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
         <div class="nation">
           <b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b>
           <b>Độc lập - Tự do - Hạnh phúc</b>
-          <span class="official-line" style="width:19.2em;max-width:100%"></span>
+          <span class="official-line"></span>
         </div>
       </div>
 
@@ -1330,6 +1356,17 @@ function refreshSignatureUI(){
     else { st.textContent='Chưa xác thực người ký.'; st.classList.remove('ok'); }
   }
   applySignatureToPaper();
+  const psb=$('previewSignBtn'), pst=$('previewSignBtnText');
+  if(psb&&pst){
+    if(state.signed){ pst.textContent='Đã ký xác nhận'; psb.classList.remove('primary'); psb.classList.add('secondary'); }
+    else if(state.signerVerified){ pst.textContent='Ký xác nhận'; psb.classList.add('primary'); psb.classList.remove('secondary'); }
+    else { pst.textContent='Xác thực & ký xác nhận HVA'; psb.classList.add('primary'); psb.classList.remove('secondary'); }
+  }
+}
+function previewSignerAction(){
+  if(state.signed){ showHvaNotice('success','Đã ký xác nhận','Bản kê khai hiện tại đã được xác thực và gắn chữ ký.'); return; }
+  if(!state.signerVerified){ openSignerVerify(); return; }
+  signDocument();
 }
 function loadSavedSignature(){
   try{ state.signatureData=localStorage.getItem(signatureStorageKey())||''; }catch(e){ state.signatureData=''; }
@@ -1374,11 +1411,11 @@ async function verifySignerIdentity(){
     setTimeout(closeSignerVerify,700);
   }catch(e){
     state.signerVerified=false; state.signed=false;
-    msg.style.color='#b42318'; msg.textContent='Thông tin xác thực chưa khớp hoặc máy chủ chưa hỗ trợ xác thực người ký.';
+    msg.style.color='#b42318'; msg.textContent=(e&&e.message)?e.message:'Thông tin xác thực chưa khớp.';
     refreshSignatureUI();
   }finally{
     btn.disabled=false;
-    $('signerCccd').value=''; // không giữ CCCD trên trình duyệt
+    if(state.signerVerified) $('signerCccd').value=''; // PASS mới xóa; sai giữ lại để sửa
   }
 }
 function signDocument(){
@@ -1463,6 +1500,7 @@ function previewNoTutor(){
 }
 
 function backEdit(){
+  if(state.signed||state.signerVerified){ state.signed=false; state.signerVerified=false; refreshSignatureUI(); }
   $('previewCard').classList.add('hidden');
   $('declareCard').classList.remove('hidden');
   setStep(1);
