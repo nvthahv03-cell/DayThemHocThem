@@ -10,7 +10,17 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
   
-  <style>
+  <!--
+===============================================================================
+🔴 CORE PASS / 🟦 FORM ENGINE / ⚪ FORM SPECIFIC — HVA FORMS MASTER MAP
+BẢN ĐÁNH DẤU KIẾN TRÚC — KHÔNG THAY ĐỔI LOGIC CHẠY
+Quy ước:
+🔴 CORE PASS      = KHÓA, dùng chung mọi mẫu, DO NOT EDIT khi tạo mẫu mới.
+🟦 FORM ENGINE    = bộ máy biểu mẫu dùng chung; chỉ sửa ở cấp engine.
+⚪ FORM SPECIFIC  = phần riêng từng mẫu; đây là vùng được thay khi nhân mẫu.
+===============================================================================
+-->
+<style>
 :root{
   --hva-h-navy:#073b78;--hva-h-blue:#075cad;--hva-h-cyan:#08abc5;--hva-h-white:#f8fdff;
   --hva-h-line:rgba(190,238,255,.58);--ink:#183249;--line:#d8e5ef;--soft:#f4f9fd;
@@ -487,6 +497,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     
 </style>
 </head>
+<!-- 🔴 CORE PASS — SHELL/HVA PAGE FRAME — LOCK -->
 <body>
 
 <div id="dthtAuth" class="dtht-auth hidden">
@@ -1003,6 +1014,7 @@ function toggleSignerCccd(){
 }
   
 </script>
+<!-- 🔴 CORE PASS — AUTH / CURRENT USER / HVA SESSION — LOCK -->
 <script>
 const DTHT_STANDALONE_BACKEND='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 
@@ -1116,6 +1128,7 @@ function dthtDisplayRole(teacher,me){
   }
   return raw.replace(/^phó hiệu trưởng$/i,'P. Hiệu trưởng');
 }
+/* 🔴 CORE PASS — BIND CURRENT HVA USER / PERSONNEL — LOCK */
 function bindCurrentTeacher(){
   const me=dthtCurrentUser();
   const username=String(me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
@@ -1180,6 +1193,7 @@ $('participation').classList.remove('hidden');
  * Hội đồng = BGH + 07 Tổ chuyên môn + Tổ Văn phòng.
  * ========================================================= */
 
+/* 🔴 CORE PASS — HVA PERSONNEL CORE EMBEDDED — LOCK / DO NOT EDIT */
 function hvaPersonnelText(v){ return String(v ?? '').trim(); }
 
 function hvaPersonnelArray(data){
@@ -1523,6 +1537,7 @@ global.HVAPersonnel = Object.freeze({
 
 })(window);
 
+/* ⚪ FORM SPECIFIC — danh mục/hiển thị phục vụ Mẫu 10; mẫu khác có thể thay */
 const TEAM_UNITS=[
  {label:'Toán - Tin',query:'Toán - Tin'},
  {label:'Ngữ văn',query:'Ngữ văn'},
@@ -1548,6 +1563,7 @@ function initTeams(){
 async function onTeamSelect(){ return; }
 async function onTeacherSelect(){ return; }
 
+/* ⚪ FORM SPECIFIC — trạng thái kê khai DẠY THÊM của Mẫu 10 */
 function setParticipate(v){
   state.participates=v;
   $('yesBtn').classList.toggle('on',v===true);
@@ -1560,6 +1576,7 @@ function setParticipate(v){
   setStep(1);
 }
 
+/* ⚪ FORM SPECIFIC — reset trường nghiệp vụ Mẫu 10 */
 function resetDeclaration(){
   [
     'tutorSubject',
@@ -1583,6 +1600,7 @@ function resetDeclaration(){
 }
 
 
+/* 🔴 CORE PASS — SIGNATURE UI / SIGNATURE STATE — LOCK */
 function signatureStorageKey(){
   const key=String(state.teacher?.key||dthtCurrentUser().username||'').trim().toLowerCase();
   return 'hvaDTHTSignature:'+key;
@@ -1642,6 +1660,8 @@ function closeSignerVerify(){
   $('signerCccd').value=''; $('signerVerifyMsg').textContent='';
   $('signerVerifyModal').classList.add('hidden');
 }
+/* 🔴 CORE PASS — CCCD VERIFY FLOW — LOCK
+   Hiện Mẫu 10 đọc N→AB và chuẩn hóa padStart(12,'0'). */
 async function verifySignerIdentity(){
   const cccd=String($('signerCccd').value||'').replace(/\s+/g,'');
   const msg=$('signerVerifyMsg'), btn=$('verifySignerBtn');
@@ -1702,6 +1722,8 @@ function invalidateSignature(){
   if(state.signed){ state.signed=false; refreshSignatureUI(); }
 }
 
+/* 🟦 FORM ENGINE + ⚪ FORM SPECIFIC SCHEMA
+   Engine đóng gói hồ sơ; danh sách field bên trong là schema riêng Mẫu 10. */
 function payload(){
   return {
     teacherKey:state.teacher?.key||'',
@@ -1720,6 +1742,8 @@ function payload(){
   };
 }
 
+/* 🟦 FORM ENGINE — PREVIEW PIPELINE
+   Nội dung giấy bên trong hiện là template riêng Mẫu 10. */
 function fillPreview(p){
   $('pName').textContent=p.teacherName||'';
   $('pAssigned').textContent=p.assignedSubject||'';
@@ -1768,6 +1792,7 @@ function backEdit(){
   setStep(1);
 }
 
+/* 🔴 CORE PASS — FORM API DISPATCH — LOCK */
 async function callAPI(method,...args){
   const fn=window.HVA_API?.dtht?.[method];
   if(typeof fn!=='function') throw new Error('Chưa nối backend HVA: HVA_API.dtht.'+method);
@@ -1803,6 +1828,8 @@ function showSubmitAcknowledgement(){
   if(ack) ack.hidden=false;
 }
 
+/* 🟦 FORM ENGINE — SUBMIT / ACKNOWLEDGEMENT / RELOAD
+   KHÔNG nhân bản cho từng mẫu; sau khi Backend contract PASS sẽ khóa CORE. */
 async function submitReport(){
   if(window.__dthtSubmitting) return;
   if(!state.signatureData){ showHvaNotice('error','Chưa có chữ ký','Thầy/Cô vui lòng tải hình ảnh chữ ký trước khi gửi.'); return; }
@@ -1853,6 +1880,8 @@ function canonicalTeamForReport(x){
   const person=(state.allTeachers||[]).find(t=>String(t.key||'').trim().toLowerCase()===key);
   return String(person&&person.team||x&&x.team||'').trim();
 }
+/* 🟦 FORM ENGINE — VERSION / HISTORY RENDER
+   Dùng chung mọi mẫu sau khi Backend contract PASS. */
 function renderHistory(){
   const rows=state.reports||[];
 
@@ -1952,6 +1981,7 @@ function viewReport(id){
 /* ===== DTHT SUBJECT SOURCE · FRONTEND ONLY · 07/10/2026 =====
    Du_lieu_NhanSu_HVA: M = Môn dạy; N = Tên đăng nhập.
    Độc lập getDTHTInitial. KHÔNG sửa Backend/HVA_Personnel/Auth/CCCD/chữ ký. */
+/* 🔴 CORE PASS — PERSONNEL LOOKUP: username N → Môn dạy M — LOCK */
 function dthtLoadAssignedSubjectFromSheet(username){
   const user=String(username||'').trim();
   if(!user) return Promise.resolve('');
@@ -1996,6 +2026,7 @@ function dthtLoadAssignedSubjectFromSheet(username){
 /* ===== DTHT CCCD VERIFY · FRONTEND ONLY · 07/10/2026 =====
    Du_lieu_NhanSu_HVA: N = Tên đăng nhập; AB = CCCD.
    Chỉ trả true/false; không hiển thị, không lưu CCCD vào state/localStorage. */
+/* 🔴 CORE PASS — IDENTITY LOOKUP: username N → CCCD AB — LOCK */
 function dthtVerifyCccdFromSheet(username,inputCccd){
   const user=String(username||'').trim();
   const entered=String(inputCccd||'').replace(/\D/g,'');
@@ -2051,6 +2082,8 @@ function dthtVerifyCccdFromSheet(username,inputCccd){
   });
 }
 
+/* 🟦 FORM ENGINE — BOOTSTRAP DATA / HISTORY / PERSONNEL BIND
+   Lưu ý: getDTHTInitial hiện chưa có route trong Backend đang dùng. */
 async function loadData(){
   const me=dthtCurrentUser();
   const teacherKey=String(me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
@@ -2117,6 +2150,7 @@ async function loadData(){
     $('apiStatus').textContent='Chưa tải được hồ sơ nhân sự HVA: '+(e&&e.message?e.message:'Lỗi không xác định');
   }
 }
+/* 🔴 CORE PASS — PAGE BOOTSTRAP — LOCK */
 (async function initDTHT(){
   if(!dthtSessionToken()){
     dthtShowLogin('');
