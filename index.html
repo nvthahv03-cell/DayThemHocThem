@@ -677,15 +677,21 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
       <div class="grid">
 
         <div class="field full">
-          <label>
-            Môn học được phân công dạy học <b>*</b>
-          </label>
-          <input
-            id="assignedSubject"
-            required
-            placeholder="Ví dụ: Toán"
-          >
-        </div>
+  <label>Môn học được phân công dạy học</label>
+
+  <input
+    id="assignedSubject"
+    type="text"
+    readonly
+    tabindex="-1"
+    placeholder="HVA tự động trích xuất từ hồ sơ nhân sự"
+  >
+
+  <div class="field-help">
+    <i class="bi bi-shield-check"></i>
+    Thông tin được tự động trích xuất từ hồ sơ nhân sự HVA.
+  </div>
+</div>
 
         <div class="field">
           <label>
@@ -1126,17 +1132,33 @@ function bindCurrentTeacher(){
     chucVu:String(me.chucVu||me.viTriViecLam||'').trim()
   };
 
-  state.team=teacher.team;
-  state.teacher=teacher;
+ state.team=teacher.team;
+state.teacher=teacher;
+
+if(person){
+  state.teacher.subject=String(person.subject||'').trim();
+}
 
   $('identityName').textContent=teacher.name;
   $('identityTeam').textContent=teacher.team;
   const role=dthtDisplayRole(teacher,me);
   $('identityRole').textContent=role;
   $('teacherInfo').innerHTML=person
-    ? '<i class="bi bi-shield-check"></i> Hồ sơ đã được đối chiếu với HVA Personnel.'
-    : '<i class="bi bi-shield-check"></i> Danh tính được xác thực từ phiên đăng nhập HVA.';
-  $('participation').classList.remove('hidden');
+  ? '<i class="bi bi-shield-check"></i> Hồ sơ đã được đối chiếu với HVA Personnel.'
+  : '<i class="bi bi-shield-check"></i> Danh tính được xác thực từ phiên đăng nhập HVA.';
+
+const assigned=$('assignedSubject');
+
+if(assigned){
+  assigned.value=String(
+    person?.subject||
+    ''
+  ).trim();
+
+  assigned.readOnly=true;
+}
+
+$('participation').classList.remove('hidden');
   $('apiStatus').textContent='Sẵn sàng kê khai.';
   loadSavedSignature();
   setStep(1);
@@ -1539,7 +1561,25 @@ function setParticipate(v){
 }
 
 function resetDeclaration(){
-  ['assignedSubject','tutorSubject','tutorTime','tutorForm','tutorPlace','relationship'].forEach(id=>$(id).value='');
+  [
+    'tutorSubject',
+    'tutorTime',
+    'tutorForm',
+    'tutorPlace',
+    'relationship'
+  ].forEach(id=>{
+    const el=$(id);
+    if(el) el.value='';
+  });
+
+  const assigned=$('assignedSubject');
+
+  if(assigned){
+    assigned.value=String(
+      state.teacher?.subject||
+      ''
+    ).trim();
+  }
 }
 
 
@@ -1908,14 +1948,55 @@ async function loadData(){
     const people=[];
 
     (groups||[]).forEach(g=>{
-      if(!g || !Array.isArray(g.members)) return;
-      g.members.forEach(person=>{
-        const key=String(person.username||person.maGV||person.taiKhoan||'').trim();
-        const name=String(person.hoTen||person.name||'').trim();
-        const unit=String(person.tenTo||person.toBoPhan||person.to||'').trim();
-        if(key&&name) people.push({key,name,team:unit,chucVu:String(person.chucVu||person.viTriViecLam||'').trim(),viTriViecLam:String(person.viTriViecLam||'').trim()});
+  if(!g || !Array.isArray(g.members)) return;
+
+  g.members.forEach(person=>{
+    const key=String(
+      person.username||
+      person.maGV||
+      person.taiKhoan||
+      ''
+    ).trim();
+
+    const name=String(
+      person.hoTen||
+      person.name||
+      ''
+    ).trim();
+
+    const unit=String(
+      person.tenTo||
+      person.toBoPhan||
+      person.to||
+      ''
+    ).trim();
+
+    const raw=
+      person.raw && typeof person.raw==='object'
+        ? person.raw
+        : {};
+
+    const subject=String(
+      raw['Môn dạy']||
+      raw.monDay||
+      raw.mon||
+      raw.monHoc||
+      raw.subject||
+      ''
+    ).trim();
+
+    if(key&&name){
+      people.push({
+        key,
+        name,
+        team:unit,
+        subject:subject,
+        chucVu:String(person.chucVu||person.viTriViecLam||'').trim(),
+        viTriViecLam:String(person.viTriViecLam||'').trim()
       });
-    });
+    }
+  });
+});
 
     const seen=new Set();
     state.allTeachers=people.filter(t=>{
