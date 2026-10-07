@@ -1094,7 +1094,7 @@ try{
   if(!r.ok) throw new Error('HTTP_'+r.status);
 
   const data=await r.json();
-  console.log('[NVS LOGIN RESPONSE]', data);
+  console.log('[NVS LOGIN RESPONSE]', JSON.stringify(data));
 
   if(!data||data.success!==true||!data.user){
     throw new Error((data&&data.message)||'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
