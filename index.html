@@ -1680,44 +1680,47 @@ function closeSignerVerify(){
   $('signerCccd').value=''; $('signerVerifyMsg').textContent='';
   $('signerVerifyModal').classList.add('hidden');
 }
-/* 🔴 CORE PASS — CCCD VERIFY FLOW — LOCK
-   Hiện Mẫu 10 đọc N→AB và chuẩn hóa padStart(12,'0'). */
+/* 🔴 CORE PASS — CCCD VERIFY FLOW — LOCK */
 async function verifySignerIdentity(){
-  const cccd=String($('signerCccd').value||'').replace(/\s+/g,'');
-  const msg=$('signerVerifyMsg'), btn=$('verifySignerBtn');
-  if(!/^\d{12}$/.test(cccd)){ msg.textContent='CCCD phải gồm đúng 12 chữ số.'; return; }
+  const cccd = String($('signerCccd').value || '').replace(/\s+/g, '');
+  const msg = $('signerVerifyMsg'), btn = $('verifySignerBtn');
+  if(!/^\d{12}$/.test(cccd)){ 
+    msg.textContent = 'CCCD phải gồm đúng 12 chữ số.'; 
+    return; 
+  }
 
-  const me=dthtCurrentUser();
-  const username=String(me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
+  const me = dthtCurrentUser();
+  // Đã bổ sung me.tenDangNhap để nhận diện chuẩn xác tài khoản HVA
+  const username = String(me.tenDangNhap || me.username || me.userName || me.maGV || me.taiKhoan || '').trim();
   if(!username){
-    msg.style.color='#b42318';
-    msg.textContent='Không xác định được tài khoản HVA đang đăng nhập.';
+    msg.style.color = '#b42318';
+    msg.textContent = 'Không xác định được tài khoản HVA đang đăng nhập.';
     return;
   }
 
-  btn.disabled=true;
-  msg.style.color='#075cad';
-  msg.textContent='HVA đang đối chiếu thông tin...';
+  btn.disabled = true;
+  msg.style.color = '#075cad';
+  msg.textContent = 'HVA đang đối chiếu thông tin...';
 
   try{
-    const verified=await dthtVerifyCccdFromSheet(username,cccd);
+    const verified = await dthtVerifyCccdFromSheet(username, cccd);
     if(!verified) throw new Error('Số CCCD chưa khớp với hồ sơ nhân sự của tài khoản đang đăng nhập.');
 
-    state.signerVerified=true;
-    state.signed=false;
-    msg.style.color='#14733a';
-    msg.textContent='Xác thực thành công.';
+    state.signerVerified = true;
+    state.signed = false;
+    msg.style.color = '#14733a';
+    msg.textContent = 'Xác thực thành công.';
     refreshSignatureUI();
-    setTimeout(closeSignerVerify,700);
+    setTimeout(closeSignerVerify, 700);
   }catch(e){
-    state.signerVerified=false;
-    state.signed=false;
-    msg.style.color='#b42318';
-    msg.textContent=(e&&e.message)?e.message:'Thông tin xác thực chưa khớp.';
+    state.signerVerified = false;
+    state.signed = false;
+    msg.style.color = '#b42318';
+    msg.textContent = (e && e.message) ? e.message : 'Thông tin xác thực chưa khớp.';
     refreshSignatureUI();
   }finally{
-    btn.disabled=false;
-    if(state.signerVerified) $('signerCccd').value='';
+    btn.disabled = false;
+    if(state.signerVerified) $('signerCccd').value = '';
   }
 }
 function signDocument(){
@@ -2047,57 +2050,59 @@ function dthtLoadAssignedSubjectFromSheet(username){
    Du_lieu_NhanSu_HVA: N = Tên đăng nhập; AB = CCCD.
    Chỉ trả true/false; không hiển thị, không lưu CCCD vào state/localStorage. */
 /* 🔴 CORE PASS — IDENTITY LOOKUP: username N → CCCD AB — LOCK */
-function dthtVerifyCccdFromSheet(username,inputCccd){
-  const user=String(username||'').trim();
-  const entered=String(inputCccd||'').replace(/\D/g,'');
-  if(!user||!/^\d{12}$/.test(entered)) return Promise.resolve(false);
+/* 🔴 CORE PASS — IDENTITY LOOKUP: username N → CCCD D — LOCK */
+function dthtVerifyCccdFromSheet(username, inputCccd){
+  const user = String(username || '').trim();
+  const entered = String(inputCccd || '').replace(/\D/g, '');
+  if(!user || !/^\d{12}$/.test(entered)) return Promise.resolve(false);
 
-  return new Promise(resolve=>{
-    const cb='__dthtCccd_'+Date.now()+'_'+Math.random().toString(36).slice(2);
-    const script=document.createElement('script');
-    let finished=false;
+  return new Promise(resolve => {
+    const cb = '__dthtCccd_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const script = document.createElement('script');
+    let finished = false;
 
-    const finish=value=>{
+    const finish = value => {
       if(finished) return;
-      finished=true;
-      try{delete window[cb];}catch(_){window[cb]=undefined;}
-      try{script.remove();}catch(_){}
-      resolve(value===true);
+      finished = true;
+      try{ delete window[cb]; }catch(_){ window[cb] = undefined; }
+      try{ script.remove(); }catch(_){}
+      resolve(value === true);
     };
 
-    const timer=setTimeout(()=>finish(false),8000);
+    const timer = setTimeout(() => finish(false), 8000);
 
-    window[cb]=payload=>{
+    window[cb] = payload => {
       clearTimeout(timer);
       try{
-        const rows=payload?.table?.rows||[];
+        const rows = payload?.table?.rows || [];
         for(const row of rows){
-          const cells=row?.c||[];
-          const login=String(cells[0]?.v??cells[0]?.f??'').trim();
-          const storedRaw=String(cells[1]?.v??cells[1]?.f??'').replace(/\D/g,'');
-          const stored=storedRaw.padStart(12,'0');
-          if(login.toLowerCase()===user.toLowerCase()){
-            finish(stored===entered);
+          const cells = row?.c || [];
+          const login = String(cells[0]?.v ?? cells[0]?.f ?? '').trim();
+          const storedRaw = String(cells[1]?.v ?? cells[1]?.f ?? '').replace(/\D/g, '');
+          const stored = storedRaw.padStart(12, '0');
+          if(login.toLowerCase() === user.toLowerCase()){
+            finish(stored === entered);
             return;
           }
         }
       }catch(e){
-        console.warn('[DTHT CCCD]',e);
+        console.warn('[DTHT CCCD]', e);
       }
       finish(false);
     };
 
-    const tq="select N,AB where lower(N) = '"+user.toLowerCase().replace(/'/g,"''")+"'";
-    script.src=
+    // N: Tên đăng nhập, D: CCCD thực tế trên Sheet
+    const tq = "select N,D where lower(N) = '" + user.toLowerCase().replace(/'/g, "''") + "'";
+    script.src =
       'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq'
-      +'?sheet='+encodeURIComponent('Du_lieu_NhanSu_HVA')
-      +'&headers=6'
-      +'&tqx='+encodeURIComponent('responseHandler:'+cb)
-      +'&tq='+encodeURIComponent(tq)
-      +'&_='+Date.now();
+      + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
+      + '&headers=6'
+      + '&tqx=' + encodeURIComponent('responseHandler:' + cb)
+      + '&tq=' + encodeURIComponent(tq)
+      + '&_=' + Date.now();
 
-    script.async=true;
-    script.onerror=()=>{clearTimeout(timer);finish(false);};
+    script.async = true;
+    script.onerror = () => { clearTimeout(timer); finish(false); };
     document.head.appendChild(script);
   });
 }
