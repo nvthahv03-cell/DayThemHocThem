@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>HVA - Quản lý dạy thêm, học thêm</title>
+<title>HVA - Quản lý dạy thêm, học thêm 2</title>
 <!-- DTHT HVA UI V3_10 | Backend HVA + Personnel source + Sheet DTHT -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1098,20 +1098,20 @@ try{
   const data=await r.json();
   console.log('[NVS LOGIN RESPONSE]', JSON.stringify(data));
 
-  // 06_PhienDangNhap.dangNhapNVS_ giữ contract tương thích HVA cho DTHT:
-  // success / user / sessionToken / expiresAt.
-  if(!data||data.success!==true||!data.user){
-    throw new Error((data&&data.message)||'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+  // NVS Login contract thực tế từ Backend 01–17:
+  // ok / nguoiDung / sessionToken / hetHanLuc.
+  if(!data||data.ok!==true||!data.nguoiDung){
+    throw new Error((data&&(data.thongBao||data.message))||'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
   }
 
-    if(!data.sessionToken||!data.expiresAt){
+    if(!data.sessionToken||!data.hetHanLuc){
       throw new Error('Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.');
     }
 
-    localStorage.setItem('user',JSON.stringify(data.user));
+    localStorage.setItem('user',JSON.stringify(data.nguoiDung));
     localStorage.setItem('hvaSessionToken',String(data.sessionToken));
-    localStorage.setItem('hvaSessionExpiresAt',String(data.expiresAt));
-    localStorage.setItem('hvaLastUsername',username);
+    localStorage.setItem('hvaSessionExpiresAt',String(data.hetHanLuc));
+    localStorage.setItem('hvaLastUsername',String(data.nguoiDung.tenDangNhap||username||'').trim());
 
     passInput.value='';
     dthtHideLogin();
