@@ -931,9 +931,11 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   async function parseResponse(r){
     let data=null;
     try{ data=await r.json(); }
-    catch(e){ throw new Error('Backend HVA không trả JSON hợp lệ.'); }
-    if(!r.ok) throw new Error((data&&data.message)||('HTTP '+r.status));
-    if(data && data.success===false) throw new Error(data.message||data.code||'Yêu cầu DTHT không thành công.');
+    catch(e){ throw new Error('Backend NVS không trả JSON hợp lệ.'); }
+    if(!r.ok) throw new Error((data&&(data.thongBao||data.message))||('HTTP '+r.status));
+    if(data && (data.ok===false || data.success===false)){
+      throw new Error(data.thongBao||data.message||data.ma||data.code||'Yêu cầu DTHT không thành công.');
+    }
     return data;
   }
 
@@ -941,7 +943,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     const u=new URL(backendUrl());
     u.searchParams.set('action',action);
     const me=currentUser();
-    const username=me.username||me.userName||me.maGV||'';
+    const username=me.tenDangNhap||me.username||me.userName||me.maGV||'';
     if(username) u.searchParams.set('username',username);
     const token=authToken();
     if(token) u.searchParams.set('sessionToken',token);
@@ -968,7 +970,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     const token=authToken();
     const body=Object.assign({},payload,{
       action,
-      username:me.username||me.userName||me.maGV||'',
+      username:me.tenDangNhap||me.username||me.userName||me.maGV||'',
       sessionToken:token
     });
 
@@ -997,7 +999,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
   global.HVA_API=global.HVA_API||{};
   global.HVA_API.dtht={
-    getInitial: async teacherKey=>await get('getDTHTInitial',teacherKey?{teacherKey}:{}),
+    getInitial: async ()=>await get('getDTHTInitial'),
     submitReport: async payload=>await post('submitDTHTReport',payload),
     verifySigner: async cccd=>await post('verifyDTHTSignerIdentity',{cccd:String(cccd||'').trim()})
   };
@@ -1031,7 +1033,7 @@ function dthtShowLogin(message){
   if(msg) msg.textContent=message||'';
   if(userInput && !userInput.value){
     let saved=localStorage.getItem('hvaLastUsername')||'';
-    if(!saved){ try{ const u=JSON.parse(localStorage.getItem('user')||'{}'); saved=u.username||u.userName||u.taiKhoan||''; }catch(_){ } }
+    if(!saved){ try{ const u=JSON.parse(localStorage.getItem('user')||'{}'); saved=u.tenDangNhap||u.username||u.userName||u.taiKhoan||''; }catch(_){ } }
     if(saved) userInput.value=saved;
   }
   if(box) box.classList.remove('hidden');
@@ -2093,68 +2095,53 @@ function dthtVerifyCccdFromSheet(username,inputCccd){
    Lưu ý: getDTHTInitial hiện chưa có route trong Backend đang dùng. */
 async function loadData(){
   const me=dthtCurrentUser();
-  const teacherKey=String(me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
+  const teacherKey=String(
+    me.tenDangNhap||me.username||me.userName||me.maGV||me.taiKhoan||''
+  ).trim();
 
-  /* Lịch sử DTHT là nhánh riêng; lỗi action cũ không được chặn hồ sơ nhân sự. */
   state.reports=[];
+
   try{
     const fn=window.HVA_API?.dtht?.getInitial;
-    if(typeof fn==='function'){
-      const data=await fn(teacherKey);
-      state.reports=Array.isArray(data&&data.reports)?data.reports:[];
-    }
-  }catch(e){
-    console.warn('[DTHT History] getDTHTInitial chưa khả dụng:',e);
-  }
+    if(typeof fn!=='function') throw new Error('NVS_DTHT_API_NOT_READY');
 
-  try{
-    if(!window.HVAPersonnel) throw new Error('HVA_PERSONNEL_NOT_READY');
-
-    const [groups,assignedSubject]=await Promise.all([
-      window.HVAPersonnel.buildGroups(),
-      dthtLoadAssignedSubjectFromSheet(teacherKey)
-    ]);
-
-    const people=[];
-    (groups||[]).forEach(g=>{
-      if(!g||!Array.isArray(g.members)) return;
-      g.members.forEach(person=>{
-        const key=String(person.username||person.maGV||person.taiKhoan||'').trim();
-        const name=String(person.hoTen||person.name||'').trim();
-        const unit=String(person.tenTo||person.toBoPhan||person.to||'').trim();
-        if(key&&name){
-          people.push({
-            key,name,team:unit,subject:'',
-            chucVu:String(person.chucVu||person.viTriViecLam||'').trim(),
-            viTriViecLam:String(person.viTriViecLam||'').trim()
-          });
-        }
-      });
-    });
-
-    const seen=new Set();
-    state.allTeachers=people.filter(t=>{
-      const k=String(t.key||'').toLowerCase();
-      if(!k||seen.has(k)) return false;
-      seen.add(k); return true;
-    });
-
-    if(assignedSubject){
-      const current=state.allTeachers.find(t=>
-        String(t.key||'').trim().toLowerCase()===teacherKey.toLowerCase()
-      );
-      if(current) current.subject=assignedSubject;
+    // NVS xác định danh tính từ sessionToken ở Backend; không tin teacherKey từ Client.
+    const data=await fn();
+    if(!data || data.ok!==true || !data.nguoiDung){
+      throw new Error((data&&(data.thongBao||data.message))||'Không tải được dữ liệu DTHT từ NVS.');
     }
 
+    const nvsUser=data.nguoiDung||{};
+    const key=String(nvsUser.tenDangNhap||teacherKey).trim();
+    const name=String(nvsUser.hoTen||me.hoTen||me.fullName||me.name||key).trim();
+    const team=String(nvsUser.toBoPhan||me.toBoPhan||me.tenTo||me.to||'').trim();
+    const subject=String(nvsUser.monDay||'').trim();
+
+    // Dùng duy nhất hồ sơ nhân sự đã được NVS xác lập từ Session.
+    state.allTeachers=key&&name ? [{
+      key,
+      name,
+      team:team||'Chưa xác định',
+      subject,
+      chucVu:String(me.chucVu||me.viTriViecLam||'').trim(),
+      viTriViecLam:String(me.viTriViecLam||'').trim()
+    }] : [];
+
+    // getDTHTInitial của NVS hiện trả hồ sơ hiện hành, không giả lập lịch sử cũ.
+    // Giữ state.reports rỗng ở bước nối nhân sự; lịch sử sẽ nối riêng sau khi bước này PASS.
     renderHistory();
-    $('apiStatus').textContent=assignedSubject
-      ? 'Đã kết nối HVA.'
-      : 'Đã kết nối HVA · Chưa đọc được Môn dạy.';
+
+    $('apiStatus').textContent=subject
+      ? 'Đã kết nối NVS.'
+      : 'Đã kết nối NVS · Chưa có Môn dạy trong hồ sơ nhân sự.';
+
   }catch(e){
-    console.error(e);
+    console.error('[DTHT NVS Initial]',e);
     state.allTeachers=[];
+    state.reports=[];
     renderHistory();
-    $('apiStatus').textContent='Chưa tải được hồ sơ nhân sự HVA: '+(e&&e.message?e.message:'Lỗi không xác định');
+    $('apiStatus').textContent='Chưa tải được hồ sơ nhân sự NVS: '+(e&&e.message?e.message:'Lỗi không xác định');
+    throw e;
   }
 }
 /* 🔴 CORE PASS — PAGE BOOTSTRAP — LOCK */
