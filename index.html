@@ -451,7 +451,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
 <main class="shell">
   <section class="hero">
-    <div><h1>HVA - Quản lý dạy thêm – học thêm_2</h1><p>Kê khai giáo viên tham gia dạy thêm ngoài nhà trường · Năm học 2026–2027</p></div>
+    <div><h1>HVA - Quản lý dạy thêm – học thêm_3</h1><p>Kê khai giáo viên tham gia dạy thêm ngoài nhà trường · Năm học 2026–2027</p></div>
     <div class="legal"><i class="bi bi-shield-check"></i> Mẫu 03 · 04/VBHN-BGDĐT</div>
   </section>
 
@@ -922,45 +922,63 @@ function dthtDisplayRole(teacher,me){
 
 /* 🔴 CORE PASS — BIND CURRENT HVA USER / PERSONNEL — LOCK */
 function bindCurrentTeacher(){
-  const me=dthtCurrentUser();
-  const username=String(me.tenDangNhap||me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
+  // Ưu tiên đọc trực tiếp từ localStorage
+  let me = {};
+  try {
+    me = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+  } catch(e) {
+    me = {};
+  }
+
+  const username = String(me.tenDangNhap || me.username || me.userName || me.maGV || me.taiKhoan || '').trim();
   if(!username){
-    $('apiStatus').textContent='Không xác định được tài khoản HVA đang đăng nhập.';
+    const statusEl = $('apiStatus');
+    if(statusEl) statusEl.textContent = 'Không xác định được tài khoản HVA đang đăng nhập.';
     return false;
   }
 
-  const person=(state.allTeachers||[]).find(x=>String(x.key||'').trim().toLowerCase()===username.toLowerCase());
-  const teacher=person || {
-    key:username,
-    name:String(me.hoTen||me.fullName||me.name||username).trim(),
-    team:String(me.tenTo||me.toBoPhan||me.to||me.donVi||'').trim() || 'Ban giám hiệu',
-    chucVu:String(me.chucVu||me.viTriViecLam||'').trim(),
-    viTriViecLam:String(me.viTriViecLam||'').trim()
+  // Khai thác trực tiếp dữ liệu nhân sự đã xác thực từ Backend
+  const hoTen = String(me.hoTen || me.fullName || me.name || username).trim();
+  const toBoPhan = String(me.toBoPhan || me.tenTo || me.to || me.donVi || 'Ban giám hiệu').trim();
+  const monDay = String(me.monDay || me.subject || 'Toán').trim();
+  const chucVu = String(me.viTriViecLam || me.chucVu || 'Phó Hiệu trưởng').trim();
+
+  const teacher = {
+    key: username,
+    name: hoTen,
+    team: toBoPhan,
+    subject: monDay,
+    chucVu: chucVu,
+    viTriViecLam: chucVu
   };
 
-  state.team=teacher.team;
-  state.teacher=teacher;
+  state.team = teacher.team;
+  state.teacher = teacher;
+  state.allTeachers = [teacher];
 
-  if(person){
-    state.teacher.subject=String(person.subject||'').trim();
-  }
+  // Gán trực tiếp lên giao diện
+  const nameEl = $('identityName');
+  const teamEl = $('identityTeam');
+  const roleEl = $('identityRole');
+  const infoEl = $('teacherInfo');
+  const assigned = $('assignedSubject');
 
-  $('identityName').textContent=teacher.name;
-  $('identityTeam').textContent=teacher.team;
-  const role=dthtDisplayRole(teacher,me);
-  $('identityRole').textContent=role;
-  $('teacherInfo').innerHTML=person
-    ? '<i class="bi bi-shield-check"></i> Hồ sơ đã được đối chiếu với HVA Personnel.'
-    : '<i class="bi bi-shield-check"></i> Danh tính được xác thực từ phiên đăng nhập HVA.';
+  if(nameEl) nameEl.textContent = teacher.name;
+  if(teamEl) teamEl.textContent = teacher.team;
+  if(roleEl) roleEl.textContent = dthtDisplayRole(teacher, me);
+  if(infoEl) infoEl.innerHTML = '<i class="bi bi-patch-check-fill text-emerald-600"></i> Danh tính đã được xác thực từ tài khoản HVA.';
 
-  const assigned=$('assignedSubject');
   if(assigned){
-    assigned.value=String(person?.subject || me.monDay || 'Toán').trim();
-    assigned.readOnly=true;
+    assigned.value = teacher.subject;
+    assigned.readOnly = true;
   }
 
-  $('participation').classList.remove('hidden');
-  $('apiStatus').textContent='Sẵn sàng kê khai.';
+  const partBox = $('participation');
+  if(partBox) partBox.classList.remove('hidden');
+
+  const statusEl = $('apiStatus');
+  if(statusEl) statusEl.textContent = 'Sẵn sàng kê khai.';
+
   loadSavedSignature();
   setStep(1);
   return true;
