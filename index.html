@@ -9,17 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
-  
-  <!--
-===============================================================================
-🔴 CORE PASS / 🟦 FORM ENGINE / ⚪ FORM SPECIFIC — HVA FORMS MASTER MAP
-BẢN ĐÁNH DẤU KIẾN TRÚC — KHÔNG THAY ĐỔI LOGIC CHẠY
-Quy ước:
-🔴 CORE PASS      = KHÓA, dùng chung mọi mẫu, DO NOT EDIT khi tạo mẫu mới.
-🟦 FORM ENGINE    = bộ máy biểu mẫu dùng chung; chỉ sửa ở cấp engine.
-⚪ FORM SPECIFIC  = phần riêng từng mẫu; đây là vùng được thay khi nhân mẫu.
-===============================================================================
--->
 <style>
 :root{
   --hva-h-navy:#073b78;--hva-h-blue:#075cad;--hva-h-cyan:#08abc5;--hva-h-white:#f8fdff;
@@ -133,16 +122,12 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     width:210mm!important;
     min-height:297mm!important;
   }
-
-  /* Không display:none phần tử cha của #paper: đó là nguyên nhân Print Preview trắng. */
   body *{visibility:hidden!important}
-
   #previewCard,
   #previewCard #paper,
   #previewCard #paper *{
     visibility:visible!important
   }
-
   #previewCard{
     display:block!important;
     position:static!important;
@@ -155,12 +140,10 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     background:#fff!important;
     box-shadow:none!important;
   }
-
   #previewCard .preview-toolbar,
   #previewCard .previewActions{
     display:none!important;
   }
-
   #paper{
     display:block!important;
     position:absolute!important;
@@ -182,33 +165,29 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     line-height:1.45!important;
     overflow:visible!important;
   }
-
   #paper .official-head{break-inside:avoid!important}
   #paper .official-sign{break-inside:avoid!important}
-  /* KHÓA BỐ CỤC QUỐC HIỆU - TÊN TRƯỜNG KHI IN A4 */
   #paper .form-code{
-  position:absolute;
-  top:8mm;
-  right:20mm;
-  font-family:"Times New Roman",Times,serif;
-  font-size:10pt;
-  font-style:italic;
-  font-weight:400;
-  line-height:1;
-  white-space:nowrap;
-}
-
-#paper .official-head{
-  display:grid!important;
-  grid-template-columns:1fr 1fr!important;
-  align-items:start!important;
-}
-
-#paper .official-left,
-#paper .official-right{
-  width:auto!important;
-  min-width:0!important;
-}
+    position:absolute;
+    top:8mm;
+    right:20mm;
+    font-family:"Times New Roman",Times,serif;
+    font-size:10pt;
+    font-style:italic;
+    font-weight:400;
+    line-height:1;
+    white-space:nowrap;
+  }
+  #paper .official-head{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    align-items:start!important;
+  }
+  #paper .official-left,
+  #paper .official-right{
+    width:auto!important;
+    min-width:0!important;
+  }
   #paper p{orphans:3;widows:3}
 }
 
@@ -337,7 +316,6 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 #submitReportBtn[aria-busy="true"] .bi-arrow-repeat{display:inline-block;animation:dthtSpin .8s linear infinite}
 @keyframes dthtSpin{to{transform:rotate(360deg)}}
 
-/* V7.6 — nhịp cụm thao tác + xác nhận sau gửi */
 .previewActions.action-beat{animation:hvaActionBeat .62s cubic-bezier(.22,.8,.28,1) 1}
 @keyframes hvaActionBeat{
   0%{transform:scale(1)}
@@ -358,146 +336,56 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .submit-ack-title{font-size:17px;font-weight:900;color:#14532d;line-height:1.35}
 .submit-ack-sub{margin-top:4px;font-size:11px;font-weight:800;color:#4b7560;letter-spacing:.035em}
 
-/* ===== V2_10 · IDENTITY / SIGNATURE PATCH ===== */
-.identity-card{display:grid!important;grid-template-columns:minmax(0,1.35fr) minmax(250px,.9fr) minmax(250px,.85fr)!important;gap:0!important;padding:0!important;overflow:hidden!important;background:#E6F2FF!important;border:1px solid #9CCCF2!important;box-shadow:0 12px 30px rgba(7,92,173,.10)!important}
-.identity-col{min-width:0;padding:18px 20px;position:relative;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(9,169,214,.035))}.identity-col+.identity-col{border-left:1px solid rgba(52,142,197,.24)}
-.identity-person{display:flex;align-items:center;gap:14px}.identity-label-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.identity-auth-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;background:#e9f8ef;color:#14733a;font-size:9px;font-weight:900;letter-spacing:.02em}
-.identity-section-title{font-size:10px;font-weight:900;letter-spacing:.09em;color:#66829a;margin-bottom:9px}
-.signature-preview{height:58px;display:flex;align-items:center;justify-content:center;border:1px dashed #79bddd;border-radius:11px;background:linear-gradient(135deg,rgba(214,241,255,.88),rgba(210,249,249,.82));box-shadow:inset 0 1px 0 rgba(255,255,255,.35);overflow:hidden}
-.signature-preview img{max-width:160px;max-height:52px;object-fit:contain}.signature-empty{font-size:11px;color:#7a8fa2;text-align:center;padding:8px}
-.signature-actions{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}.signature-actions .btn{padding:8px 10px;font-size:10px}
-.signer-status{font-size:11px;color:#61798e;line-height:1.4;margin:3px 0 10px}.signer-status.ok{color:#14733a;font-weight:800}
-.signer-buttons{display:flex;gap:7px;flex-wrap:wrap}.signer-buttons .btn{padding:9px 11px;font-size:10px}
-.signer-buttons .sign-ready{background:#0879c9;color:#fff}.signer-buttons .sign-ready:disabled{background:#dbe8f2;color:#7b91a4}
-.signature-on-paper{height:66px;display:flex;align-items:center;justify-content:center}.signature-on-paper img{max-width:155px;max-height:64px;object-fit:contain}
-.sign-guide.hidden-sign-guide{display:none!important}
-.hva-sign-modal{position:fixed;inset:0;z-index:100000;background:rgba(7,31,55,.56);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:18px}
-.hva-sign-modal.hidden{display:none!important}.hva-sign-box{width:min(470px,100%);background:#fff;border-radius:22px;padding:24px;box-shadow:0 24px 70px rgba(0,30,60,.28)}
-.hva-sign-box h3{margin:0 0 7px;color:#0b4f8a;font-size:19px}.hva-sign-box p{margin:0 0 17px;color:#667c8f;font-size:12px;line-height:1.5}
-.hva-sign-box label{font-size:12px}.hva-sign-box .actions{justify-content:flex-end}.hva-sign-msg{min-height:18px;margin-top:9px;font-size:11px;font-weight:800;color:#b42318}
-@media(max-width:900px){.identity-card{grid-template-columns:1fr!important}.identity-col+.identity-col{border-left:0;border-top:1px solid rgba(92,153,201,.20)}}
-
-
-/* ===== V2_10 FINAL PAINT · NO MILKY WHITE ===== */
-.identity-card{background:linear-gradient(112deg,#d9efff 0%,#c9ebff 46%,#c9f4f5 100%)!important;border:1px solid #84ccec!important;box-shadow:0 12px 30px rgba(5,99,166,.12)!important}
-.identity-col{background:transparent!important}.identity-col+.identity-col{border-left:1px solid #9bd3e9!important}
-.identity-main,.identity-name,#identityName,#identityTeam,#identityRole{background:transparent!important;box-shadow:none!important}
-.identity-name,#identityName{color:#063f79!important}.identity-section-title{color:#416f91!important}
-.signature-preview{background:#c8ebf8!important;border:1px dashed #63b9da!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.20)!important}
-.signature-empty{color:#52748c!important}.signer-status{color:#4d718b!important}
-.identity-avatar{background:#c5e7fb!important;color:#0569b6!important}.identity-auth-chip{background:#d9f5e4!important;color:#11703a!important}
-
-/* ===== V2_10 RELEASE PATCH 06/10/2026 · SURGICAL ONLY ===== */
-.identity-card{background:#e8f4ff!important;border:1px solid #79b9e8!important;box-shadow:0 10px 26px rgba(7,92,173,.10)!important}
-.identity-col{background:#e8f4ff!important;padding:20px 22px!important}
-.identity-col+.identity-col{border-left:1px solid #9bc9ea!important}
-.identity-name,#identityName{font-size:20px!important;font-weight:900!important;color:#06447f!important}
-.identity-section-title{font-size:11px!important;color:#376a91!important}
-.signature-preview{height:68px!important;background:#fff!important;border:1.5px dashed #69addc!important;box-shadow:none!important}
-.signature-preview img{max-width:175px!important;max-height:62px!important;object-fit:contain!important}
-.signer-status{font-size:12px!important;color:#466985!important}
-.identity-meta{font-size:12px!important}
-.identity-col .btn{font-weight:800!important}
-.cccd-input-wrap input{padding:14px 52px 14px 16px!important}
-.cccd-eye{right:8px!important;top:50%!important;transform:translateY(-50%)!important}
-.preview-shell{overflow:auto!important}
-.official-paper{width:210mm!important;min-height:297mm!important;max-width:none!important;box-sizing:border-box!important;padding:30mm 20mm 20mm 20mm!important}
-.official-head{align-items:start!important}
-.agency .official-line.short{width:50%!important;max-width:50%!important;margin-top:0!important}
-.nation .official-line{width:100%!important;max-width:none!important;margin-top:0!important}
-.preview-sign-action{display:inline-flex!important;align-items:center!important;gap:6px!important}
-@media(max-width:900px){.identity-card{grid-template-columns:1fr!important}.identity-col+.identity-col{border-left:0!important;border-top:1px solid #9bc9ea!important}}
-@media(max-width:720px){
-  .preview-shell{
-    overflow:hidden!important;
-    padding:8px!important;
-  }
-
-  .official-paper{
-    width:100%!important;
-    min-height:auto!important;
-    max-width:100%!important;
-    margin:0 auto!important;
-    padding:34px 18px 40px!important;
-    box-sizing:border-box!important;
-  }
-}
-@media print{#paper{padding:30mm 20mm 20mm 20mm!important}}
-
-
-/* ===== V3_10 VISUAL PATCH 06/10/2026 · PASS LOGIC LOCKED ===== */
-/* 1. Card 3 cột: tăng độ nét, không đổi ID/hàm/nghiệp vụ */
-.identity-card{background:#f4f9ff!important;border:1px solid #6db7eb!important;box-shadow:0 10px 26px rgba(7,92,173,.10)!important}
-.identity-col{background:#f7fbff!important;padding:20px 22px!important}
+/* V3_10 IDENTITY & SIGNATURE */
+.identity-card{display:grid!important;grid-template-columns:minmax(0,1.35fr) minmax(250px,.9fr) minmax(250px,.85fr)!important;gap:0!important;padding:0!important;overflow:hidden!important;background:#f4f9ff!important;border:1px solid #6db7eb!important;box-shadow:0 10px 26px rgba(7,92,173,.10)!important}
+.identity-col{background:#f7fbff!important;padding:20px 22px!important;position:relative}
 .identity-col:nth-child(1){background:#edf7ff!important}
 .identity-col:nth-child(2){background:#f8fcff!important}
 .identity-col:nth-child(3){background:#eef8ff!important}
 .identity-col+.identity-col{border-left:1px solid #86bfe6!important}
-.identity-section-title{font-size:12px!important;font-weight:900!important;letter-spacing:.08em!important;color:#245f8f!important}
+.identity-section-title{font-size:12px!important;font-weight:900!important;letter-spacing:.08em!important;color:#245f8f!important;margin-bottom:9px}
 .identity-name,#identityName{font-size:20px!important;font-weight:900!important;color:#063f79!important}
-.identity-meta{font-size:12px!important;color:#365f7f!important}
+.identity-meta{font-size:12px!important;color:#365f7f!important;display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
 .identity-meta b{color:#123f67!important}
-.signer-status{font-size:12px!important;color:#365f7f!important}
-.signature-preview{height:68px!important;background:#fff!important;border:1.5px dashed #55a8dc!important;box-shadow:0 2px 8px rgba(7,92,173,.04)!important}
+.identity-avatar{width:48px;height:48px;flex:0 0 48px;border-radius:14px;display:grid;place-items:center;background:#c5e7fb!important;color:#0569b6!important;font-size:22px}
+.identity-auth-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;background:#d9f5e4!important;color:#11703a!important;font-size:9px;font-weight:900}
+.signer-status{font-size:12px!important;color:#365f7f!important;margin:3px 0 10px}
+.signer-status.ok{color:#14733a!important;font-weight:800}
+.signature-preview{height:68px!important;display:flex;align-items:center;justify-content:center;background:#fff!important;border:1.5px dashed #55a8dc!important;border-radius:11px;overflow:hidden}
 .signature-preview img{max-width:175px!important;max-height:62px!important;object-fit:contain!important}
 .signature-empty{color:#55758f!important;font-size:11px!important}
 .signature-clean-note{margin-top:6px;font-size:10px;line-height:1.35;color:#456b89;font-weight:600}
-.identity-col .btn{font-weight:800!important}
+.signature-actions{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.signer-buttons{display:flex;gap:7px;flex-wrap:wrap}
+.signer-buttons .sign-ready{background:#0879c9;color:#fff}
+.signer-buttons .sign-ready:disabled{background:#dbe8f2;color:#7b91a4}
+.signature-on-paper{height:66px;display:flex;align-items:center;justify-content:center}
+.signature-on-paper img{max-width:155px;max-height:64px;object-fit:contain}
+.sign-guide.hidden-sign-guide{display:none!important}
 
-/* 2. CCCD: mắt nằm trong ô bên phải + nội dung thụt trái 16px */
+.hva-sign-modal{position:fixed;inset:0;z-index:100000;background:rgba(7,31,55,.56);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:18px}
+.hva-sign-modal.hidden{display:none!important}
+.hva-sign-box{width:min(470px,100%);background:#fff;border-radius:22px;padding:24px;box-shadow:0 24px 70px rgba(0,30,60,.28)}
+.hva-sign-box h3{margin:0 0 7px;color:#0b4f8a;font-size:19px}
+.hva-sign-box p{margin:0 0 17px;color:#667c8f;font-size:12px;line-height:1.5}
+.hva-sign-msg{min-height:18px;margin-top:9px;font-size:11px;font-weight:800;color:#b42318}
+
 .cccd-input-wrap{position:relative!important;width:100%!important}
 .cccd-input-wrap input{width:100%!important;box-sizing:border-box!important;padding:14px 52px 14px 16px!important}
 .cccd-eye{position:absolute!important;right:10px!important;top:50%!important;transform:translateY(-50%)!important;width:38px!important;height:38px!important;display:flex!important;align-items:center!important;justify-content:center!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;color:#0871bd!important;font-size:18px!important;z-index:3!important}
+.preview-sign-action{display:inline-flex!important;align-items:center!important;gap:6px!important;background:linear-gradient(135deg,#e9f5ff,#dff1ff)!important;color:#075da8!important;border:1px solid #86c5ee!important}
 
-/* 3. Nút xác thực ở Bản xem trước: sáng, rõ, không thành mảng xanh đậm */
-.preview-sign-action{display:inline-flex!important;align-items:center!important;gap:6px!important;background:linear-gradient(135deg,#e9f5ff,#dff1ff)!important;color:#075da8!important;border:1px solid #86c5ee!important;box-shadow:0 4px 12px rgba(7,93,168,.07)!important}
-.preview-sign-action:hover{background:#d8efff!important;border-color:#55afe8!important;color:#004f94!important}
-
-/* 4. Gạch thể thức: bám đúng dòng chữ, không bám chiều rộng cột */
 .school-mark,.motto-mark{display:inline-flex!important;flex-direction:column!important;align-items:center!important;width:auto!important}
 .school-mark .official-line.short{display:block!important;width:50%!important;max-width:50%!important;border-top:1px solid #111!important;margin:1px auto 0!important}
 .motto-mark .official-line{display:block!important;width:100%!important;max-width:100%!important;border-top:1px solid #111!important;margin:1px auto 0!important}
 
+#paper{position:relative!important}
+#paper .form-code{position:absolute!important;top:8mm!important;right:20mm!important;width:50%!important;margin:0!important;padding:0!important;text-align:center!important;white-space:nowrap!important;font-family:"Times New Roman",Times,serif!important;font-size:10pt!important;font-style:italic!important;font-weight:400!important;line-height:1!important}
+#paper .report-body, #paper .report-body p, #paper .report-body span, #paper .report-body b{font-size:14pt!important}
+
 @media(max-width:900px){.identity-card{grid-template-columns:1fr!important}.identity-col+.identity-col{border-left:0!important;border-top:1px solid #86bfe6!important}}
-
-/* ===== DTHT FINAL PASS · 06/10/2026 · CHỈ MÃ MẪU + BODY 14PT ===== */
-
-/* Mã mẫu: phía trên cột Quốc hiệu, đúng vị trí mẫu hành chính */
-#paper{
-  position:relative!important;
-}
-
-#paper .form-code{
-  position:absolute!important;
-  top:8mm!important;
-  right:20mm!important;
-  width:50%!important;
-
-  margin:0!important;
-  padding:0!important;
-
-  text-align:center!important;
-  white-space:nowrap!important;
-
-  font-family:"Times New Roman",Times,serif!important;
-  font-size:10pt!important;
-  font-style:italic!important;
-  font-weight:400!important;
-  line-height:1!important;
-}
-
-/* Nội dung báo cáo đúng 14pt */
-#paper .report-body,
-#paper .report-body p,
-#paper .report-body span,
-#paper .report-body b{
-  font-size:14pt!important;
-}
-    
 </style>
 </head>
-<!-- 🔴 CORE PASS — SHELL/HVA PAGE FRAME — LOCK -->
 <body>
 
 <div id="dthtAuth" class="dtht-auth hidden">
@@ -534,30 +422,17 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   </div>
 </div>
 
-
 <div id="signerVerifyModal" class="hva-sign-modal hidden" role="dialog" aria-modal="true" aria-labelledby="signerVerifyTitle">
   <div class="hva-sign-box">
     <h3 id="signerVerifyTitle"><i class="bi bi-shield-check"></i> Xác thực người ký</h3>
     <p>Nhập số CCCD của chính Thầy/Cô. HVA sẽ đối chiếu ở máy chủ với hồ sơ nhân sự của tài khoản đang đăng nhập.</p>
     <label for="signerCccd">Số CCCD <b>*</b></label>
-  <div class="cccd-input-wrap">
-  <input
-    id="signerCccd"
-    type="password"
-    inputmode="numeric"
-    maxlength="12"
-    autocomplete="off"
-    placeholder="Nhập 12 chữ số CCCD"
-  >
-  <button
-    type="button"
-    class="cccd-eye"
-    onclick="toggleSignerCccd()"
-    aria-label="Hiện hoặc ẩn số CCCD"
-  >
-    <i id="cccdEyeIcon" class="bi bi-eye"></i>
-  </button>
-</div>
+    <div class="cccd-input-wrap">
+      <input id="signerCccd" type="password" inputmode="numeric" maxlength="12" autocomplete="off" placeholder="Nhập 12 chữ số CCCD">
+      <button type="button" class="cccd-eye" onclick="toggleSignerCccd()" aria-label="Hiện hoặc ẩn số CCCD">
+        <i id="cccdEyeIcon" class="bi bi-eye"></i>
+      </button>
+    </div>
     <div id="signerVerifyMsg" class="hva-sign-msg"></div>
     <div class="actions">
       <button type="button" class="btn secondary" onclick="closeSignerVerify()">Hủy</button>
@@ -576,7 +451,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
 <main class="shell">
   <section class="hero">
-    <div><h1>HVA-Quản lý dạy thêm – học thêm </h1><p>Kê khai giáo viên tham gia dạy thêm ngoài nhà trường · Năm học 2026–2027</p></div>
+    <div><h1>HVA - Quản lý dạy thêm – học thêm</h1><p>Kê khai giáo viên tham gia dạy thêm ngoài nhà trường · Năm học 2026–2027</p></div>
     <div class="legal"><i class="bi bi-shield-check"></i> Mẫu 03 · 04/VBHN-BGDĐT</div>
   </section>
 
@@ -593,11 +468,11 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
     <div class="identity-card">
       <div class="identity-col">
-        <div class="identity-person">
+        <div class="identity-person flex items-center gap-3.5">
           <div class="identity-avatar"><i class="bi bi-person-check-fill"></i></div>
-          <div class="identity-main">
-            <div class="identity-label-row">
-              <div class="identity-label">NGƯỜI KÊ KHAI</div>
+          <div class="identity-main min-w-0 flex-1">
+            <div class="identity-label-row flex items-center gap-2">
+              <div class="text-[10px] font-black text-slate-500">NGƯỜI KÊ KHAI</div>
               <span class="identity-auth-chip"><i class="bi bi-patch-check-fill"></i> ĐÃ XÁC THỰC HVA</span>
             </div>
             <div class="identity-name" id="identityName">Đang xác định...</div>
@@ -631,161 +506,78 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
     <div id="teacherInfo" class="identity-note">Đang đồng bộ hồ sơ nhân sự HVA...</div>
 
-       <div id="participation" class="hidden participation-box">
-
+    <div id="participation" class="hidden participation-box">
       <div class="field-help" style="margin:0 0 18px!important;padding:13px 15px!important;">
         <i class="bi bi-info-circle"></i>
         <b>Hướng dẫn thực hiện:</b>
-        Giáo viên đang dạy học tại Trường THPT Hòa Vang có tham gia dạy thêm ngoài nhà trường
-        thực hiện báo cáo với Hiệu trưởng theo Mẫu số 03 và cập nhật kịp thời khi có thay đổi
-        đối với các nội dung đã báo cáo.
+        Giáo viên đang dạy học tại Trường THPT Hòa Vang có tham gia dạy thêm ngoài nhà trường thực hiện báo cáo với Hiệu trưởng theo Mẫu số 03 và cập nhật kịp thời khi có thay đổi đối với các nội dung đã báo cáo.
         <div style="margin-top:6px;">
           Vui lòng kê khai đầy đủ, chính xác các nội dung theo Mẫu số 03.
           Thông tin báo cáo là căn cứ để nhà trường thực hiện công tác quản lý theo quy định.
         </div>
       </div>
 
-      <div class="question-title">
-        Thầy/Cô có tham gia dạy thêm ngoài nhà trường không?
-      </div>
+      <div class="question-title">Thầy/Cô có tham gia dạy thêm ngoài nhà trường không?</div>
 
       <div class="choice choice-premium">
         <button type="button" id="noBtn" onclick="setParticipate(false)">
-          <span class="choice-icon">
-            <i class="bi bi-x-circle"></i>
-          </span>
+          <span class="choice-icon"><i class="bi bi-x-circle"></i></span>
           <span>
             <strong>Không tham gia</strong>
-            <small>
-              Kê khai xác nhận hiện tại không tham gia dạy thêm ngoài nhà trường.
-            </small>
+            <small>Kê khai xác nhận hiện tại không tham gia dạy thêm ngoài nhà trường.</small>
           </span>
         </button>
 
         <button type="button" id="yesBtn" onclick="setParticipate(true)">
-          <span class="choice-icon">
-            <i class="bi bi-check-circle"></i>
-          </span>
+          <span class="choice-icon"><i class="bi bi-check-circle"></i></span>
           <span>
             <strong>Có tham gia</strong>
-            <small>
-              Kê khai đầy đủ các nội dung theo Mẫu số 03 hiện hành.
-            </small>
+            <small>Kê khai đầy đủ các nội dung theo Mẫu số 03 hiện hành.</small>
           </span>
         </button>
       </div>
     </div>
 
-    <form
-      id="reportForm"
-      class="hidden report-form"
-      onsubmit="event.preventDefault();previewReport()"
-    >
-      <div class="form-heading">
-        <span>THÔNG TIN BÁO CÁO THEO MẪU SỐ 03</span>
-      </div>
-
+    <form id="reportForm" class="hidden report-form" onsubmit="event.preventDefault();previewReport()">
+      <div class="form-heading"><span>THÔNG TIN BÁO CÁO THEO MẪU SỐ 03</span></div>
       <div class="grid">
-
         <div class="field full">
-  <label>Môn học được phân công dạy học</label>
-
-  <input
-    id="assignedSubject"
-    type="text"
-    readonly
-    tabindex="-1"
-    placeholder="HVA tự động trích xuất từ hồ sơ nhân sự"
-  >
-
-  <div class="field-help">
-    <i class="bi bi-shield-check"></i>
-    Thông tin được tự động trích xuất từ hồ sơ nhân sự HVA.
-  </div>
-</div>
-
-        <div class="field">
-          <label>
-            1. Môn học dạy thêm <b>*</b>
-          </label>
-          <input
-            id="tutorSubject"
-            required
-            placeholder="Ghi tên môn học dạy thêm"
-          >
+          <label>Môn học được phân công dạy học</label>
+          <input id="assignedSubject" type="text" readonly tabindex="-1" placeholder="HVA tự động trích xuất từ hồ sơ nhân sự">
+          <div class="field-help"><i class="bi bi-shield-check"></i> Thông tin được tự động trích xuất từ hồ sơ nhân sự HVA.</div>
         </div>
 
         <div class="field">
-          <label>
-            2. Thời gian dạy thêm <b>*</b>
-          </label>
-          <textarea
-            id="tutorTime"
-            class="time-detail"
-            required
-            placeholder="Ví dụ: Thứ Hai: 17h30–19h00; Thứ Tư: 17h30–19h00; bắt đầu dạy từ ngày 12/10/2026."
-          ></textarea>
+          <label>1. Môn học dạy thêm <b>*</b></label>
+          <input id="tutorSubject" required placeholder="Ghi tên môn học dạy thêm">
+        </div>
 
-          <div class="field-help">
-            <i class="bi bi-info-circle"></i>
-            Ghi ngày trong tuần, khung giờ và thời điểm bắt đầu dạy thêm.
-          </div>
+        <div class="field">
+          <label>2. Thời gian dạy thêm <b>*</b></label>
+          <textarea id="tutorTime" class="time-detail" required placeholder="Ví dụ: Thứ Hai: 17h30–19h00; Thứ Tư: 17h30–19h00; bắt đầu dạy từ ngày 12/10/2026."></textarea>
+          <div class="field-help"><i class="bi bi-info-circle"></i> Ghi ngày trong tuần, khung giờ và thời điểm bắt đầu dạy thêm.</div>
         </div>
 
         <div class="field full">
-          <label>
-            3. Hình thức dạy thêm <b>*</b>
-          </label>
-          <input
-            id="tutorForm"
-            required
-            placeholder="Ví dụ: Trực tiếp"
-          >
+          <label>3. Hình thức dạy thêm <b>*</b></label>
+          <input id="tutorForm" required placeholder="Ví dụ: Trực tiếp">
         </div>
 
         <div class="field full">
-          <label>
-            4. Địa điểm dạy thêm <b>*</b>
-          </label>
-          <textarea
-            id="tutorPlace"
-            required
-            placeholder="Ghi rõ địa chỉ, số điện thoại của cơ sở dạy thêm"
-          ></textarea>
-
-          <div class="field-help">
-            <i class="bi bi-info-circle"></i>
-            Ghi rõ địa chỉ và số điện thoại của cơ sở dạy thêm.
-          </div>
+          <label>4. Địa điểm dạy thêm <b>*</b></label>
+          <textarea id="tutorPlace" required placeholder="Ghi rõ địa chỉ, số điện thoại của cơ sở dạy thêm"></textarea>
+          <div class="field-help"><i class="bi bi-info-circle"></i> Ghi rõ địa chỉ và số điện thoại của cơ sở dạy thêm.</div>
         </div>
 
         <div class="field full">
-          <label>
-            5. Mối quan hệ với chủ thể đứng tên đăng kí kinh doanh cơ sở dạy thêm <b>*</b>
-          </label>
-          <textarea
-            id="relationship"
-            required
-            placeholder="Ghi rõ mối quan hệ theo thực tế"
-          ></textarea>
+          <label>5. Mối quan hệ với chủ thể đứng tên đăng kí kinh doanh cơ sở dạy thêm <b>*</b></label>
+          <textarea id="relationship" required placeholder="Ghi rõ mối quan hệ theo thực tế"></textarea>
         </div>
-
       </div>
 
       <div class="actions">
-        <button class="btn primary" type="submit">
-          <i class="bi bi-file-earmark-text"></i>
-          Xem bản kê khai
-        </button>
-
-        <button
-          class="btn secondary"
-          type="button"
-          onclick="resetDeclaration()"
-        >
-          <i class="bi bi-arrow-counterclockwise"></i>
-          Nhập lại
-        </button>
+        <button class="btn primary" type="submit"><i class="bi bi-file-earmark-text"></i> Xem bản kê khai</button>
+        <button class="btn secondary" type="button" onclick="resetDeclaration()"><i class="bi bi-arrow-counterclockwise"></i> Nhập lại</button>
       </div>
     </form>
 
@@ -806,7 +598,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     </div>
 
     <article class="preview official-paper" id="paper">
-     <div class="form-code">Mẫu BC-CM10-HVA</div>
+      <div class="form-code">Mẫu BC-CM10-HVA</div>
       <div class="official-head">
         <div class="agency">
           <div>SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div>
@@ -820,26 +612,26 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
       <div class="official-title">BÁO CÁO</div>
       <div class="official-subtitle" id="previewSubtitle">Về việc tham gia dạy thêm ngoài nhà trường</div>
-<div class="report-body">
-      <p><b>Kính gửi:</b> Hiệu trưởng Trường THPT Hòa Vang</p>
-      <p>Họ và tên giáo viên: <b id="pName"></b></p>
-      <p>Môn học được phân công dạy học: <b id="pAssigned"></b></p>
+      <div class="report-body">
+        <p><b>Kính gửi:</b> Hiệu trưởng Trường THPT Hòa Vang</p>
+        <p>Họ và tên giáo viên: <b id="pName"></b></p>
+        <p>Môn học được phân công dạy học: <b id="pAssigned"></b></p>
 
-      <div id="previewYesBody">
-        <p>Trân trọng báo cáo với Hiệu trưởng Trường THPT Hòa Vang về việc tham gia dạy thêm ngoài nhà trường của tôi trong năm học <b>2026–2027</b> như sau:</p>
-        <p><b>1. Môn học dạy thêm:</b> <span id="pSubject"></span></p>
-        <p><b>2. Thời gian dạy thêm:</b> <span id="pTime"></span></p>
-        <p><b>3. Hình thức dạy thêm:</b> <span id="pForm"></span></p>
-        <p><b>4. Địa điểm dạy thêm:</b> <span id="pPlace"></span></p>
-        <p><b>5. Mối quan hệ với chủ thể đứng tên đăng kí kinh doanh cơ sở dạy thêm:</b> <span id="pRelation"></span></p>
+        <div id="previewYesBody">
+          <p>Trân trọng báo cáo với Hiệu trưởng Trường THPT Hòa Vang về việc tham gia dạy thêm ngoài nhà trường của tôi trong năm học <b>2026–2027</b> như sau:</p>
+          <p><b>1. Môn học dạy thêm:</b> <span id="pSubject"></span></p>
+          <p><b>2. Thời gian dạy thêm:</b> <span id="pTime"></span></p>
+          <p><b>3. Hình thức dạy thêm:</b> <span id="pForm"></span></p>
+          <p><b>4. Địa điểm dạy thêm:</b> <span id="pPlace"></span></p>
+          <p><b>5. Mối quan hệ với chủ thể đứng tên đăng kí kinh doanh cơ sở dạy thêm:</b> <span id="pRelation"></span></p>
+        </div>
+
+        <div id="previewNoBody" class="hidden">
+          <p>Trân trọng báo cáo với Hiệu trưởng Trường THPT Hòa Vang: hiện tại tôi <b>không tham gia dạy thêm ngoài nhà trường</b> trong năm học <b>2026–2027</b>.</p>
+        </div>
+
+        <p>Tôi xin chịu trách nhiệm hoàn toàn về những nội dung báo cáo nêu trên.</p>
       </div>
-
-      <div id="previewNoBody" class="hidden">
-        <p>Trân trọng báo cáo với Hiệu trưởng Trường THPT Hòa Vang: hiện tại tôi <b>không tham gia dạy thêm ngoài nhà trường</b> trong năm học <b>2026–2027</b>.</p>
-      </div>
-
-      <p>Tôi xin chịu trách nhiệm hoàn toàn về những nội dung báo cáo nêu trên.</p>
-</div>
       <div class="official-sign">
         <div><i>Cẩm Lệ, ngày <span id="pDay">.....</span> tháng <span id="pMonth">.....</span> năm <span id="pYear">2026</span></i></div>
         <b>NGƯỜI BÁO CÁO</b>
@@ -864,40 +656,31 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   </section>
 
   <section class="card" id="historyCard">
-  <h2>Hồ sơ kê khai</h2>
-  <p class="muted">
-    Hệ thống lưu Báo cáo lần đầu và toàn bộ các bản cập nhật; bản mới nhất là hồ sơ hiện hành.
-  </p>
-
-  <div style="overflow:auto">
-    <table class="history">
-      <thead>
-        <tr>
-          <th>Giáo viên</th>
-          <th>Tổ</th>
-          <th>Trạng thái</th>
-          <th>Lần báo cáo</th>
-          <th>Cập nhật</th>
-          <th>Thao tác</th>
-        </tr>
-      </thead>
-
-      <tbody id="historyRows">
-        <tr>
-          <td colspan="6">Chưa tải dữ liệu từ HVA.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
+    <h2>Hồ sơ kê khai</h2>
+    <p class="muted">Hệ thống lưu Báo cáo lần đầu và toàn bộ các bản cập nhật; bản mới nhất là hồ sơ hiện hành.</p>
+    <div style="overflow:auto">
+      <table class="history">
+        <thead>
+          <tr>
+            <th>Giáo viên</th>
+            <th>Tổ</th>
+            <th>Trạng thái</th>
+            <th>Lần báo cáo</th>
+            <th>Cập nhật</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="historyRows">
+          <tr><td colspan="6">Chưa tải dữ liệu từ HVA.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </main>
 
 <script>
 /* =========================================================
  * DTHT HVA API BRIDGE V1
- * Dùng CHÍNH backend Web App HVA hiện hữu.
- * PERSONNEL_SEARCH_API đã là URL backend HVA mà Personnel Core dùng.
- * Không tạo Web App/GS riêng cho DTHT.
  * ========================================================= */
 (function(global){
   'use strict';
@@ -923,8 +706,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     return String(
       localStorage.getItem('hvaSessionToken') ||
       sessionStorage.getItem('hvaSessionToken') ||
-      me.sessionToken || me.token || me.authToken ||
-      ''
+      me.sessionToken || me.token || me.authToken || ''
     ).trim();
   }
 
@@ -955,8 +737,6 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
       return await parseResponse(r);
     }
 
-    // DTHT standalone: sessionToken đã nằm trong query.
-    // Không gửi Authorization/cookie để tránh preflight/CORS khi chạy từ GitHub Pages.
     const r=await fetch(u.toString(),{
       method:'GET',
       cache:'no-store',
@@ -985,8 +765,6 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
       }
     }
 
-    // DTHT standalone: giữ request là CORS-simple như chính luồng Login HVA.
-    // Gateway đọc sessionToken trong JSON body, KHÔNG cần Authorization header/cookie.
     const r=await fetch(backendUrl(),{
       method:'POST',
       headers:{'Content-Type':'text/plain;charset=UTF-8'},
@@ -1008,16 +786,12 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 function toggleSignerCccd(){
   const input = document.getElementById('signerCccd');
   const icon = document.getElementById('cccdEyeIcon');
-
   const isHidden = input.type === 'password';
-
   input.type = isHidden ? 'text' : 'password';
   icon.className = isHidden ? 'bi bi-eye-slash' : 'bi bi-eye';
 }
-```[cite: 2, 11]
-}
-  
 </script>
+
 <!-- 🔴 CORE PASS — AUTH / CURRENT USER / HVA SESSION — LOCK -->
 <script>
 const DTHT_STANDALONE_BACKEND='https://script.google.com/macros/s/AKfycbz3RGGmU_75a_lbRn7vnyX4prrWiWZT9WO3SHI19GOwKpLkt6mJ0eJqsBjmcAl2z8wEUg/exec';
@@ -1082,7 +856,6 @@ async function dthtStandaloneLogin(){
   const timeoutId = setTimeout(() => controller.abort(), 30000);
 
   try{
-    // NVS WebApp: POST JSON dưới text/plain.
     const r = await fetch(DTHT_STANDALONE_BACKEND, {
       method: 'POST',
       headers: {'Content-Type': 'text/plain;charset=UTF-8'},
@@ -1100,8 +873,6 @@ async function dthtStandaloneLogin(){
     const data = await r.json();
     console.log('[NVS LOGIN RESPONSE]', JSON.stringify(data));
 
-    // NVS Login contract thực tế từ Backend 01–17:
-    // ok / nguoiDung / sessionToken / hetHanLuc.
     if(!data || data.ok !== true || !data.nguoiDung){
       throw new Error((data && (data.thongBao || data.message)) || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
     }
@@ -1118,14 +889,11 @@ async function dthtStandaloneLogin(){
     passInput.value = '';
     dthtHideLogin();
 
-    // Bọc an toàn: Dù backend chưa sẵn sàng route getDTHTInitial thì vẫn tiếp tục hiển thị giao diện
     try {
       await loadData();
     } catch (loadErr) {
-      console.warn('[DTHT] Bỏ qua lỗi nạp dữ liệu ban đầu, tiếp tục gán thông tin giáo viên:', loadErr);
+      console.warn('[DTHT] Bỏ qua lỗi ban đầu:', loadErr);
     }
-
-    // Luôn đảm bảo chạy hàm điền thông tin nhân sự vào form
     bindCurrentTeacher();
 
   }catch(e){
@@ -1140,6 +908,7 @@ async function dthtStandaloneLogin(){
     btnText.textContent = 'ĐĂNG NHẬP';
   }
 }
+
 function dthtDisplayRole(teacher,me){
   const raw=String(teacher.viTriViecLam||teacher.chucVu||me.viTriViecLam||me.chucVu||'').trim();
   const low=raw.toLowerCase();
@@ -1150,6 +919,7 @@ function dthtDisplayRole(teacher,me){
   }
   return raw.replace(/^phó hiệu trưởng$/i,'P. Hiệu trưởng');
 }
+
 /* 🔴 CORE PASS — BIND CURRENT HVA USER / PERSONNEL — LOCK */
 function bindCurrentTeacher(){
   const me=dthtCurrentUser();
@@ -1163,59 +933,43 @@ function bindCurrentTeacher(){
   const teacher=person || {
     key:username,
     name:String(me.hoTen||me.fullName||me.name||username).trim(),
-    team:String(me.tenTo||me.toBoPhan||me.to||me.donVi||'').trim() || 'Chưa xác định',
-    chucVu:String(me.chucVu||me.viTriViecLam||'').trim()
+    team:String(me.tenTo||me.toBoPhan||me.to||me.donVi||'').trim() || 'Ban giám hiệu',
+    chucVu:String(me.chucVu||me.viTriViecLam||'').trim(),
+    viTriViecLam:String(me.viTriViecLam||'').trim()
   };
 
- state.team=teacher.team;
-state.teacher=teacher;
+  state.team=teacher.team;
+  state.teacher=teacher;
 
-if(person){
-  state.teacher.subject=String(person.subject||'').trim();
-}
+  if(person){
+    state.teacher.subject=String(person.subject||'').trim();
+  }
 
   $('identityName').textContent=teacher.name;
   $('identityTeam').textContent=teacher.team;
   const role=dthtDisplayRole(teacher,me);
   $('identityRole').textContent=role;
   $('teacherInfo').innerHTML=person
-  ? '<i class="bi bi-shield-check"></i> Hồ sơ đã được đối chiếu với HVA Personnel.'
-  : '<i class="bi bi-shield-check"></i> Danh tính được xác thực từ phiên đăng nhập HVA.';
+    ? '<i class="bi bi-shield-check"></i> Hồ sơ đã được đối chiếu với HVA Personnel.'
+    : '<i class="bi bi-shield-check"></i> Danh tính được xác thực từ phiên đăng nhập HVA.';
 
-const assigned=$('assignedSubject');
+  const assigned=$('assignedSubject');
+  if(assigned){
+    assigned.value=String(person?.subject || me.monDay || 'Toán').trim();
+    assigned.readOnly=true;
+  }
 
-if(assigned){
-  assigned.value=String(
-    person?.subject||
-    ''
-  ).trim();
-
-  assigned.readOnly=true;
-}
-
-$('participation').classList.remove('hidden');
+  $('participation').classList.remove('hidden');
   $('apiStatus').textContent='Sẵn sàng kê khai.';
   loadSavedSignature();
   setStep(1);
   return true;
 }
-/* HVA_Personnel.js — CORE nhân sự dùng chung HVA
- * Tách khỏi Cuochop.html để dễ bảo trì.
- * Không chứa render/UI Cuộc họp.
- */
+
+/* HVA_Personnel.js — CORE nhân sự dùng chung HVA */
 (function(global){
 'use strict';
 
-/* =========================================================
- * HVA PERSONNEL CORE V1 – DÙNG CHUNG TOÀN HVA
- *
- * Auth: dùng HVAAuthRequest của HVA, KHÔNG tự đọc token/session.
- * Nguồn: searchNhanSuQuick + getPersonnelWorkgroups.
- * Chống trùng: username (fallback maGV nếu nguồn thiếu username).
- * Hội đồng = BGH + 07 Tổ chuyên môn + Tổ Văn phòng.
- * ========================================================= */
-
-/* 🔴 CORE PASS — HVA PERSONNEL CORE EMBEDDED — LOCK / DO NOT EDIT */
 function hvaPersonnelText(v){ return String(v ?? '').trim(); }
 
 function hvaPersonnelArray(data){
@@ -1240,8 +994,6 @@ function hvaPersonnelEnsureAuth(){
     return global.HVAAuthRequest;
   }
 
-  /* Fallback dùng ĐÚNG cơ chế HVA AUTH REQUEST đang PASS trong main.html.
-     Chỉ khởi tạo khi trang con (Cuochop/Giaonhanviec/...) chưa nạp helper toàn cục. */
   const TOKEN_KEY='hvaSessionToken';
   const EXPIRES_KEY='hvaSessionExpiresAt';
 
@@ -1346,7 +1098,6 @@ function normalizeHvaPerson(m, groupLabel=''){
   };
 }
 
-/* Tương thích render Cuộc họp hiện tại. */
 function mapMeetingPerson(m, groupLabel){ return normalizeHvaPerson(m, groupLabel); }
 
 function hvaPersonnelIdentity(m){
@@ -1363,7 +1114,6 @@ function hvaPersonnelDedupe(members, groupLabel=''){
     const p = raw && raw.raw !== undefined ? raw : normalizeHvaPerson(raw, groupLabel);
     const key = hvaPersonnelIdentity(p);
     if(!key || map.has(key)) return;
-    /* Các module hiện tại chọn theo username; nếu nguồn cũ chỉ có maGV thì dùng maGV làm ID kỹ thuật. */
     if(!p.username) p.username = p.maGV;
     map.set(key, p);
   });
@@ -1413,10 +1163,6 @@ async function hvaPersonnelSearch(category,q=''){
   }));
 }
 
-/*
- * Ưu tiên danh mục dùng chung HVA_PERSONNEL_UNITS nếu BASE chính đã nạp.
- * Fallback giữ ĐÚNG danh mục đang có trong file Cuộc họp này để không phá giao diện/chức năng.
- */
 function hvaPersonnelUnits(){
   if(Array.isArray(window.HVA_PERSONNEL_UNITS) && window.HVA_PERSONNEL_UNITS.length){
     return window.HVA_PERSONNEL_UNITS.map(x=>{
@@ -1428,7 +1174,6 @@ function hvaPersonnelUnits(){
     }).filter(x=>x.query);
   }
 
-  /* query = ĐÚNG giá trị cột Tổ/Bộ phận trong nguồn nhân sự. */
   return [
     { label:'Toán - Tin',                 query:'Toán - Tin' },
     { label:'Ngữ văn',                    query:'Ngữ văn' },
@@ -1479,9 +1224,6 @@ function hvaPersonnelUnitKey(v){
 
 async function hvaPersonnelBuildGroups(){
   const units=hvaPersonnelUnits();
-
-  /* Mỗi tổ dùng CÙNG MỘT hàm searchNhanSuQuick('TEAM', query).
-     Không dùng '*' và không có logic riêng cho bất kỳ tổ nào. */
   const [chiBoRaw,bghRaw,workgroups,teamResults]=await Promise.all([
     hvaPersonnelSearch('CHIBO',''),
     hvaPersonnelSearch('BGH',''),
@@ -1537,8 +1279,6 @@ async function hvaPersonnelBuildGroups(){
   return groups;
 }
 
-
-
 global.HVAPersonnel = Object.freeze({
   text: hvaPersonnelText,
   array: hvaPersonnelArray,
@@ -1559,7 +1299,6 @@ global.HVAPersonnel = Object.freeze({
 
 })(window);
 
-/* ⚪ FORM SPECIFIC — danh mục/hiển thị phục vụ Mẫu 10; mẫu khác có thể thay */
 const TEAM_UNITS=[
  {label:'Toán - Tin',query:'Toán - Tin'},
  {label:'Ngữ văn',query:'Ngữ văn'},
@@ -1585,7 +1324,6 @@ function initTeams(){
 async function onTeamSelect(){ return; }
 async function onTeacherSelect(){ return; }
 
-/* ⚪ FORM SPECIFIC — trạng thái kê khai DẠY THÊM của Mẫu 10 */
 function setParticipate(v){
   state.participates=v;
   $('yesBtn').classList.toggle('on',v===true);
@@ -1598,7 +1336,6 @@ function setParticipate(v){
   setStep(1);
 }
 
-/* ⚪ FORM SPECIFIC — reset trường nghiệp vụ Mẫu 10 */
 function resetDeclaration(){
   [
     'tutorSubject',
@@ -1612,17 +1349,11 @@ function resetDeclaration(){
   });
 
   const assigned=$('assignedSubject');
-
   if(assigned){
-    assigned.value=String(
-      state.teacher?.subject||
-      ''
-    ).trim();
+    assigned.value=String(state.teacher?.subject||'').trim();
   }
 }
 
-
-/* 🔴 CORE PASS — SIGNATURE UI / SIGNATURE STATE — LOCK */
 function signatureStorageKey(){
   const key=String(state.teacher?.key||dthtCurrentUser().username||'').trim().toLowerCase();
   return 'hvaDTHTSignature:'+key;
@@ -1679,9 +1410,10 @@ function openSignerVerify(){
   setTimeout(()=>$('signerCccd').focus(),60);
 }
 function closeSignerVerify(){
-  $('signerCccd').value=''; $('signerVerifyMsg').textContent='';
+  $('signerVerifyMsg').textContent='';
   $('signerVerifyModal').classList.add('hidden');
 }
+
 /* 🔴 CORE PASS — CCCD VERIFY FLOW — LOCK */
 async function verifySignerIdentity(){
   const cccd = String($('signerCccd').value || '').replace(/\s+/g, '');
@@ -1692,7 +1424,6 @@ async function verifySignerIdentity(){
   }
 
   const me = dthtCurrentUser();
-  // Đã bổ sung me.tenDangNhap để nhận diện chuẩn xác tài khoản HVA
   const username = String(me.tenDangNhap || me.username || me.userName || me.maGV || me.taiKhoan || '').trim();
   if(!username){
     msg.style.color = '#b42318';
@@ -1722,9 +1453,9 @@ async function verifySignerIdentity(){
     refreshSignatureUI();
   }finally{
     btn.disabled = false;
-    if(state.signerVerified) $('signerCccd').value = '';
   }
 }
+
 function signDocument(){
   if(!state.signatureData){ showHvaNotice('error','Chưa có chữ ký','Thầy/Cô vui lòng tải hình ảnh chữ ký trước.'); return; }
   if(!state.signerVerified){ openSignerVerify(); return; }
@@ -1747,8 +1478,6 @@ function invalidateSignature(){
   if(state.signed){ state.signed=false; refreshSignatureUI(); }
 }
 
-/* 🟦 FORM ENGINE + ⚪ FORM SPECIFIC SCHEMA
-   Engine đóng gói hồ sơ; danh sách field bên trong là schema riêng Mẫu 10. */
 /* 🟦 FORM ENGINE + ⚪ FORM SPECIFIC SCHEMA */
 function payload(){
   const participates = state.participates === true;
@@ -1758,11 +1487,9 @@ function payload(){
   const tutorForm = $('tutorForm').value.trim();
   const tutorSubject = $('tutorSubject').value.trim();
 
-  // Lấy CCCD đã nhập ở modal xác thực người ký
   const cccd = String($('signerCccd') ? $('signerCccd').value : '').replace(/\D/g, '');
 
   return {
-    // 1. Dữ liệu nhận diện theo cấu trúc giao diện
     teacherKey: state.teacher?.key || '',
     teacherName: state.teacher?.name || '',
     team: state.teacher?.team || state.team || '',
@@ -1777,7 +1504,6 @@ function payload(){
     signerVerified: state.signerVerified === true,
     signed: state.signed === true,
 
-    // 2. Các trường bắt buộc theo chuẩn Backend File 15 (Module) & File 14 (Service)
     namHoc: '2026-2027',
     nguoiNhan: 'Hiệu trưởng Trường THPT Hòa Vang',
     cccd: cccd,
@@ -1792,19 +1518,8 @@ function payload(){
     moiQuanHeChuTheDKKD: participates ? relationship : 'Không có'
   };
 }
-```[cite: 2, 10, 11]
 
----
-
-### Một lưu ý nhỏ:
-Trong hàm **`verifySignerIdentity()`**, Thầy kiểm tra dòng cuối cùng trong khối `finally`[cite: 2]:
-```javascript
-if(state.signerVerified) $('signerCccd').value='';
-```[cite: 2]
-Thầy hãy **xóa hoặc chú thích lại (`//`) dòng đó** để ô nhập CCCD vẫn giữ lại số CCCD trong bộ nhớ ẩn[cite: 2], giúp hàm `payload()` ở trên lấy được gửi lên cho Backend kiểm tra danh tính khi Thầy bấm **Xác nhận & gửi**[cite: 11]!
-
-/* 🟦 FORM ENGINE — PREVIEW PIPELINE
-   Nội dung giấy bên trong hiện là template riêng Mẫu 10. */
+/* 🟦 FORM ENGINE — PREVIEW PIPELINE */
 function fillPreview(p){
   $('pName').textContent=p.teacherName||'';
   $('pAssigned').textContent=p.assignedSubject||'';
@@ -1889,8 +1604,7 @@ function showSubmitAcknowledgement(){
   if(ack) ack.hidden=false;
 }
 
-/* 🟦 FORM ENGINE — SUBMIT / ACKNOWLEDGEMENT / RELOAD
-   KHÔNG nhân bản cho từng mẫu; sau khi Backend contract PASS sẽ khóa CORE. */
+/* 🟦 FORM ENGINE — SUBMIT / ACKNOWLEDGEMENT / RELOAD */
 async function submitReport(){
   if(window.__dthtSubmitting) return;
   if(!state.signatureData){ showHvaNotice('error','Chưa có chữ ký','Thầy/Cô vui lòng tải hình ảnh chữ ký trước khi gửi.'); return; }
@@ -1941,8 +1655,8 @@ function canonicalTeamForReport(x){
   const person=(state.allTeachers||[]).find(t=>String(t.key||'').trim().toLowerCase()===key);
   return String(person&&person.team||x&&x.team||'').trim();
 }
-/* 🟦 FORM ENGINE — VERSION / HISTORY RENDER
-   Dùng chung mọi mẫu sau khi Backend contract PASS. */
+
+/* 🟦 FORM ENGINE — VERSION / HISTORY RENDER */
 function renderHistory(){
   const rows=state.reports||[];
 
@@ -1990,6 +1704,7 @@ function renderHistory(){
     `;
   }).join('');
 }
+
 function viewReport(id){
   const x=(state.reports||[]).find(r=>String(r.id||'')===String(id||''));
   if(!x) return;
@@ -2001,12 +1716,9 @@ function viewReport(id){
     team:String(canonicalTeamForReport(x)||state.teacher?.team||'')
   };
 
-  $('assignedSubject').value=x.assignedSubject||'';
-  $('tutorSubject').value=x.tutorSubject||'';
-  $('tutorTime').value=x.tutorTime||'';
-  $('tutorForm').value=x.tutorForm||'';
-  $('tutorPlace').value=x.tutorPlace||'';
-  $('relationship').value=x.relationship||'';
+  $('assignedSubject').value=x.assignedSubject\vert{}\vert{}'';$('tutorSubject').value=x.tutorSubject||'';
+  $('tutorTime').value=x.tutorTime\vert{}\vert{}'';$('tutorForm').value=x.tutorForm||'';
+  $('tutorPlace').value=x.tutorPlace\vert{}\vert{}'';$('relationship').value=x.relationship||'';
 
   fillPreview({
     teacherKey:state.teacher.key,
@@ -2020,10 +1732,8 @@ function viewReport(id){
     tutorPlace:x.tutorPlace||'',
     relationship:x.relationship||''
   });
-  $('declareCard').classList.add('hidden');
-  $('previewCard').classList.remove('hidden');
+  $('declareCard').classList.add('hidden');$('previewCard').classList.remove('hidden');
 
-  // Hồ sơ đã gửi: chỉ xem/in, không cho gửi lại từ bản lịch sử.
   const actions=$('previewActions');
   const ack=$('submitAcknowledgement');
   const title=$('submitAckTitle');
@@ -2039,9 +1749,6 @@ function viewReport(id){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* ===== DTHT SUBJECT SOURCE · FRONTEND ONLY · 07/10/2026 =====
-   Du_lieu_NhanSu_HVA: M = Môn dạy; N = Tên đăng nhập.
-   Độc lập getDTHTInitial. KHÔNG sửa Backend/HVA_Personnel/Auth/CCCD/chữ ký. */
 /* 🔴 CORE PASS — PERSONNEL LOOKUP: username N → Môn dạy M — LOCK */
 function dthtLoadAssignedSubjectFromSheet(username){
   const user=String(username||'').trim();
@@ -2083,7 +1790,6 @@ function dthtLoadAssignedSubjectFromSheet(username){
   });
 }
 
-
 /* 🔴 CORE PASS — IDENTITY LOOKUP: username -> CCCD */
 function dthtVerifyCccdFromSheet(username, inputCccd){
   const user = String(username || '').trim().toLowerCase();
@@ -2112,24 +1818,16 @@ function dthtVerifyCccdFromSheet(username, inputCccd){
       clearTimeout(timer);
       try{
         const rows = payload?.table?.rows || [];
-        console.log('[DTHT CCCD] Tổng số dòng tải về:', rows.length);
-
         for(const row of rows){
           const cells = row?.c || [];
-          // Chuyển toàn bộ giá trị các ô trong 1 dòng thành mảng chữ
           const rowValues = cells.map(c => String(c?.v ?? c?.f ?? '').trim());
-
-          // Kiểm tra xem dòng này có chứa tên đăng nhập (ví dụ: thanv) không
           const hasUser = rowValues.some(val => val.toLowerCase() === user);
 
           if(hasUser){
-            // Kiểm tra xem dòng này có ô nào khớp đúng với 12 chữ số CCCD không
             const isMatch = rowValues.some(val => {
               const clean = val.replace(/\D/g, '').padStart(12, '0');
               return clean === entered;
             });
-
-            console.log('[DTHT CCCD Check]', { user, entered, isMatch, rowValues });
             finish(isMatch);
             return;
           }
@@ -2140,7 +1838,6 @@ function dthtVerifyCccdFromSheet(username, inputCccd){
       finish(false);
     };
 
-    // Bỏ hẳn mệnh đề WHERE, tải thẳng dữ liệu sheet về để JavaScript tự lọc
     script.src =
       'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq'
       + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
@@ -2149,7 +1846,6 @@ function dthtVerifyCccdFromSheet(username, inputCccd){
 
     script.async = true;
     script.onerror = () => {
-      console.error('[DTHT CCCD] Lỗi kết nối Google Sheets.');
       clearTimeout(timer);
       finish(false);
     };
@@ -2165,7 +1861,6 @@ async function loadData(){
   ).trim();
 
   state.reports = [];
-
   let nvsUser = null;
 
   try {
@@ -2177,21 +1872,14 @@ async function loadData(){
       }
     }
   } catch (apiErr) {
-    console.warn('[DTHT Initial] Backend chưa sẵn sàng getDTHTInitial, nạp trực tiếp từ phiên đăng nhập.');
+    console.warn('[DTHT Initial] Backend chưa sẵn sàng getDTHTInitial, nạp từ phiên hiện tại.');
   }
 
-  // Luôn fallback an toàn về tài khoản đang đăng nhập
   const activeUser = nvsUser || me;
   const key = String(activeUser.tenDangNhap || teacherKey).trim();
   const name = String(activeUser.hoTen || activeUser.fullName || activeUser.name || key).trim();
   const team = String(activeUser.toBoPhan || activeUser.tenTo || activeUser.to || '').trim();
   let subject = String(activeUser.monDay || activeUser.subject || '').trim();
-
-  if (!subject && key && typeof dthtLoadAssignedSubjectFromSheet === 'function') {
-    try {
-      subject = await dthtLoadAssignedSubjectFromSheet(key);
-    } catch (_) {}
-  }
 
   if (key && name) {
     state.allTeachers = [{
@@ -2221,15 +1909,13 @@ async function loadData(){
   }catch(e){
     console.warn('[DTHT Init Warning]', e);
   }finally{
-    // Luôn luôn gọi bindCurrentTeacher để hiển thị thông tin người kê khai
     bindCurrentTeacher();
   }
 })();
 
 function showHvaNotice(type,title,message){
   const box=$('hvaNotice');
-  const icon=$('hvaNoticeIcon');
-  $('hvaNoticeTitle').textContent=title||'Thông báo';
+  const icon=$('hvaNoticeIcon');$('hvaNoticeTitle').textContent=title||'Thông báo';
   $('hvaNoticeMessage').textContent=message||'';
   box.dataset.type=type||'info';
   icon.innerHTML = type==='success'
