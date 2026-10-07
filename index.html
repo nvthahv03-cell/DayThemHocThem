@@ -1000,7 +1000,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   global.HVA_API=global.HVA_API||{};
   global.HVA_API.dtht={
     getInitial: async ()=>await get('getDTHTInitial'),
-    submitReport: async payload=>await post('submitDTHTReport',payload),
+    submitReport: async payload=>await post('submitDTHT',payload),
     verifySigner: async cccd=>await post('verifyDTHTSignerIdentity',{cccd:String(cccd||'').trim()})
   };
 })(window);
@@ -1013,6 +1013,8 @@ function toggleSignerCccd(){
 
   input.type = isHidden ? 'text' : 'password';
   icon.className = isHidden ? 'bi bi-eye-slash' : 'bi bi-eye';
+}
+```[cite: 2, 11]
 }
   
 </script>
@@ -1747,23 +1749,59 @@ function invalidateSignature(){
 
 /* 🟦 FORM ENGINE + ⚪ FORM SPECIFIC SCHEMA
    Engine đóng gói hồ sơ; danh sách field bên trong là schema riêng Mẫu 10. */
+/* 🟦 FORM ENGINE + ⚪ FORM SPECIFIC SCHEMA */
 function payload(){
+  const participates = state.participates === true;
+  const tutorTime = $('tutorTime').value.trim();
+  const tutorPlace = $('tutorPlace').value.trim();
+  const relationship = $('relationship').value.trim();
+  const tutorForm = $('tutorForm').value.trim();
+  const tutorSubject = $('tutorSubject').value.trim();
+
+  // Lấy CCCD đã nhập ở modal xác thực người ký
+  const cccd = String($('signerCccd') ? $('signerCccd').value : '').replace(/\D/g, '');
+
   return {
-    teacherKey:state.teacher?.key||'',
-    teacherName:state.teacher?.name||'',
-    team:state.teacher?.team||state.team||'',
-    participates:state.participates,
-    assignedSubject:$('assignedSubject').value.trim(),
-    tutorSubject:$('tutorSubject').value.trim(),
-    tutorTime:$('tutorTime').value.trim(),
-    tutorForm:$('tutorForm').value.trim(),
-    tutorPlace:$('tutorPlace').value.trim(),
-    relationship:$('relationship').value.trim(),
-    schoolYear:'2026-2027',
-    signerVerified:state.signerVerified===true,
-    signed:state.signed===true
+    // 1. Dữ liệu nhận diện theo cấu trúc giao diện
+    teacherKey: state.teacher?.key || '',
+    teacherName: state.teacher?.name || '',
+    team: state.teacher?.team || state.team || '',
+    participates: participates,
+    assignedSubject: $('assignedSubject').value.trim(),
+    tutorSubject: tutorSubject,
+    tutorTime: tutorTime,
+    tutorForm: tutorForm,
+    tutorPlace: tutorPlace,
+    relationship: relationship,
+    schoolYear: '2026-2027',
+    signerVerified: state.signerVerified === true,
+    signed: state.signed === true,
+
+    // 2. Các trường bắt buộc theo chuẩn Backend File 15 (Module) & File 14 (Service)
+    namHoc: '2026-2027',
+    nguoiNhan: 'Hiệu trưởng Trường THPT Hòa Vang',
+    cccd: cccd,
+
+    monHocDayThem: participates ? tutorSubject : 'Không tham gia',
+    ngayTrongTuan: participates ? tutorTime : 'Không',
+    khungGio: participates ? tutorTime : 'Không',
+    thoiDiemBatDau: participates ? 'Năm học 2026-2027' : 'Không',
+    hinhThucDayThem: participates ? (tutorForm || 'Trực tiếp') : 'Không',
+    diaDiemDayThem: participates ? tutorPlace : 'Không',
+    dienThoaiCoSo: participates ? (tutorPlace || 'Không có') : 'Không',
+    moiQuanHeChuTheDKKD: participates ? relationship : 'Không có'
   };
 }
+```[cite: 2, 10, 11]
+
+---
+
+### Một lưu ý nhỏ:
+Trong hàm **`verifySignerIdentity()`**, Thầy kiểm tra dòng cuối cùng trong khối `finally`[cite: 2]:
+```javascript
+if(state.signerVerified) $('signerCccd').value='';
+```[cite: 2]
+Thầy hãy **xóa hoặc chú thích lại (`//`) dòng đó** để ô nhập CCCD vẫn giữ lại số CCCD trong bộ nhớ ẩn[cite: 2], giúp hàm `payload()` ở trên lấy được gửi lên cho Backend kiểm tra danh tính khi Thầy bấm **Xác nhận & gửi**[cite: 11]!
 
 /* 🟦 FORM ENGINE — PREVIEW PIPELINE
    Nội dung giấy bên trong hiện là template riêng Mẫu 10. */
