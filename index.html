@@ -2046,13 +2046,9 @@ function dthtLoadAssignedSubjectFromSheet(username){
 }
 
 
-/* ===== DTHT CCCD VERIFY · FRONTEND ONLY · 07/10/2026 =====
-   Du_lieu_NhanSu_HVA: N = Tên đăng nhập; AB = CCCD.
-   Chỉ trả true/false; không hiển thị, không lưu CCCD vào state/localStorage. */
-/* 🔴 CORE PASS — IDENTITY LOOKUP: username N → CCCD AB — LOCK */
-/* 🔴 CORE PASS — IDENTITY LOOKUP: username N → CCCD D — LOCK */
+/* 🔴 CORE PASS — IDENTITY LOOKUP: username N → CCCD D */
 function dthtVerifyCccdFromSheet(username, inputCccd){
-  const user = String(username || '').trim();
+  const user = String(username || '').trim().toLowerCase();
   const entered = String(inputCccd || '').replace(/\D/g, '');
   if(!user || !/^\d{12}$/.test(entered)) return Promise.resolve(false);
 
@@ -2069,40 +2065,57 @@ function dthtVerifyCccdFromSheet(username, inputCccd){
       resolve(value === true);
     };
 
-    const timer = setTimeout(() => finish(false), 8000);
+    const timer = setTimeout(() => {
+      console.warn('[DTHT CCCD] Quá thời gian phản hồi từ Google Sheets.');
+      finish(false);
+    }, 10000);
 
     window[cb] = payload => {
       clearTimeout(timer);
       try{
         const rows = payload?.table?.rows || [];
+        console.log('[DTHT CCCD Sheet Raw]', rows);
+
         for(const row of rows){
           const cells = row?.c || [];
-          const login = String(cells[0]?.v ?? cells[0]?.f ?? '').trim();
-          const storedRaw = String(cells[1]?.v ?? cells[1]?.f ?? '').replace(/\D/g, '');
-          const stored = storedRaw.padStart(12, '0');
-          if(login.toLowerCase() === user.toLowerCase()){
-            finish(stored === entered);
+          // Quét tìm ô chứa tên đăng nhập
+          const rowValues = cells.map(c => String(c?.v ?? c?.f ?? '').trim());
+          const hasUser = rowValues.some(val => val.toLowerCase() === user);
+
+          if(hasUser){
+            // Kiểm tra các ô trong dòng xem có ô nào chứa đúng 12 chữ số CCCD nhập vào
+            const isMatch = rowValues.some(val => {
+              const clean = val.replace(/\D/g, '').padStart(12, '0');
+              return clean === entered;
+            });
+
+            console.log('[DTHT CCCD Check]', { user, entered, matched: isMatch, rowData: rowValues });
+            finish(isMatch);
             return;
           }
         }
       }catch(e){
-        console.warn('[DTHT CCCD]', e);
+        console.error('[DTHT CCCD Parse Error]', e);
       }
       finish(false);
     };
 
-    // N: Tên đăng nhập, D: CCCD thực tế trên Sheet
-    const tq = "select N,D where lower(N) = '" + user.toLowerCase().replace(/'/g, "''") + "'";
+    // Truy vấn linh hoạt theo sheet Du_lieu_NhanSu_THPT_HOA_VANG
+    const tq = "select * where lower(N) = '" + user.replace(/'/g, "''") + "'";
     script.src =
-      'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq'
+      'https://docs.google.com/spreadsheets/d/19zyS6na6VaTiTImj9Bh11ot6f75TmBBpECAMxiObJcA/gviz/tq'
+     
       + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
-      + '&headers=6'
       + '&tqx=' + encodeURIComponent('responseHandler:' + cb)
       + '&tq=' + encodeURIComponent(tq)
       + '&_=' + Date.now();
 
     script.async = true;
-    script.onerror = () => { clearTimeout(timer); finish(false); };
+    script.onerror = () => {
+      console.error('[DTHT CCCD] Không thể tải dữ liệu từ Google Sheets URL.');
+      clearTimeout(timer);
+      finish(false);
+    };
     document.head.appendChild(script);
   });
 }
