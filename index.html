@@ -2168,7 +2168,6 @@ async function loadData(){
 
   let nvsUser = null;
 
-  // Thử gọi backend nếu tương lai có bổ sung action getDTHTInitial
   try {
     const fn = window.HVA_API?.dtht?.getInitial;
     if (typeof fn === 'function') {
@@ -2178,37 +2177,37 @@ async function loadData(){
       }
     }
   } catch (apiErr) {
-    console.warn('[DTHT Initial] Backend chưa có route getDTHTInitial, tự động dùng hồ sơ đăng nhập:', apiErr);
+    console.warn('[DTHT Initial] Backend chưa sẵn sàng getDTHTInitial, nạp trực tiếp từ phiên đăng nhập.');
   }
 
-  // Lấy dữ liệu từ đối tượng đăng nhập thành công
+  // Luôn fallback an toàn về tài khoản đang đăng nhập
   const activeUser = nvsUser || me;
   const key = String(activeUser.tenDangNhap || teacherKey).trim();
   const name = String(activeUser.hoTen || activeUser.fullName || activeUser.name || key).trim();
   const team = String(activeUser.toBoPhan || activeUser.tenTo || activeUser.to || '').trim();
   let subject = String(activeUser.monDay || activeUser.subject || '').trim();
 
-  // Nếu môn dạy chưa có sẵn, tự động tra cứu từ Google Sheet nhân sự
   if (!subject && key && typeof dthtLoadAssignedSubjectFromSheet === 'function') {
     try {
       subject = await dthtLoadAssignedSubjectFromSheet(key);
     } catch (_) {}
   }
 
-  // Cập nhật vào danh sách giáo viên của trang
-  state.allTeachers = (key && name) ? [{
-    key,
-    name,
-    team: team || 'Ban giám hiệu',
-    subject: subject || 'Toán',
-    chucVu: String(activeUser.chucVu || activeUser.viTriViecLam || '').trim(),
-    viTriViecLam: String(activeUser.viTriViecLam || '').trim()
-  }] : [];
+  if (key && name) {
+    state.allTeachers = [{
+      key: key,
+      name: name,
+      team: team || 'Ban giám hiệu',
+      subject: subject || 'Toán',
+      chucVu: String(activeUser.chucVu || activeUser.viTriViecLam || '').trim(),
+      viTriViecLam: String(activeUser.viTriViecLam || '').trim()
+    }];
+  } else {
+    state.allTeachers = [];
+  }
 
   renderHistory();
-  $('apiStatus').textContent = subject
-    ? 'Đã kết nối tài khoản HVA thành công.'
-    : 'Đã kết nối tài khoản HVA · Đang sẵn sàng kê khai.';
+  $('apiStatus').textContent = 'Đã kết nối tài khoản HVA thành công.';
 }
 
 /* 🔴 CORE PASS — PAGE BOOTSTRAP — LOCK */
@@ -2219,13 +2218,11 @@ async function loadData(){
   }
   try{
     await loadData();
-    bindCurrentTeacher();
   }catch(e){
-    console.warn('[DTHT Bootstrap Warning]', e);
-    // Vẫn bind dữ liệu nếu thông tin người dùng đã có trong bộ nhớ
-    if (!bindCurrentTeacher()) {
-      dthtShowLogin('Phiên HVA không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.');
-    }
+    console.warn('[DTHT Init Warning]', e);
+  }finally{
+    // Luôn luôn gọi bindCurrentTeacher để hiển thị thông tin người kê khai
+    bindCurrentTeacher();
   }
 })();
 
