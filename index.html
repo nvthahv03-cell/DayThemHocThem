@@ -1000,7 +1000,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   global.HVA_API=global.HVA_API||{};
   global.HVA_API.dtht={
     getInitial: async ()=>await get('getDTHTInitial'),
-    submitReport: async payload=>await post('submitDTHTReport',payload),
+    submitReport: async payload=>await post('submitDTHT',payload),
     verifySigner: async cccd=>await post('verifyDTHTSignerIdentity',{cccd:String(cccd||'').trim()})
   };
 })(window);
