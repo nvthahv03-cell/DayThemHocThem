@@ -1098,17 +1098,19 @@ try{
   const data=await r.json();
   console.log('[NVS LOGIN RESPONSE]', JSON.stringify(data));
 
-  if(!data||data.ok!==true||!data.nguoiDung){
-    throw new Error((data&&data.thongBao)||'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+  // 06_PhienDangNhap.dangNhapNVS_ giữ contract tương thích HVA cho DTHT:
+  // success / user / sessionToken / expiresAt.
+  if(!data||data.success!==true||!data.user){
+    throw new Error((data&&data.message)||'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
   }
 
-    if(!data.sessionToken||!data.hetHanLuc){
+    if(!data.sessionToken||!data.expiresAt){
       throw new Error('Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.');
     }
 
-    localStorage.setItem('user',JSON.stringify(data.nguoiDung));
+    localStorage.setItem('user',JSON.stringify(data.user));
     localStorage.setItem('hvaSessionToken',String(data.sessionToken));
-    localStorage.setItem('hvaSessionExpiresAt',String(data.hetHanLuc));
+    localStorage.setItem('hvaSessionExpiresAt',String(data.expiresAt));
     localStorage.setItem('hvaLastUsername',username);
 
     passInput.value='';
