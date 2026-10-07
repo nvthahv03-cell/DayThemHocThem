@@ -1051,82 +1051,91 @@ function dthtTogglePassword(){
   icon.className=show?'bi bi-eye-slash':'bi bi-eye';
 }
 async function dthtStandaloneLogin(){
-  const userInput=document.getElementById('dthtLoginUser');
-  const passInput=document.getElementById('dthtLoginPass');
-  const btn=document.getElementById('dthtLoginBtn');
-  const btnText=document.getElementById('dthtLoginBtnText');
-  const msg=document.getElementById('dthtAuthMsg');
-  const username=(userInput.value||'').trim();
-  const rawPassword=(passInput.value||'').trim();
+  const userInput = document.getElementById('dthtLoginUser');
+  const passInput = document.getElementById('dthtLoginPass');
+  const btn = document.getElementById('dthtLoginBtn');
+  const btnText = document.getElementById('dthtLoginBtnText');
+  const msg = document.getElementById('dthtAuthMsg');
+  const username = (userInput.value || '').trim();
+  const rawPassword = (passInput.value || '').trim();
 
-  if(!username||!rawPassword){
-    msg.style.color='#be123c';
-    msg.textContent='Vui lòng nhập đầy đủ tên đăng nhập và 4 số của mật khẩu.';
+  if(!username || !rawPassword){
+    msg.style.color = '#be123c';
+    msg.textContent = 'Vui lòng nhập đầy đủ tên đăng nhập và 4 số của mật khẩu.';
     return;
   }
   if(!/^\d{4}$/.test(rawPassword)){
-    msg.style.color='#be123c';
-    msg.textContent='Mật khẩu HVA gồm đúng 4 chữ số.';
+    msg.style.color = '#be123c';
+    msg.textContent = 'Mật khẩu HVA gồm đúng 4 chữ số.';
     passInput.focus();
     return;
   }
 
-  const password='HVA@'+rawPassword;
-  btn.disabled=true; userInput.disabled=true; passInput.disabled=true;
-  btnText.textContent='ĐANG XÁC THỰC...';
-  msg.style.color='#075cad'; msg.textContent='Đang xác thực tài khoản HVA...';
+  const password = 'HVA@' + rawPassword;
+  btn.disabled = true; userInput.disabled = true; passInput.disabled = true;
+  btnText.textContent = 'ĐANG XÁC THỰC...';
+  msg.style.color = '#075cad'; msg.textContent = 'Đang xác thực tài khoản HVA...';
 
- const controller=new AbortController();
-const timeoutId=setTimeout(()=>controller.abort(),30000);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-try{
-  // NVS WebApp: POST JSON dưới text/plain.
-  const r=await fetch(DTHT_STANDALONE_BACKEND,{
-    method:'POST',
-    headers:{'Content-Type':'text/plain;charset=UTF-8'},
-    body:JSON.stringify({
-      action:'login',
-      tenDangNhap:username,
-      matKhau:password
-    }),
-    cache:'no-store',
-    signal:controller.signal
-  });
+  try{
+    // NVS WebApp: POST JSON dưới text/plain.
+    const r = await fetch(DTHT_STANDALONE_BACKEND, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=UTF-8'},
+      body: JSON.stringify({
+        action: 'login',
+        tenDangNhap: username,
+        matKhau: password
+      }),
+      cache: 'no-store',
+      signal: controller.signal
+    });
 
-  if(!r.ok) throw new Error('HTTP_'+r.status);
+    if(!r.ok) throw new Error('HTTP_' + r.status);
 
-  const data=await r.json();
-  console.log('[NVS LOGIN RESPONSE]', JSON.stringify(data));
+    const data = await r.json();
+    console.log('[NVS LOGIN RESPONSE]', JSON.stringify(data));
 
-  // NVS Login contract thực tế từ Backend 01–17:
-  // ok / nguoiDung / sessionToken / hetHanLuc.
-  if(!data||data.ok!==true||!data.nguoiDung){
-    throw new Error((data&&(data.thongBao||data.message))||'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
-  }
+    // NVS Login contract thực tế từ Backend 01–17:
+    // ok / nguoiDung / sessionToken / hetHanLuc.
+    if(!data || data.ok !== true || !data.nguoiDung){
+      throw new Error((data && (data.thongBao || data.message)) || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+    }
 
-    if(!data.sessionToken||!data.hetHanLuc){
+    if(!data.sessionToken || !data.hetHanLuc){
       throw new Error('Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.');
     }
 
-    localStorage.setItem('user',JSON.stringify(data.nguoiDung));
-    localStorage.setItem('hvaSessionToken',String(data.sessionToken));
-    localStorage.setItem('hvaSessionExpiresAt',String(data.hetHanLuc));
-    localStorage.setItem('hvaLastUsername',String(data.nguoiDung.tenDangNhap||username||'').trim());
+    localStorage.setItem('user', JSON.stringify(data.nguoiDung));
+    localStorage.setItem('hvaSessionToken', String(data.sessionToken));
+    localStorage.setItem('hvaSessionExpiresAt', String(data.hetHanLuc));
+    localStorage.setItem('hvaLastUsername', String(data.nguoiDung.tenDangNhap || username || '').trim());
 
-    passInput.value='';
+    passInput.value = '';
     dthtHideLogin();
-    await loadData();
+
+    // Bọc an toàn: Dù backend chưa sẵn sàng route getDTHTInitial thì vẫn tiếp tục hiển thị giao diện
+    try {
+      await loadData();
+    } catch (loadErr) {
+      console.warn('[DTHT] Bỏ qua lỗi nạp dữ liệu ban đầu, tiếp tục gán thông tin giáo viên:', loadErr);
+    }
+
+    // Luôn đảm bảo chạy hàm điền thông tin nhân sự vào form
     bindCurrentTeacher();
+
   }catch(e){
-    console.error('[DTHT HVA Login]',e);
-    msg.style.color='#be123c';
-    msg.textContent=e&&e.name==='AbortError'
+    console.error('[DTHT HVA Login]', e);
+    msg.style.color = '#be123c';
+    msg.textContent = e && e.name === 'AbortError'
       ? 'Máy chủ HVA phản hồi quá lâu. Vui lòng kiểm tra kết nối mạng và thử lại.'
-      : String(e&&e.message||'Đã xảy ra lỗi mạng hoặc không thể kết nối máy chủ HVA.');
+      : String(e && e.message || 'Đã xảy ra lỗi mạng hoặc không thể kết nối máy chủ HVA.');
   }finally{
     clearTimeout(timeoutId);
-    btn.disabled=false; userInput.disabled=false; passInput.disabled=false;
-    btnText.textContent='ĐĂNG NHẬP';
+    btn.disabled = false; userInput.disabled = false; passInput.disabled = false;
+    btnText.textContent = 'ĐĂNG NHẬP';
   }
 }
 function dthtDisplayRole(teacher,me){
