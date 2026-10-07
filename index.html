@@ -1074,28 +1074,30 @@ async function dthtStandaloneLogin(){
   btnText.textContent='ĐANG XÁC THỰC...';
   msg.style.color='#075cad'; msg.textContent='Đang xác thực tài khoản HVA...';
 
-  const controller=new AbortController();
-  const timeoutId=setTimeout(()=>controller.abort(),30000);
-  try{
-    // Dùng đúng transport của Login HVA đang PASS: POST JSON dưới text/plain.
-    const r=await fetch(DTHT_STANDALONE_BACKEND,{
-      method:'POST',
-      headers:{'Content-Type':'text/plain;charset=UTF-8'},
-      body:JSON.stringify({action:'login',username,password}),
-      cache:'no-store',
-      signal:controller.signal
-    });
-    if(!r.ok) throw new Error('HTTP_'+r.status);
-    const data=await r.json();
+ const controller=new AbortController();
+const timeoutId=setTimeout(()=>controller.abort(),30000);
 
-    if(!data||data.success!==true||!data.user){
-      throw new Error((data&&data.message)||'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
-    }
-    if(!data.sessionToken||!data.expiresAt){
-      localStorage.removeItem('hvaSessionToken');
-      localStorage.removeItem('hvaSessionExpiresAt');
-      throw new Error('Phiên đăng nhập HVA không hợp lệ. Vui lòng đăng nhập lại.');
-    }
+try{
+  // NVS WebApp: POST JSON dưới text/plain.
+  const r=await fetch(DTHT_STANDALONE_BACKEND,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=UTF-8'},
+    body:JSON.stringify({
+      action:'login',
+      tenDangNhap:username,
+      matKhau:password
+    }),
+    cache:'no-store',
+    signal:controller.signal
+  });
+
+  if(!r.ok) throw new Error('HTTP_'+r.status);
+
+  const data=await r.json();
+
+  if(!data||data.success!==true||!data.user){
+    throw new Error((data&&data.message)||'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+  }
 
     localStorage.setItem('user',JSON.stringify(data.user));
     localStorage.setItem('hvaSessionToken',String(data.sessionToken));
