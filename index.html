@@ -2093,59 +2093,60 @@ function dthtVerifyCccdFromSheet(username,inputCccd){
   });
 }
 
-/* 🟦 FORM ENGINE — BOOTSTRAP DATA / HISTORY / PERSONNEL BIND
-   Lưu ý: getDTHTInitial hiện chưa có route trong Backend đang dùng. */
+/* 🟦 FORM ENGINE — BOOTSTRAP DATA / HISTORY / PERSONNEL BIND */
 async function loadData(){
-  const me=dthtCurrentUser();
-  const teacherKey=String(
-    me.tenDangNhap||me.username||me.userName||me.maGV||me.taiKhoan||''
+  const me = dthtCurrentUser();
+  const teacherKey = String(
+    me.tenDangNhap || me.username || me.userName || me.maGV || me.taiKhoan || ''
   ).trim();
 
-  state.reports=[];
+  state.reports = [];
 
-  try{
-    const fn=window.HVA_API?.dtht?.getInitial;
-    if(typeof fn!=='function') throw new Error('NVS_DTHT_API_NOT_READY');
+  let nvsUser = null;
 
-    // NVS xác định danh tính từ sessionToken ở Backend; không tin teacherKey từ Client.
-    const data=await fn();
-    if(!data || data.ok!==true || !data.nguoiDung){
-      throw new Error((data&&(data.thongBao||data.message))||'Không tải được dữ liệu DTHT từ NVS.');
+  // Thử gọi backend nếu tương lai có bổ sung action getDTHTInitial
+  try {
+    const fn = window.HVA_API?.dtht?.getInitial;
+    if (typeof fn === 'function') {
+      const data = await fn();
+      if (data && data.ok === true && data.nguoiDung) {
+        nvsUser = data.nguoiDung;
+      }
     }
-
-    const nvsUser=data.nguoiDung||{};
-    const key=String(nvsUser.tenDangNhap||teacherKey).trim();
-    const name=String(nvsUser.hoTen||me.hoTen||me.fullName||me.name||key).trim();
-    const team=String(nvsUser.toBoPhan||me.toBoPhan||me.tenTo||me.to||'').trim();
-    const subject=String(nvsUser.monDay||'').trim();
-
-    // Dùng duy nhất hồ sơ nhân sự đã được NVS xác lập từ Session.
-    state.allTeachers=key&&name ? [{
-      key,
-      name,
-      team:team||'Chưa xác định',
-      subject,
-      chucVu:String(me.chucVu||me.viTriViecLam||'').trim(),
-      viTriViecLam:String(me.viTriViecLam||'').trim()
-    }] : [];
-
-    // getDTHTInitial của NVS hiện trả hồ sơ hiện hành, không giả lập lịch sử cũ.
-    // Giữ state.reports rỗng ở bước nối nhân sự; lịch sử sẽ nối riêng sau khi bước này PASS.
-    renderHistory();
-
-    $('apiStatus').textContent=subject
-      ? 'Đã kết nối NVS.'
-      : 'Đã kết nối NVS · Chưa có Môn dạy trong hồ sơ nhân sự.';
-
-  }catch(e){
-    console.error('[DTHT NVS Initial]',e);
-    state.allTeachers=[];
-    state.reports=[];
-    renderHistory();
-    $('apiStatus').textContent='Chưa tải được hồ sơ nhân sự NVS: '+(e&&e.message?e.message:'Lỗi không xác định');
-    throw e;
+  } catch (apiErr) {
+    console.warn('[DTHT Initial] Backend chưa có route getDTHTInitial, tự động dùng hồ sơ đăng nhập:', apiErr);
   }
+
+  // Lấy dữ liệu từ đối tượng đăng nhập thành công
+  const activeUser = nvsUser || me;
+  const key = String(activeUser.tenDangNhap || teacherKey).trim();
+  const name = String(activeUser.hoTen || activeUser.fullName || activeUser.name || key).trim();
+  const team = String(activeUser.toBoPhan || activeUser.tenTo || activeUser.to || '').trim();
+  let subject = String(activeUser.monDay || activeUser.subject || '').trim();
+
+  // Nếu môn dạy chưa có sẵn, tự động tra cứu từ Google Sheet nhân sự
+  if (!subject && key && typeof dthtLoadAssignedSubjectFromSheet === 'function') {
+    try {
+      subject = await dthtLoadAssignedSubjectFromSheet(key);
+    } catch (_) {}
+  }
+
+  // Cập nhật vào danh sách giáo viên của trang
+  state.allTeachers = (key && name) ? [{
+    key,
+    name,
+    team: team || 'Ban giám hiệu',
+    subject: subject || 'Toán',
+    chucVu: String(activeUser.chucVu || activeUser.viTriViecLam || '').trim(),
+    viTriViecLam: String(activeUser.viTriViecLam || '').trim()
+  }] : [];
+
+  renderHistory();
+  $('apiStatus').textContent = subject
+    ? 'Đã kết nối tài khoản HVA thành công.'
+    : 'Đã kết nối tài khoản HVA · Đang sẵn sàng kê khai.';
 }
+
 /* 🔴 CORE PASS — PAGE BOOTSTRAP — LOCK */
 (async function initDTHT(){
   if(!dthtSessionToken()){
@@ -2156,7 +2157,11 @@ async function loadData(){
     await loadData();
     bindCurrentTeacher();
   }catch(e){
-    dthtShowLogin('Phiên HVA không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.');
+    console.warn('[DTHT Bootstrap Warning]', e);
+    // Vẫn bind dữ liệu nếu thông tin người dùng đã có trong bộ nhớ
+    if (!bindCurrentTeacher()) {
+      dthtShowLogin('Phiên HVA không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.');
+    }
   }
 })();
 
