@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>HVA - Quản lý dạy thêm, học thêm 2</title>
+<title>HVA - Quản lý dạy thêm, học thêm </title>
 <!-- DTHT HVA UI V3_10 | Backend HVA + Personnel source + Sheet DTHT -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -576,7 +576,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
 <main class="shell">
   <section class="hero">
-    <div><h1>Quản lý dạy thêm – học thêm3</h1><p>Kê khai giáo viên tham gia dạy thêm ngoài nhà trường · Năm học 2026–2027</p></div>
+    <div><h1>Quản lý dạy thêm – học thêm 4</h1><p>Kê khai giáo viên tham gia dạy thêm ngoài nhà trường · Năm học 2026–2027</p></div>
     <div class="legal"><i class="bi bi-shield-check"></i> Mẫu 03 · 04/VBHN-BGDĐT</div>
   </section>
 
@@ -2046,7 +2046,7 @@ function dthtLoadAssignedSubjectFromSheet(username){
 }
 
 
-/* 🔴 CORE PASS — IDENTITY LOOKUP: username N → CCCD D */
+/* 🔴 CORE PASS — IDENTITY LOOKUP: username -> CCCD */
 function dthtVerifyCccdFromSheet(username, inputCccd){
   const user = String(username || '').trim().toLowerCase();
   const entered = String(inputCccd || '').replace(/\D/g, '');
@@ -2074,22 +2074,24 @@ function dthtVerifyCccdFromSheet(username, inputCccd){
       clearTimeout(timer);
       try{
         const rows = payload?.table?.rows || [];
-        console.log('[DTHT CCCD Sheet Raw]', rows);
+        console.log('[DTHT CCCD] Tổng số dòng tải về:', rows.length);
 
         for(const row of rows){
           const cells = row?.c || [];
-          // Quét tìm ô chứa tên đăng nhập
+          // Chuyển toàn bộ giá trị các ô trong 1 dòng thành mảng chữ
           const rowValues = cells.map(c => String(c?.v ?? c?.f ?? '').trim());
+
+          // Kiểm tra xem dòng này có chứa tên đăng nhập (ví dụ: thanv) không
           const hasUser = rowValues.some(val => val.toLowerCase() === user);
 
           if(hasUser){
-            // Kiểm tra các ô trong dòng xem có ô nào chứa đúng 12 chữ số CCCD nhập vào
+            // Kiểm tra xem dòng này có ô nào khớp đúng với 12 chữ số CCCD không
             const isMatch = rowValues.some(val => {
               const clean = val.replace(/\D/g, '').padStart(12, '0');
               return clean === entered;
             });
 
-            console.log('[DTHT CCCD Check]', { user, entered, matched: isMatch, rowData: rowValues });
+            console.log('[DTHT CCCD Check]', { user, entered, isMatch, rowValues });
             finish(isMatch);
             return;
           }
@@ -2100,19 +2102,16 @@ function dthtVerifyCccdFromSheet(username, inputCccd){
       finish(false);
     };
 
-    // Truy vấn linh hoạt theo sheet Du_lieu_NhanSu_THPT_HOA_VANG
-    const tq = "select * where lower(N) = '" + user.replace(/'/g, "''") + "'";
+    // Bỏ hẳn mệnh đề WHERE, tải thẳng dữ liệu sheet về để JavaScript tự lọc
     script.src =
-      'https://docs.google.com/spreadsheets/d/19zyS6na6VaTiTImj9Bh11ot6f75TmBBpECAMxiObJcA/gviz/tq'
-     
+      'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq'
       + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
       + '&tqx=' + encodeURIComponent('responseHandler:' + cb)
-      + '&tq=' + encodeURIComponent(tq)
       + '&_=' + Date.now();
 
     script.async = true;
     script.onerror = () => {
-      console.error('[DTHT CCCD] Không thể tải dữ liệu từ Google Sheets URL.');
+      console.error('[DTHT CCCD] Lỗi kết nối Google Sheets.');
       clearTimeout(timer);
       finish(false);
     };
