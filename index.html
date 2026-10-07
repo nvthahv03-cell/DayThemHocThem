@@ -1138,7 +1138,7 @@ function dthtDisplayRole(teacher,me){
 /* 🔴 CORE PASS — BIND CURRENT HVA USER / PERSONNEL — LOCK */
 function bindCurrentTeacher(){
   const me=dthtCurrentUser();
-  const username=String(me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
+  const username=String(me.tenDangNhap||me.username||me.userName||me.maGV||me.taiKhoan||'').trim();
   if(!username){
     $('apiStatus').textContent='Không xác định được tài khoản HVA đang đăng nhập.';
     return false;
