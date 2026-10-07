@@ -451,7 +451,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
 <main class="shell">
   <section class="hero">
-    <div><h1>HVA - Quản lý dạy thêm – học thêm_3</h1><p>Kê khai giáo viên tham gia dạy thêm ngoài nhà trường · Năm học 2026–2027</p></div>
+    <div><h1>HVA - Quản lý dạy thêm – học thêm_4</h1><p>Kê khai giáo viên tham gia dạy thêm ngoài nhà trường · Năm học 2026–2027</p></div>
     <div class="legal"><i class="bi bi-shield-check"></i> Mẫu 03 · 04/VBHN-BGDĐT</div>
   </section>
 
@@ -889,13 +889,11 @@ async function dthtStandaloneLogin(){
     passInput.value = '';
     dthtHideLogin();
 
-    try {
-      await loadData();
-    } catch (loadErr) {
-      console.warn('[DTHT] Bỏ qua lỗi ban đầu:', loadErr);
-    }
+    // 1. Gán danh tính và hiển thị họ tên lên form ngay lập tức:
     bindCurrentTeacher();
 
+    // 2. Chạy ngầm loadData (không dùng await để tránh bị treo giao diện):
+    loadData().catch(err => console.warn('[DTHT] Bỏ qua lỗi nạp dữ liệu nền:', err));
   }catch(e){
     console.error('[DTHT HVA Login]', e);
     msg.style.color = '#be123c';
@@ -1917,20 +1915,26 @@ async function loadData(){
 }
 
 /* 🔴 CORE PASS — PAGE BOOTSTRAP — LOCK */
-(async function initDTHT(){
-  if(!dthtSessionToken()){
+(function initDTHT(){
+  // 1. Kiểm tra phiên đăng nhập
+  const token = dthtSessionToken();
+  if(!token){
     dthtShowLogin('');
     return;
   }
-  try{
-    await loadData();
-  }catch(e){
-    console.warn('[DTHT Init Warning]', e);
-  }finally{
-    bindCurrentTeacher();
-  }
-})();
 
+  // 2. HIỂN THỊ DANH TÍNH NGAY LẬP TỨC (Không chờ API qua mạng)
+  bindCurrentTeacher();
+
+  // 3. Tải dữ liệu bổ sung ngầm ở chế độ không đồng bộ (nếu có lỗi cũng không chặn giao diện)
+  setTimeout(async () => {
+    try {
+      await loadData();
+    } catch(e) {
+      console.warn('[DTHT Background Sync]', e);
+    }
+  }, 100);
+})();
 function showHvaNotice(type,title,message){
   const box=$('hvaNotice');
   const icon=$('hvaNoticeIcon');$('hvaNoticeTitle').textContent=title||'Thông báo';
