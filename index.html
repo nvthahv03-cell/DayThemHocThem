@@ -394,20 +394,45 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .identity-col+.identity-col{border-left:1px solid #9bc9ea!important}
 .identity-name,#identityName{font-size:20px!important;font-weight:900!important;color:#06447f!important}
 .identity-section-title{font-size:11px!important;color:#376a91!important}
-.signature-preview{height:68px!important;background:#fff!important;border:1.5px dashed #69addc!important;box-shadow:none!important}
-.signature-preview img{max-width:175px!important;max-height:62px!important;object-fit:contain!important}
-.signer-status{font-size:12px!important;color:#466985!important}
-.identity-meta{font-size:12px!important}
-.identity-col .btn{font-weight:800!important}
-.cccd-input-wrap input{padding:14px 52px 14px 16px!important}
-.cccd-eye{right:8px!important;top:50%!important;transform:translateY(-50%)!important}
-.preview-shell{overflow:auto!important}
-.official-paper{width:210mm!important;min-height:297mm!important;max-width:none!important;box-sizing:border-box!important;padding:30mm 20mm 20mm 20mm!important}
-.official-head{align-items:start!important}
-.agency .official-line.short{width:50%!important;max-width:50%!important;margin-top:0!important}
-.nation .official-line{width:100%!important;max-width:none!important;margin-top:0!important}
-.preview-sign-action{display:inline-flex!important;align-items:center!important;gap:6px!important}
-@media(max-width:900px){.identity-card{grid-template-columns:1fr!important}.identity-col+.identity-col{border-left:0!important;border-top:1px solid #9bc9ea!important}}
+/* ===== KHỐI CHỮ KÝ VÀ NÚT KÝ SỐ TRỰC QUAN, ĐẬM NÉT ===== */
+.signature-preview{height:64px;display:flex;align-items:center;justify-content:center;border:1.8px dashed #38bdf8;border-radius:12px;background:#ffffff;box-shadow:inset 0 2px 4px rgba(7,92,173,.04);overflow:hidden}
+.signature-preview img{max-width:170px;max-height:56px;object-fit:contain}
+.signature-empty{font-size:11.5px;color:#64748b;text-align:center;padding:8px;font-weight:600}
+.signature-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.signature-actions .btn{padding:8px 12px;font-size:11px;font-weight:700;border-radius:8px}
+
+.signer-status{font-size:12px;color:#475569;line-height:1.4;margin:4px 0 10px;font-weight:600}
+.signer-status.ok{color:#15803d;font-weight:800}
+
+/* Cụm nút xác thực và ký số nổi bật */
+.signer-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.signer-buttons .btn{padding:10px 14px!important;font-size:11.5px!important;font-weight:800!important;border-radius:10px!important;letter-spacing:.01em;transition:all .18s ease!important}
+
+/* Nút phụ: Xác thực người ký (Màu xanh nước biển viền đậm, nền rõ nét) */
+.signer-buttons .btn.secondary{background:#f0f9ff!important;color:#0369a1!important;border:1.5px solid #7dd3fc!important;box-shadow:0 2px 6px rgba(3,105,161,.08)!important}
+.signer-buttons .btn.secondary:hover{background:#e0f2fe!important;border-color:#38bdf8!important;color:#0284c7!important}
+
+/* Nút chính: Ký xác nhận (Đậm màu, gradient coban nổi bật, đổ bóng 3D trực quan) */
+.signer-buttons .sign-ready{background:linear-gradient(135deg,#0284c7 0%,#0369a1 100%)!important;color:#ffffff!important;border:1.5px solid #0284c7!important;box-shadow:0 4px 14px rgba(2,132,199,.35)!important;cursor:pointer!important;opacity:1!important}
+.signer-buttons .sign-ready:hover{background:linear-gradient(135deg,#0369a1 0%,#075985 100%)!important;box-shadow:0 6px 18px rgba(2,132,199,.45)!important;transform:translateY(-1px)}
+.signer-buttons .sign-ready:disabled{background:#e2e8f0!important;color:#94a3b8!important;border:1px solid #cbd5e1!important;box-shadow:none!important;cursor:not-allowed!important;opacity:.65!important}
+
+/* Chữ ký gắn vào văn bản bản in / xem trước */
+.signature-on-paper{height:68px;display:flex;align-items:center;justify-content:center}
+.signature-on-paper img{max-width:160px;max-height:66px;object-fit:contain}
+.sign-guide.hidden-sign-guide{display:none!important}
+
+/* Modal nhập CCCD xác thực */
+.hva-sign-modal{position:fixed;inset:0;z-index:100000;background:rgba(7,31,55,.62);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:18px}
+.hva-sign-modal.hidden{display:none!important}
+.hva-sign-box{width:min(470px,100%);background:#ffffff;border-radius:24px;padding:26px 28px;box-shadow:0 24px 70px rgba(0,30,60,.32);border:1px solid #e2e8f0}
+.hva-sign-box h3{margin:0 0 8px;color:#0369a1;font-size:20px;font-weight:800}
+.hva-sign-box p{margin:0 0 18px;color:#475569;font-size:12.5px;line-height:1.5}
+.hva-sign-box label{font-size:12.5px;font-weight:800;color:#1e293b}
+.hva-sign-box .actions{justify-content:flex-end;margin-top:20px;gap:10px}
+.hva-sign-box .actions .btn{padding:11px 18px;font-size:12px;font-weight:800;border-radius:10px}
+.hva-sign-msg{min-height:18px;margin-top:10px;font-size:12px;font-weight:800;color:#dc2626}
+@media(max-width:900px){.identity-card{grid-template-columns:1fr!important}.identity-col+.identity-col{border-left:0;border-top:1px solid rgba(92,153,201,.20)}}
 @media(max-width:720px){
   .preview-shell{
     overflow:hidden!important;
@@ -1641,11 +1666,19 @@ function refreshSignatureUI(){
     else { st.textContent='Chưa xác thực người ký.'; st.classList.remove('ok'); }
   }
   applySignatureToPaper();
+
   const psb=$('previewSignBtn'), pst=$('previewSignBtnText');
   if(psb&&pst){
-    if(state.signed){ pst.textContent='Đã ký xác nhận'; psb.classList.remove('primary'); psb.classList.add('secondary'); }
-    else if(state.signerVerified){ pst.textContent='Ký xác nhận'; psb.classList.add('primary'); psb.classList.remove('secondary'); }
-    else { pst.textContent='Xác thực & ký xác nhận HVA'; psb.classList.add('primary'); psb.classList.remove('secondary'); }
+    if(state.signed){
+      pst.textContent='✓ Đã ký xác nhận';
+      psb.className='btn preview-sign-action signed-ok';
+    }else if(state.signerVerified){
+      pst.textContent='Ký xác nhận';
+      psb.className='btn preview-sign-action';
+    }else{
+      pst.textContent='Xác thực & ký xác nhận HVA';
+      psb.className='btn preview-sign-action';
+    }
   }
 }
 function previewSignerAction(){
@@ -1916,7 +1949,7 @@ async function submitReport(){
     setStep(3);
     $('apiStatus').textContent='Đang gửi hồ sơ...';
 
-    await callAPI('submitReport',payload());
+    const res = await callAPI('submitReport', payload());
 
     $('apiStatus').textContent='Đã lưu hồ sơ kê khai vào HVA.';
     if(btn){
@@ -1925,7 +1958,14 @@ async function submitReport(){
       btn.innerHTML='<i class="bi bi-check-circle-fill"></i> Đã gửi';
     }
 
-    await loadData();
+    // Nếu Backend trả về mảng danh sách mới nhất thì cập nhật ngay vào state
+    if (res && Array.isArray(res.reports) && res.reports.length > 0) {
+      state.reports = res.reports;
+      renderHistory();
+    } else {
+      await loadData();
+    }
+
     showSubmitAcknowledgement();
     showHvaNotice('success','Gửi bản kê khai thành công','Hồ sơ kê khai đã được ghi nhận trên hệ thống HVA.');
   }catch(e){
@@ -1949,44 +1989,41 @@ function canonicalTeamForReport(x){
 /* 🟦 FORM ENGINE — VERSION / HISTORY RENDER
    Dùng chung mọi mẫu sau khi Backend contract PASS. */
 function renderHistory(){
-  const rows=state.reports||[];
+  const rows = state.reports || [];
 
   if(!rows.length){
-    $('historyRows').innerHTML=
-      '<tr><td colspan="6">Chưa có hồ sơ kê khai.</td></tr>';
+    $('historyRows').innerHTML =
+      '<tr><td colspan="6" style="text-align:center;padding:16px;color:#64748b;">Chưa có hồ sơ kê khai.</td></tr>';
     return;
   }
 
-  const maxVersion=Math.max(
-    ...rows.map(x=>Number(x.version)||1)
+  const maxVersion = Math.max(
+    ...rows.map(x => Number(x.version) || 1)
   );
 
-  $('historyRows').innerHTML=rows.map(x=>{
-    const version=Number(x.version)||1;
-
-    const versionLabel=
-      version===1
-        ? 'Báo cáo lần đầu'
-        : 'Bản cập nhật lần '+(version-1);
-
-    const currentLabel=
-      version===maxVersion
-        ? ' <b style="color:#15803d;">· Hiện hành</b>'
-        : '';
+  $('historyRows').innerHTML = rows.map(x => {
+    const version = Number(x.version) || 1;
+    const versionLabel = version === 1 ? 'Báo cáo lần đầu' : ('Bản cập nhật lần ' + (version - 1));
+    const currentLabel = version === maxVersion ? ' <b style="color:#15803d;">· Hiện hành</b>' : '';
+    
+    // Nhận diện trạng thái tiếp nhận
+    const tiepNhan = String(x.trangThaiTiepNhan || '').toUpperCase();
+    const badgeTiepNhan = tiepNhan === 'ĐÃ TIẾP NHẬN'
+      ? '<span style="display:inline-block;padding:3px 8px;border-radius:12px;font-size:11px;font-weight:800;background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;">ĐÃ TIẾP NHẬN</span>'
+      : '<span style="display:inline-block;padding:3px 8px;border-radius:12px;font-size:11px;font-weight:800;background:#fef3c7;color:#b45309;border:1px solid #fde68a;">CHỜ TIẾP NHẬN</span>';
 
     return `
       <tr>
-        <td>${esc(x.teacherName)}</td>
+        <td style="font-weight:700;color:#0f3f70;">${esc(x.teacherName || x.hoTen)}</td>
         <td>${esc(canonicalTeamForReport(x))}</td>
-        <td>${x.participates?'Có tham gia':'Không tham gia'}</td>
-        <td>
-          ${versionLabel}${currentLabel}
-        </td>
-        <td>${esc(x.updatedAt||'')}</td>
+        <td>${badgeTiepNhan}</td>
+        <td>${versionLabel}${currentLabel}</td>
+        <td style="color:#64748b;font-size:11.5px;">${esc(x.updatedAt || x.ngayGui || '')}</td>
         <td>
           <button
             class="btn secondary"
-            onclick="viewReport('${esc(x.id)}')"
+            style="padding:5px 12px;font-size:11px;"
+            onclick="viewReport('${esc(x.id || x.maHoSo)}')"
           >
             Xem
           </button>
@@ -2170,20 +2207,24 @@ async function loadData(){
   ).trim();
 
   state.reports = [];
-
   let nvsUser = null;
 
-  // Thử gọi backend nếu tương lai có bổ sung action getDTHTInitial
+  // Gọi trực tiếp backend độc lập để lấy hồ sơ và bảng lịch sử
   try {
     const fn = window.HVA_API?.dtht?.getInitial;
     if (typeof fn === 'function') {
       const data = await fn();
-      if (data && data.ok === true && data.nguoiDung) {
-        nvsUser = data.nguoiDung;
+      if (data && (data.ok === true || data.success === true)) {
+        if (data.nguoiDung) nvsUser = data.nguoiDung;
+        // Gán mảng danh sách lịch sử trả về từ Sheet
+        const reportsList = data.reports || data.danhSach || data.history;
+        if (Array.isArray(reportsList)) {
+          state.reports = reportsList;
+        }
       }
     }
   } catch (apiErr) {
-    console.warn('[DTHT Initial] Backend chưa có route getDTHTInitial, tự động dùng hồ sơ đăng nhập:', apiErr);
+    console.warn('[DTHT Initial] Lỗi nạp dữ liệu từ backend:', apiErr);
   }
 
   // Lấy dữ liệu từ đối tượng đăng nhập thành công
@@ -2193,14 +2234,12 @@ async function loadData(){
   const team = String(activeUser.toBoPhan || activeUser.tenTo || activeUser.to || '').trim();
   let subject = String(activeUser.monDay || activeUser.subject || '').trim();
 
-  // Nếu môn dạy chưa có sẵn, tự động tra cứu từ Google Sheet nhân sự
   if (!subject && key && typeof dthtLoadAssignedSubjectFromSheet === 'function') {
     try {
       subject = await dthtLoadAssignedSubjectFromSheet(key);
     } catch (_) {}
   }
 
-  // Cập nhật vào danh sách giáo viên của trang
   state.allTeachers = (key && name) ? [{
     key,
     name,
@@ -2210,7 +2249,9 @@ async function loadData(){
     viTriViecLam: String(activeUser.viTriViecLam || '').trim()
   }] : [];
 
+  // Vẽ lại bảng lịch sử sau khi đã nhận được dữ liệu
   renderHistory();
+
   $('apiStatus').textContent = subject
     ? 'Đã kết nối tài khoản HVA thành công.'
     : 'Đã kết nối tài khoản HVA · Đang sẵn sàng kê khai.';
