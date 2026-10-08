@@ -1754,21 +1754,8 @@ function payload(){
   const tutorForm = $('tutorForm') ? $('tutorForm').value.trim() : '';
   const tutorSubject = $('tutorSubject') ? $('tutorSubject').value.trim() : '';
 
- // 1. Lấy CCCD người ký (Vét sạch mọi nguồn để không bao giờ bị rỗng)
-  let rawCccd = '';
-  if ($('signerCccd') && $('signerCccd').value) {
-    rawCccd = $('signerCccd').value;
-  } else if ($('txtCccd') && $('txtCccd').value) {
-    rawCccd = $('txtCccd').value;
-  } else if (window.dthtSignerCccd) {
-    rawCccd = window.dthtSignerCccd;
-  } else if (sessionStorage.getItem('dthtSignerCccd')) {
-    rawCccd = sessionStorage.getItem('dthtSignerCccd');
-  } else if (userObj && (userObj.cccd || userObj.soCccd)) {
-    rawCccd = userObj.cccd || userObj.soCccd;
-  }
-
-  const cccd = String(rawCccd).replace(/\D/g, '').trim();
+  // 1. Lấy CCCD người ký
+  const cccd = String($('signerCccd') ? $('signerCccd').value : '').replace(/\D/g, '');
 
   // 2. Lấy Session Token hợp lệ từ bộ nhớ hoặc từ đối tượng người dùng đang lưu
   const userObj = dthtCurrentUser();
@@ -1781,10 +1768,10 @@ function payload(){
   ).trim();
 
   return {
-    // 🔴 Gửi kèm token và cccd trực tiếp trong payload
+    // 🔴 Gửi kèm token trực tiếp trong payload để File 15 luôn nhận diện được
     sessionToken: token,
     token: token,
-    cccd: cccd,
+
     // Nhận diện giao diện
     teacherKey: state.teacher?.key || '',
     teacherName: state.teacher?.name || '',
