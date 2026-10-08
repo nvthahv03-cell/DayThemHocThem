@@ -544,6 +544,82 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   background: linear-gradient(135deg, #064d91 0%, #02335f 100%) !important;
   box-shadow: 0 6px 18px rgba(7, 92, 173, 0.45) !important;
 }
+
+/* ===== ĐIỀU CHỈNH GIAO DIỆN XEM TRƯỚC TRÊN ĐIỆN THOẠI (KHÔNG BỊ ĐÈ CHỮ) ===== */
+@media (max-width: 720px) {
+  /* 1. Mã mẫu đưa về góc phải trên cùng, không chiếm vị trí đè chữ */
+  #paper .form-code {
+    position: static !important;
+    width: 100% !important;
+    text-align: right !important;
+    margin-bottom: 8px !important;
+    font-size: 9pt !important;
+  }
+
+  /* 2. Phần đầu văn bản: Chia 2 cột rõ ràng bằng grid 2 cột nhỏ */
+  #paper .official-head {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    text-align: center !important;
+    font-size: 9.5pt !important;
+    line-height: 1.25 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .official-head .agency,
+  .official-head .nation {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* 3. Cỡ chữ tiêu đề và nội dung trên mobile vừa vặn, không bị tràn lề */
+  #paper .official-title {
+    font-size: 15pt !important;
+    margin: 12px 0 4px !important;
+  }
+
+  #paper .official-subtitle {
+    font-size: 12pt !important;
+    margin-bottom: 14px !important;
+  }
+
+  #paper .report-body,
+  #paper .report-body p,
+  #paper .report-body span,
+  #paper .report-body b {
+    font-size: 11.5pt !important;
+    line-height: 1.5 !important;
+  }
+
+  /* 4. Giấy văn bản căn lề vừa vặn với màn hình điện thoại */
+  .official-paper {
+    padding: 16px 12px 24px !important;
+    width: 100% !important;
+    border-radius: 8px !important;
+  }
+
+  /* 5. Thanh công cụ phía trên Bản xem trước dàn hàng ngang gọn gàng */
+  .preview-toolbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .preview-toolbar > div:last-child {
+    display: grid !important;
+    grid-template-columns: 1fr 1.3fr !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .preview-toolbar .btn {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 9px 8px !important;
+    font-size: 11px !important;
+  }
+}
   
 </style>
 </head>
