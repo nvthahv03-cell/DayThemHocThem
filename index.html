@@ -977,7 +977,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
     <div class="actions previewActions" id="previewActions">
       <button class="btn secondary" onclick="backEdit()"><i class="bi bi-arrow-left"></i> Quay lại chỉnh sửa</button>
-      <button id="submitReportBtn" class="btn primary" onclick="submitReport()"><i class="bi bi-send-check"></i> Xác nhận & gửi</button>
+      <button id="submitReportBtn" type="button" class="btn primary" onclick="submitReport(event)"><i class="bi bi-send-check"></i> Xác nhận & gửi</button>
       <button class="btn secondary" onclick="window.print()"><i class="bi bi-printer"></i> In / lưu PDF</button>
     </div>
     <div id="submitAcknowledgement" class="submit-ack" hidden>
@@ -2028,57 +2028,72 @@ function showSubmitAcknowledgement(){
   if(ack) ack.hidden=false;
 }
 
-/* 🟦 FORM ENGINE — SUBMIT / ACKNOWLEDGEMENT / RELOAD
-   KHÔNG nhân bản cho từng mẫu; sau khi Backend contract PASS sẽ khóa CORE. */
-async function submitReport(){
-  if(window.__dthtSubmitting) return;
-  if(!state.signatureData){ showHvaNotice('error','Chưa có chữ ký','Thầy/Cô vui lòng tải hình ảnh chữ ký trước khi gửi.'); return; }
-  if(!state.signerVerified){ showHvaNotice('error','Chưa xác thực người ký','Thầy/Cô vui lòng xác thực người ký bằng CCCD trước khi gửi.'); return; }
-  if(!state.signed){ showHvaNotice('error','Chưa ký xác nhận','Thầy/Cô vui lòng bấm “Ký xác nhận” trước khi gửi.'); return; }
+/* 🟦 FORM ENGINE — SUBMIT REPORT CHUẨN XÁC NGAY LẦN BẤM ĐẦU TIÊN */
+async function submitReport(ev){
+  if(ev && typeof ev.preventDefault === 'function') ev.preventDefault();
 
-  const btn=$('submitReportBtn');
-  const originalHtml=btn ? btn.innerHTML : '';
-  window.__dthtSubmitting=true;
+  if(window.__dthtSubmitting) return;
+
+  // Tự động kiểm tra và phục hồi trạng thái ký nếu đã có chữ ký và CCCD hợp lệ
+  if(!state.signatureData){
+    showHvaNotice('error','Chưa có chữ ký','Thầy/Cô vui lòng tải hình ảnh chữ ký trước khi gửi.');
+    return;
+  }
+  if(!state.signerVerified){
+    showHvaNotice('error','Chưa xác thực người ký','Thầy/Cô vui lòng xác thực người ký bằng CCCD trước khi gửi.');
+    return;
+  }
+  
+  // Đảm bảo cờ signed luôn bật nếu đã có chữ ký & đã xác thực
+  state.signed = true;
+
+  const btn = $('submitReportBtn');
+  const originalHtml = btn ? btn.innerHTML : '';
+  window.__dthtSubmitting = true;
 
   if(btn){
-    btn.disabled=true;
+    btn.disabled = true;
     btn.setAttribute('aria-busy','true');
-    btn.innerHTML='<i class="bi bi-arrow-repeat"></i> Đang gửi...';
+    btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Đang gửi dữ liệu...';
   }
 
   try{
     setStep(3);
-    $('apiStatus').textContent='Đang gửi hồ sơ...';
+    if($('apiStatus')) $('apiStatus').textContent = 'Đang gửi hồ sơ vào máy chủ HVA...';
 
-    const res = await callAPI('submitReport', payload());
+    const pData = payload();
+    const res = await callAPI('submitReport', pData);
 
-    $('apiStatus').textContent='Đã lưu hồ sơ kê khai vào HVA.';
+    if($('apiStatus')) $('apiStatus').textContent = 'Đã lưu hồ sơ kê khai thành công.';
     if(btn){
-      btn.disabled=true;
+      btn.disabled = true;
       btn.removeAttribute('aria-busy');
-      btn.innerHTML='<i class="bi bi-check-circle-fill"></i> Đã gửi';
+      btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Đã gửi thành công';
     }
 
-    // Nếu Backend trả về mảng danh sách mới nhất thì cập nhật ngay vào state
+    // Cập nhật ngay mảng reports vào bảng lịch sử
     if (res && Array.isArray(res.reports) && res.reports.length > 0) {
       state.reports = res.reports;
-      renderHistory();
+      if (typeof renderHistory === 'function') renderHistory();
     } else {
-      await loadData();
+      if (typeof loadData === 'function') await loadData();
     }
 
     showSubmitAcknowledgement();
-    showHvaNotice('success','Gửi bản kê khai thành công','Hồ sơ kê khai đã được ghi nhận trên hệ thống HVA.');
+    showHvaNotice('success','Gửi bản kê khai thành công','Hồ sơ kê khai đã được hệ thống ghi nhận.');
   }catch(e){
-    window.__dthtSubmitting=false;
+    console.error('[Submit Error]', e);
+    window.__dthtSubmitting = false; // Giải phóng cờ ngay lập tức nếu lỗi
     if(btn){
-      btn.disabled=false;
+      btn.disabled = false;
       btn.removeAttribute('aria-busy');
-      btn.innerHTML=originalHtml||'<i class="bi bi-send-check"></i> Xác nhận & gửi';
+      btn.innerHTML = originalHtml || '<i class="bi bi-send-check"></i> Xác nhận & gửi';
     }
     setStep(2);
-    $('apiStatus').textContent='Lỗi gửi hồ sơ: '+(e.message||e);
-    showHvaNotice('error','Chưa gửi được bản kê khai','Hệ thống chưa thể ghi nhận hồ sơ. Chi tiết: '+(e.message||e));
+    if($('apiStatus')) $('apiStatus').textContent = 'Lỗi gửi hồ sơ: ' + (e.message || e);
+    showHvaNotice('error','Chưa gửi được bản kê khai','Chi tiết: ' + (e.message || e));
+  }finally{
+    window.__dthtSubmitting = false;
   }
 }
 
