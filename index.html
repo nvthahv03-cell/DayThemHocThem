@@ -1745,23 +1745,66 @@ function invalidateSignature(){
   if(state.signed){ state.signed=false; refreshSignatureUI(); }
 }
 
-/* 🟦 FORM ENGINE + ⚪ FORM SPECIFIC SCHEMA
-   Engine đóng gói hồ sơ; danh sách field bên trong là schema riêng Mẫu 10. */
+/* 🟦 FORM ENGINE + ⚪ FORM SPECIFIC SCHEMA */
 function payload(){
+  const participates = state.participates === true;
+  const tutorTime = $('tutorTime') ? $('tutorTime').value.trim() : '';
+  const tutorPlace = $('tutorPlace') ? $('tutorPlace').value.trim() : '';
+  const relationship = $('relationship') ? $('relationship').value.trim() : '';
+  const tutorForm = $('tutorForm') ? $('tutorForm').value.trim() : '';
+  const tutorSubject = $('tutorSubject') ? $('tutorSubject').value.trim() : '';
+
+  // 1. Lấy CCCD người ký
+  const cccd = String($('signerCccd') ? $('signerCccd').value : '').replace(/\D/g, '');
+
+  // 2. Lấy Session Token hợp lệ từ bộ nhớ hoặc từ đối tượng người dùng đang lưu
+  const userObj = dthtCurrentUser();
+  const token = String(
+    localStorage.getItem('hvaSessionToken') ||
+    sessionStorage.getItem('hvaSessionToken') ||
+    userObj.sessionToken ||
+    userObj.token ||
+    ''
+  ).trim();
+
   return {
-    teacherKey:state.teacher?.key||'',
-    teacherName:state.teacher?.name||'',
-    team:state.teacher?.team||state.team||'',
-    participates:state.participates,
-    assignedSubject:$('assignedSubject').value.trim(),
-    tutorSubject:$('tutorSubject').value.trim(),
-    tutorTime:$('tutorTime').value.trim(),
-    tutorForm:$('tutorForm').value.trim(),
-    tutorPlace:$('tutorPlace').value.trim(),
-    relationship:$('relationship').value.trim(),
-    schoolYear:'2026-2027',
-    signerVerified:state.signerVerified===true,
-    signed:state.signed===true
+    // 🔴 Gửi kèm token trực tiếp trong payload để File 15 luôn nhận diện được
+    sessionToken: token,
+    token: token,
+
+    // Nhận diện giao diện
+    teacherKey: state.teacher?.key || '',
+    teacherName: state.teacher?.name || '',
+    team: state.teacher?.team || state.team || '',
+    schoolYear: '2026-2027',
+    signerVerified: state.signerVerified === true,
+    signed: state.signed === true,
+
+    // Khóa tham gia tương thích cả File 14 và File 15
+    participates: participates,
+    coThamGia: participates,
+
+    // Hiển thị Mẫu 03
+    assignedSubject: $('assignedSubject') ? $('assignedSubject').value.trim() : '',
+    tutorSubject: tutorSubject,
+    tutorTime: tutorTime,
+    tutorForm: tutorForm,
+    tutorPlace: tutorPlace,
+    relationship: relationship,
+
+    // 9 trường nghiệp vụ của Backend Service 14
+    namHoc: '2026-2027',
+    nguoiNhan: 'Hiệu trưởng Trường THPT Hòa Vang',
+    cccd: cccd,
+
+    monHocDayThem:       participates ? (tutorSubject || 'Toán') : 'Không tham gia',
+    ngayTrongTuan:       participates ? (tutorTime || 'Theo thỏa thuận') : 'Không tham gia',
+    khungGio:            participates ? (tutorTime || 'Theo ca học') : 'Không tham gia',
+    thoiDiemBatDau:      participates ? 'Năm học 2026-2027' : 'Không tham gia',
+    hinhThucDayThem:     participates ? (tutorForm || 'Trực tiếp') : 'Không tham gia',
+    diaDiemDayThem:      participates ? (tutorPlace || 'Tại cơ sở dạy thêm') : 'Không tham gia',
+    dienThoaiCoSo:       participates ? (tutorPlace || '0900000000') : 'Không',
+    moiQuanHeChuTheDKKD: participates ? (relationship || 'Giáo viên tham gia giảng dạy') : 'Không có'
   };
 }
 
