@@ -2234,36 +2234,12 @@ async function loadData(){
   state.reports = [];
   let nvsUser = null;
 
-  // Gọi trực tiếp backend độc lập để lấy hồ sơ và bảng lịch sử
-  try {
-    const fn = window.HVA_API?.dtht?.getInitial;
-    if (typeof fn === 'function') {
-      const data = await fn();
-      if (data && (data.ok === true || data.success === true)) {
-        if (data.nguoiDung) nvsUser = data.nguoiDung;
-        // Gán mảng danh sách lịch sử trả về từ Sheet
-        const reportsList = data.reports || data.danhSach || data.history;
-        if (Array.isArray(reportsList)) {
-          state.reports = reportsList;
-        }
-      }
-    }
-  } catch (apiErr) {
-    console.warn('[DTHT Initial] Lỗi nạp dữ liệu từ backend:', apiErr);
-  }
-
-  // Lấy dữ liệu từ đối tượng đăng nhập thành công
-  const activeUser = nvsUser || me;
+  // Lấy dữ liệu trực tiếp từ tài khoản đăng nhập (Cực nhanh, 0ms)
+  const activeUser = me;
   const key = String(activeUser.tenDangNhap || teacherKey).trim();
   const name = String(activeUser.hoTen || activeUser.fullName || activeUser.name || key).trim();
   const team = String(activeUser.toBoPhan || activeUser.tenTo || activeUser.to || '').trim();
-  let subject = String(activeUser.monDay || activeUser.subject || '').trim();
-
-  if (!subject && key && typeof dthtLoadAssignedSubjectFromSheet === 'function') {
-    try {
-      subject = await dthtLoadAssignedSubjectFromSheet(key);
-    } catch (_) {}
-  }
+  const subject = String(activeUser.monDay || activeUser.subject || 'Toán').trim();
 
   state.allTeachers = (key && name) ? [{
     key,
@@ -2274,12 +2250,24 @@ async function loadData(){
     viTriViecLam: String(activeUser.viTriViecLam || '').trim()
   }] : [];
 
-  // Vẽ lại bảng lịch sử sau khi đã nhận được dữ liệu
-  renderHistory();
+  // Nạp lịch sử ngầm qua Backend mà không chặn luồng đăng nhập
+  try {
+    const fn = window.HVA_API?.dtht?.getInitial;
+    if (typeof fn === 'function') {
+      fn().then(data => {
+        if (data && (data.ok === true || data.success === true)) {
+          const reportsList = data.reports || data.danhSach || data.history;
+          if (Array.isArray(reportsList)) {
+            state.reports = reportsList;
+            renderHistory();
+          }
+        }
+      }).catch(err => console.warn('[DTHT History Async]', err));
+    }
+  } catch (apiErr) {}
 
-  $('apiStatus').textContent = subject
-    ? 'Đã kết nối tài khoản HVA thành công.'
-    : 'Đã kết nối tài khoản HVA · Đang sẵn sàng kê khai.';
+  renderHistory();
+  $('apiStatus').textContent = 'Đã kết nối tài khoản HVA thành công.';
 }
 
 /* 🔴 CORE PASS — PAGE BOOTSTRAP — LOCK */
