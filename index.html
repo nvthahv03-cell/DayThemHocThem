@@ -519,7 +519,32 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 #paper .report-body b{
   font-size:14pt!important;
 }
-    
+
+/* Nút Xác thực & Ký xác nhận khi ĐÃ KÝ: Xanh dương đậm, chữ trắng đậm nổi bật */
+#previewSignBtn,
+.preview-sign-action,
+.preview-sign-action.signed-ok {
+  background: linear-gradient(135deg, #075cad 0%, #034685 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #023666 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 14px rgba(7, 92, 173, 0.35) !important;
+}
+
+#previewSignBtn i,
+#previewSignBtn span,
+.preview-sign-action i,
+.preview-sign-action span {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+
+#previewSignBtn:hover,
+.preview-sign-action:hover {
+  background: linear-gradient(135deg, #064d91 0%, #02335f 100%) !important;
+  box-shadow: 0 6px 18px rgba(7, 92, 173, 0.45) !important;
+}
+  
 </style>
 </head>
 <!-- 🔴 CORE PASS — SHELL/HVA PAGE FRAME — LOCK -->
