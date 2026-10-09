@@ -7,7 +7,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
   (function() {
-    const CURRENT_APP_VERSION = 'V3_10_2026_FIX';
+    const CURRENT_APP_VERSION = 'V3_10_2026_LE_CHUAN';
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const currentUrlVer = urlParams.get('hva_v');
@@ -67,13 +67,36 @@
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}.step{padding:12px;border:1px solid #dbe7f0;border-radius:14px;background:#fff;font-size:12px;font-weight:800;color:#607487;text-align:center}.step.on{border-color:#6ebbe8;background:#edf8ff;color:#075cad}.step span{display:inline-flex;width:24px;height:24px;border-radius:50%;align-items:center;justify-content:center;background:#e5eef5;margin-right:7px}.step.on span{background:#075cad;color:#fff}
 .card{background:#fff;border:1px solid #dce8f1;border-radius:18px;padding:22px;box-shadow:0 6px 20px rgba(15,76,129,.06);margin-top:14px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 24px;margin-top:18px}.field.full{grid-column:1/-1}
 
-/* NGUYÊN BẢN STYLE Ô NHẬP LIỆU CỰC ĐẸP CỦA THẦY */
-.lbl,label{display:block;font-size:12px;font-weight:800;color:#36556e;margin:0 0 6px}.lbl b,label b{color:#dc2626;font-weight:900}
-select,input,textarea{width:100%;height:42px;border:1.8px solid #075cad;border-radius:10px;padding:0 14px;background:#fff;font:600 13px Inter,Arial,sans-serif;color:#163a5f;outline:none;transition:border-color .18s ease,box-shadow .18s ease}
-select{appearance:none;-webkit-appearance:none;-moz-appearance:none;padding-right:58px;cursor:pointer;background-color:#fff;background-image:linear-gradient(45deg,transparent 50%,#fff 50%),linear-gradient(135deg,#fff 50%,transparent 50%),linear-gradient(#1479c9,#1479c9);background-position:calc(100% - 28px) calc(50% - 2px),calc(100% - 20px) calc(50% - 2px),100% 0;background-size:8px 8px,8px 8px,52px 100%;background-repeat:no-repeat}
-select:hover,input:hover,textarea:hover{border-color:#064b91} select:focus,input:focus,textarea:focus{border-color:#064b91;box-shadow:0 0 0 3px rgba(7,92,173,.12)}
+/* ĐIỀU CHỈNH LỀ TRONG CỰC KỲ THÔNG THOÁNG CHO Ô NHẬP LIỆU (KHÔNG BAO GIỜ SÁT MÉP) */
+.lbl,label{display:block;font-size:12.5px;font-weight:800;color:#36556e;margin:0 0 6px}.lbl b,label b{color:#dc2626;font-weight:900}
+select,input,textarea{
+  width:100%!important;
+  box-sizing:border-box!important;
+  height:44px;
+  border:1.8px solid #075cad!important;
+  border-radius:10px!important;
+  padding:0 14px 0 18px!important; /* Cố định lề trái 18px thông thoáng */
+  background:#fff;
+  font:600 13.5px Inter,Arial,sans-serif!important;
+  color:#163a5f!important;
+  outline:none;
+  transition:border-color .18s ease,box-shadow .18s ease;
+}
+select{
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  padding-right:58px!important;
+  cursor:pointer;
+  background-color:#fff;
+  background-image:linear-gradient(45deg,transparent 50%,#fff 50%),linear-gradient(135deg,#fff 50%,transparent 50%),linear-gradient(#1479c9,#1479c9);
+  background-position:calc(100% - 28px) calc(50% - 2px),calc(100% - 20px) calc(50% - 2px),100% 0;
+  background-size:8px 8px,8px 8px,52px 100%;
+  background-repeat:no-repeat;
+}
+select:hover,input:hover,textarea:hover{border-color:#064b91!important}
+select:focus,input:focus,textarea:focus{border-color:#064b91!important;box-shadow:0 0 0 3px rgba(7,92,173,.14)!important}
 input[readonly]{background:#f0f7fd!important;color:#06447f!important;font-weight:800!important;cursor:default}
-textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
+textarea{height:auto;min-height:86px;padding:12px 14px 12px 18px!important;resize:vertical;line-height:1.55}
+
 .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.btn{border:0;border-radius:10px;padding:11px 16px;font:800 12px Inter;cursor:pointer}.primary{background:#075cad;color:#fff}.secondary{background:#eaf4fb;color:#075cad;border:1px solid #cce1ef}.btn:disabled{opacity:.5;cursor:not-allowed}
 .hidden{display:none!important}.status{margin-top:12px;padding:11px 14px;border:1.5px solid #075cad;border-radius:9px;background:#f4f9fe;color:#16466f;font-size:12.5px;font-weight:600;line-height:1.45}
 
@@ -83,7 +106,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .identity-person{display:flex;align-items:center;gap:14px}.identity-avatar{width:48px;height:48px;flex:0 0 48px;border-radius:14px;display:grid;place-items:center;background:#c5e7fb!important;color:#0569b6!important;font-size:22px}
 .identity-name{font-size:20px!important;line-height:1.2;font-weight:900!important;color:#06447f!important;margin:3px 0 7px}
 .identity-meta{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#365f7f!important}.identity-meta i{color:#0a78c9;margin-right:4px}.identity-meta b{color:#123f67!important}
-.identity-section-title{font-size:11px!important;font-weight:900;letter-spacing:.09em;color:#376a91!important;margin-bottom:9px}
+.identity-section-title{font-size:11px!important;font-weight:900;letter-spacing:.09em;color:#376a91!important;margin-bottom:99x}
 .signature-preview{height:64px;display:flex;align-items:center;justify-content:center;border:1.8px dashed #38bdf8;border-radius:12px;background:#ffffff;box-shadow:inset 0 2px 4px rgba(7,92,173,.04);overflow:hidden}
 .signature-preview img{max-width:170px;max-height:56px;object-fit:contain}.signature-empty{font-size:11.5px;color:#64748b;text-align:center;padding:8px;font-weight:600}
 .signer-status{font-size:12px;color:#475569;line-height:1.4;margin:4px 0 10px;font-weight:600}.signer-status.ok{color:#15803d;font-weight:800}
@@ -96,42 +119,45 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 /* MODAL CCCD */
 .hva-sign-modal{position:fixed;inset:0;z-index:100000;background:rgba(7,31,55,.62);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:18px}
 .hva-sign-box{width:min(470px,100%);background:#ffffff;border-radius:24px;padding:26px 28px;box-shadow:0 24px 70px rgba(0,30,60,.32);border:1px solid #e2e8f0}
-.cccd-input-wrap{position:relative!important;width:100%!important}.cccd-input-wrap input{width:100%!important;box-sizing:border-box!important;padding:14px 52px 14px 16px!important}
+.cccd-input-wrap{position:relative!important;width:100%!important}.cccd-input-wrap input{width:100%!important;box-sizing:border-box!important;padding:14px 52px 14px 18px!important}
 .cccd-eye{position:absolute!important;right:10px!important;top:50%!important;transform:translateY(-50%)!important;width:38px!important;height:38px!important;display:flex!important;align-items:center!important;justify-content:center!important;border:0!important;background:transparent!important;color:#0871bd!important;font-size:18px!important;cursor:pointer}
 .hva-sign-msg{min-height:18px;margin-top:10px;font-size:12px;font-weight:800;color:#dc2626}
 
 /* ==============================================================================
-   KHUNG GIẤY IN A4 & THỂ THỨC HÀNH CHÍNH NGHỊ ĐỊNH 30 NGUYÊN BẢN (KHÔNG CĂN GIỮA TOÀN BỘ)
+   KHUNG GIẤY IN A4 & THỂ THỨC HÀNH CHÍNH NGHỊ ĐỊNH 30/2020/NĐ-CP CHUẨN XÁC 100%
    ============================================================================== */
 .preview-shell{background:#eef3f8!important;padding:18px!important}
 .preview-toolbar{max-width:794px;margin:0 auto 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-
-/* Container bọc ngoài giúp mobile cuộn ngang mượt mà, giữ nguyên vẹn 100% hình thức văn bản */
 .paper-scroll-wrapper{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:12px}
 
 .official-paper{width:794px!important;min-width:794px!important;margin:0 auto!important;padding:54px 62px 58px!important;background:#fff!important;color:#111!important;border-radius:2px!important;box-shadow:0 15px 45px rgba(35,56,76,.13)!important;font-family:"Times New Roman",Times,serif!important;font-size:14pt!important;line-height:1.5!important}
 .form-code{text-align:right!important;font-family:"Times New Roman",Times,serif!important;font-size:10pt!important;font-style:italic!important;margin-bottom:8px!important;color:#111!important}
 
-/* ĐẦU TRANG 2 CỘT CHUẨN NGHỊ ĐỊNH 30 */
-.official-head{display:grid!important;grid-template-columns:44% 56%!important;gap:12px!important;text-align:center!important;margin-bottom:28px!important;font-size:13pt!important;line-height:1.35!important}
-.agency div,.agency b,.nation b{display:block}
-.agency-parent{font-size:10.5pt!important;text-transform:uppercase!important;white-space:nowrap!important;letter-spacing:-0.02em!important}
-.agency-unit{font-size:11.5pt!important;text-transform:uppercase!important;font-weight:bold!important;margin-top:2px!important;white-space:nowrap!important}
-.agency-line{display:block!important;width:75px!important;border-top:1px solid #111!important;margin:3px auto 0!important}
+/* ĐẦU TRANG: QUỐC HIỆU VÀ CƠ QUAN BAN HÀNH VĂN BẢN (NGHỊ ĐỊNH 30) */
+.official-head{display:grid!important;grid-template-columns:46% 54%!important;gap:10px!important;text-align:center!important;margin-bottom:28px!important;line-height:1.35!important}
 
-.nation-title{font-size:10.5pt!important;text-transform:uppercase!important;font-weight:bold!important;white-space:nowrap!important;letter-spacing:-0.01em!important}
-.nation-motto{font-size:12pt!important;font-weight:bold!important;margin-top:2px!important;white-space:nowrap!important}
-.nation-line{display:block!important;width:170px!important;border-top:1px solid #111!important;margin:3px auto 0!important}
+.agency{display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.agency-parent{font-size:10pt!important;text-transform:uppercase!important;white-space:nowrap!important}
+.agency-unit-wrap{display:inline-block;margin-top:2px}
+.agency-unit{font-size:11pt!important;text-transform:uppercase!important;font-weight:bold!important;white-space:nowrap!important}
+/* Gạch chân dưới cơ quan ban hành: Dài bằng khoảng 1/3 đến 1/2 độ dài dòng chữ */
+.agency-line{display:block!important;width:45%!important;border-top:1px solid #111!important;margin:3px auto 0!important}
+
+.nation{display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.nation-title{font-size:10pt!important;text-transform:uppercase!important;font-weight:bold!important;white-space:nowrap!important}
+.nation-motto-wrap{display:inline-block;margin-top:2px}
+.nation-motto{font-size:11pt!important;font-weight:bold!important;white-space:nowrap!important}
+/* GẠCH CHÂN TIÊU NGỮ: DÀI BẰNG ĐÚNG ĐỘ DÀI CỦA DÒNG CHỮ (100% CỦA PHẦN NỘI DUNG CHỮ TIÊU NGỮ) */
+.nation-line{display:block!important;width:100%!important;border-top:1px solid #111!important;margin:3px auto 0!important}
 
 .official-title{text-align:center!important;font-size:18pt!important;font-weight:bold!important;margin-top:8px!important;text-transform:uppercase!important}
 .official-subtitle{text-align:center!important;font-size:14pt!important;font-weight:bold!important;margin:0!important}
-.title-decor-line{display:block!important;width:150px!important;border-top:1px solid #111!important;margin:4px auto 24px!important}
+.title-decor-line{display:block!important;width:140px!important;border-top:1px solid #111!important;margin:4px auto 24px!important}
 
-/* NỘI DUNG VĂN BẢN HÀNH CHÍNH */
 .official-paper p{margin:9px 0!important;text-align:justify!important}
 .official-paper .indent{text-indent:24px!important;display:block}
 
-/* PHẦN KÝ TÊN DẠT PHẢI 50% */
+/* PHẦN KÝ TÊN: DẠT PHẢI 50% */
 .official-sign{width:50%!important;margin:26px 0 0 auto!important;text-align:center!important;line-height:1.45!important}
 .official-sign>*{display:block}
 .sign-date{font-style:italic!important;font-size:13pt!important;margin-bottom:3px!important}
@@ -149,9 +175,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .hva-modal-icon{width:80px;height:80px;margin:0 auto 20px;display:grid;place-items:center;border-radius:50%;background:#edf5ff;color:#246be5;font-size:38px}
 .hva-modal-ok{width:100%;height:52px;border:0;border-radius:14px;background:#13588d;color:#fff;font-size:15px;font-weight:900;cursor:pointer}
 
-/* ==============================================================================
-   RESPONSIVE DI ĐỘNG: CHỈ CO GIÃN BANNER VÀ FORM ĐIỀN (KHÔNG CHẠM VÀO TỜ A4)
-   ============================================================================== */
+/* RESPONSIVE DI ĐỘNG */
 @media screen and (max-width: 900px){
   .hva-pro-header{margin:7px 7px 0;min-height:80px;border-radius:13px}
   .hva-pro-header-inner{min-height:80px;grid-template-columns:38px minmax(0,1fr) auto;gap:8px;padding:9px 10px}
@@ -343,13 +367,17 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
         <div class="official-head">
           <div class="agency">
             <div class="agency-parent">SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div>
-            <div class="agency-unit">TRƯỜNG THPT HÒA VANG</div>
-            <span class="agency-line"></span>
+            <div class="agency-unit-wrap">
+              <div class="agency-unit">TRƯỜNG THPT HÒA VANG</div>
+              <span class="agency-line"></span>
+            </div>
           </div>
           <div class="nation">
             <div class="nation-title">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
-            <div class="nation-motto">Độc lập - Tự do - Hạnh phúc</div>
-            <span class="nation-line"></span>
+            <div class="nation-motto-wrap">
+              <div class="nation-motto">Độc lập - Tự do - Hạnh phúc</div>
+              <span class="nation-line"></span>
+            </div>
           </div>
         </div>
 
