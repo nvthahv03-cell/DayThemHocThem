@@ -77,6 +77,13 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .field-help{margin:8px 2px 0!important;padding:9px 11px!important;border-radius:9px!important;background:#f3f8fc!important;color:#526d83!important;font-size:12px!important;line-height:1.45!important}
 .field-help i{color:#0b78c9;margin-right:5px}
 
+/* ĐỒNG BỘ Ô NHẬP VÀ KHẢ NĂNG CO GIÃN VỚI DTHT ĐÃ PASS */
+.field{min-width:0} .grid{min-width:0}
+.field input,.field textarea,.field select{min-width:0;max-width:100%;box-sizing:border-box;border:1.5px solid #b9d0e5;border-radius:12px;background:#fff;color:#173b5c;padding-left:16px;font-size:14px;line-height:1.5}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:#1677bd;box-shadow:0 0 0 3px rgba(22,119,189,.10)}
+.field input[readonly]{background:#f0f7fd;color:#06447f;font-weight:800;cursor:default}
+.field select{padding-right:60px;white-space:nowrap;text-overflow:ellipsis}
+@media(max-width:700px){.grid{grid-template-columns:minmax(0,1fr)!important;gap:14px!important}.field.full{grid-column:auto!important}.card{padding:14px!important}.shell{padding:0 10px!important}.hero{flex-wrap:wrap}.identity-col{padding:16px!important}.identity-person{align-items:flex-start}.identity-meta{gap:7px 12px}.preview-toolbar{flex-wrap:wrap}.preview-shell{overflow-x:auto}.official-paper{min-width:600px}.actions .btn{min-height:42px}}
 /* IDENTITY CARD CHUẨN DTHT */
 .identity-card{display:grid!important;grid-template-columns:minmax(0,1.35fr) minmax(250px,.9fr) minmax(250px,.85fr)!important;gap:0!important;padding:0!important;overflow:hidden!important;background:#e8f4ff!important;border:1px solid #79b9e8!important;border-radius:16px!important;box-shadow:0 10px 26px rgba(7,92,173,.10)!important}
 .identity-col{min-width:0;padding:20px 22px!important;position:relative;background:#e8f4ff!important}.identity-col+.identity-col{border-left:1px solid #9bc9ea!important}
@@ -306,7 +313,7 @@ html,body{max-width:100%;overflow-x:clip}
         </div>
         <div class="field">
           <label>Lớp chủ nhiệm <b>*</b></label>
-          <input id="assignedClass" required placeholder="Ví dụ: 12/5 (nhập khi hồ sơ chưa có lớp)">
+          <input id="assignedClass" required placeholder="Tự động lấy từ phân công GVCN (cột W)" readonly>
         </div>
         <div class="field">
           <label>1. Tình hình Sĩ số học sinh <b>*</b></label>
@@ -474,7 +481,11 @@ async function loadCnProfile(username){
     const response = await fetch(url.toString(), {cache:'no-store'});
     const result = await response.json();
     if(!result.ok) throw new Error(result.message || 'Không đọc được hồ sơ.');
-    const cls = parseHvaClassVal(result.lopChuNhiem || '');
+    const cls = parseHvaClassVal(result.lopChuNhiem || result.nguoiDung?.lopChuNhiem || '');
+    if(result.nguoiDung){
+      $('identityName').textContent = result.nguoiDung.hoTen || $('identityName').textContent;
+      $('identityTeam').textContent = result.nguoiDung.toBoPhan || $('identityTeam').textContent;
+    }
     if(cls && /^1[012]\/\d{1,2}$/.test(cls)){
       $('assignedClass').value=cls;
       $('assignedClass').readOnly=true;
@@ -508,7 +519,7 @@ function initApp(){
 
   let lop = parseHvaClassVal(me.lopChuNhiem);
   if(!lop || lop === 'Không') lop = ''; // Không tự gán lớp khi hồ sơ thiếu
-  $('identityClass').textContent = lop;
+  $('identityClass').textContent = lop || 'Đang đối chiếu...';
   $('assignedClass').value = '';
   $('assignedClass').readOnly = true;
   if (!lop) $('apiStatus').textContent = 'Đang tra cứu lớp chủ nhiệm theo cột W của dữ liệu nhân sự...';
