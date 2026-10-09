@@ -442,10 +442,10 @@ input::placeholder, textarea::placeholder{color:#8a9bad!important;opacity:1!impo
       </div>
     </div>
 
-    <!-- TỜ GIẤY IN A4 -->
-    <article class="official-paper" id="paper">
+    <!-- 1. Mã mẫu -->
       <div class="form-code">Mẫu BC-CN01-HVA</div>
 
+      <!-- 2. Đầu trang: Cơ quan & Quốc hiệu -->
       <div class="official-head">
         <div class="agency">
           <div class="agency-parent">SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div>
@@ -458,6 +458,7 @@ input::placeholder, textarea::placeholder{color:#8a9bad!important;opacity:1!impo
         </div>
       </div>
 
+      <!-- 3. Tên văn bản & Trích yếu -->
       <div class="official-title">BÁO CÁO</div>
       <div class="official-subtitle" id="previewSubtitle">Công tác chủ nhiệm Tháng 10/2026</div>
       <div class="title-decor-line"></div>
@@ -898,60 +899,103 @@ function resetForm(){
   ['classSize','attendance','discipline','cooperation','suggestions'].forEach(id => $(id).value = '');
 }
 
-/* GỬI BÁO CÁO VỀ TAB NVS_CHU_NHIEM */
+/* HÀM GỬI BÁO CÁO QUA CẦU NỐI DTHT MASTER */
 async function submitReport(ev){
-  if(ev) ev.preventDefault();
+  if(ev && typeof ev.preventDefault === 'function') ev.preventDefault();
+
+  if(window.__dthtSubmitting) return;
+
   if(!state.signatureData){
     showHvaNotice('error', 'Chưa có chữ ký', 'Thầy/Cô vui lòng tải ảnh chữ ký trước khi gửi BGH.');
     return;
   }
   if(!state.signerVerified){
-    showHvaNotice('error', 'Chưa xác thực CCCD', 'Thầy/Cô vui lòng xác thực người ký bằng CCCD trước khi gửi BGH.');
+    showHvaNotice('error', 'Chưa xác thực người ký', 'Thầy/Cô vui lòng xác thực người ký bằng CCCD trước khi gửi BGH.');
     return;
   }
-  state.signed = true;
-  refreshSignatureUI();
 
+  state.signed = true;
   const btn = $('submitReportBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Đang gửi dữ liệu...';
+  const originalHtml = btn ? btn.innerHTML : '';
+  window.__dthtSubmitting = true;
+
+  if(btn){
+    btn.disabled = true;
+    btn.setAttribute('aria-busy', 'true');
+    btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Đang gửi dữ liệu...';
+  }
 
   try {
+    const userObj = dthtCurrentUser();
+    const u = String(userObj.tenDangNhap || userObj.username || userObj.userName || '').trim();
+    const token = String(localStorage.getItem('hvaSessionToken') || sessionStorage.getItem('hvaSessionToken') || userObj.sessionToken || '').trim();
+    const cccd = String($('signerCccd') ? $('signerCccd').value : '').replace(/\D/g, '');
+
+    const lop = $('assignedClass') ? $('assignedClass').value.trim() : '';
+    const siSo = $('classSize') ? $('classSize').value.trim() : '';
+    const chuyenCan = $('attendance') ? $('attendance').value.trim() : '';
+    const ky = $('reportPeriod') ? $('reportPeriod').value : 'Tháng 10/2026';
+    const nenNep = $('discipline') ? $('discipline').value.trim() : '';
+    const phoiHop = $('cooperation') ? $('cooperation').value.trim() : '';
+    const deXuat = $('suggestions') ? $('suggestions').value.trim() : '';
+
     const payload = {
-      action: 'luuBaoCaoChuNhiem',
-      tenDangNhap: state.user?.tenDangNhap || '',
-      hoTen: state.user?.hoTen || state.user?.fullName || '',
-      toBoPhan: state.user?.toBoPhan || state.user?.tenTo || '',
-      monDay: state.user?.monDay || '',
-      lopChuNhiem: $('assignedClass').value,
-      kyBaoCao: $('reportPeriod').value,
-      siSo: $('classSize').value,
-      chuyenCan: $('attendance').value,
-      nenNep: $('discipline').value,
-      phoiHop: $('cooperation').value,
-      deXuat: $('suggestions').value,
-      daKy: true,
-      chuKyBase64: state.signatureData
+      action: 'submitDTHT', // Dùng đúng action mà Backend đang tiếp nhận
+      username: u,
+      teacherKey: u,
+      teacherName: userObj.hoTen || userObj.fullName || '',
+      team: userObj.toBoPhan || userObj.tenTo || '',
+      schoolYear: '2026-2027',
+      namHoc: '2026-2027',
+      sessionToken: token,
+      token: token,
+      signerVerified: true,
+      signed: true,
+      participates: true,
+      coThamGia: true,
+      cccd: cccd,
+      nguoiNhan: 'Ban Giám hiệu Trường THPT Hòa Vang',
+
+      assignedSubject: 'Chủ nhiệm: ' + lop,
+      monHocDayThem: 'CN Lớp ' + lop + ' (Sĩ số: ' + siSo + ')',
+      ngayTrongTuan: 'Chuyên cần: ' + chuyenCan,
+      khungGio: 'Kỳ: ' + ky,
+      thoiDiemBatDau: 'Năm học 2026-2027',
+      hinhThucDayThem: nenNep || 'Bình thường',
+      diaDiemDayThem: phoiHop || 'Đã liên lạc PHHS',
+      dienThoaiCoSo: lop,
+      moiQuanHeChuTheDKKD: deXuat || 'Không có kiến nghị'
     };
 
-    const r = await fetch(HVA_BACKEND_URL, {
+    const r = await fetch('https://script.google.com/macros/s/AKfycbxXCprStGvh3iu_72ri1JoncQ6kTwqaytimvbLy5Sn02At-__9g07jot32yQ7xVeKRB/exec', {
       method: 'POST',
       headers: {'Content-Type': 'text/plain;charset=UTF-8'},
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      cache: 'no-store'
     });
+
     const res = await r.json();
 
-    if(res && res.ok === true){
-      btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Đã gửi thành công';
+    if(res && (res.ok === true || res.success === true)){
       setStep(3);
-      showHvaNotice('success', 'Gửi báo cáo thành công', 'Báo cáo công tác chủ nhiệm đã được chuyển đến Ban Giám hiệu!');
+      if(btn){
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Đã gửi thành công';
+      }
+      showHvaNotice('success', 'Gửi báo cáo thành công', 'Báo cáo công tác chủ nhiệm đã được máy chủ HVA ghi nhận thành công!');
     } else {
-      throw new Error(res?.message || 'Lỗi lưu dữ liệu máy chủ.');
+      throw new Error((res && (res.thongBao || res.message)) || 'Lỗi lưu dữ liệu máy chủ.');
     }
   } catch(e) {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="bi bi-send-check"></i> Xác nhận & gửi BGH';
+    if(btn){
+      btn.disabled = false;
+      btn.removeAttribute('aria-busy');
+      btn.innerHTML = originalHtml || '<i class="bi bi-send-check"></i> Xác nhận & gửi BGH';
+    }
+    setStep(2);
     showHvaNotice('error', 'Chưa gửi được báo cáo', 'Chi tiết: ' + (e.message || e));
+  } finally {
+    window.__dthtSubmitting = false;
   }
 }
 
