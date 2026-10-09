@@ -6,24 +6,41 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <script>
-    (function() {
-      const CURRENT_APP_VERSION = 'V6_10_2026';
-      try {
-        const savedVersion = localStorage.getItem('hva_app_version');
-        if (savedVersion !== CURRENT_APP_VERSION) {
-          localStorage.setItem('hva_app_version', CURRENT_APP_VERSION);
-          if ('caches' in window) {
-            caches.keys().then(function(names) {
-              for (let name of names) caches.delete(name);
-            });
-          }
-          if (savedVersion) {
-            window.location.reload(true);
-          }
+  (function() {
+    // Khi có cập nhật mới, Thầy chỉ cần tăng số ở đây: V7, V8, V9,...
+    const CURRENT_APP_VERSION = 'V7_10_2026';
+
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const currentUrlVer = urlParams.get('hva_v');
+      const savedVer = localStorage.getItem('hva_app_version');
+
+      if (savedVer !== CURRENT_APP_VERSION || currentUrlVer !== CURRENT_APP_VERSION) {
+        localStorage.setItem('hva_app_version', CURRENT_APP_VERSION);
+
+        if ('caches' in window) {
+          caches.keys().then(function(keys) {
+            keys.forEach(function(k) { caches.delete(k); });
+          });
         }
-      } catch (e) {}
-    })();
-  </script>
+
+        urlParams.set('hva_v', CURRENT_APP_VERSION);
+        urlParams.set('_t', Date.now());
+        window.location.replace(window.location.pathname + '?' + urlParams.toString() + window.location.hash);
+        return;
+      }
+    } catch (e) {}
+
+    // Tự động cập nhật chữ phiên bản (V7, V8...) lên góc banner khi tải xong trang
+    document.addEventListener('DOMContentLoaded', function() {
+      const verEl = document.querySelector('.hva-pro-version') || document.getElementById('hvaVersionLabel');
+      if (verEl) {
+        const match = CURRENT_APP_VERSION.match(/V\d+/i);
+        verEl.textContent = match ? match[0].toUpperCase() : CURRENT_APP_VERSION;
+      }
+    });
+  })();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HVA - Quản lý dạy thêm, học thêm </title>
 <!-- DTHT HVA UI V3_10 | Backend HVA + Personnel source + Sheet DTHT -->
@@ -986,6 +1003,44 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     display: inline !important;
   }
 }
+
+  /* Chấm tròn xanh TRỰC TUYẾN phát sóng nhấp nháy liên tục */
+.hva-pro-online-dot {
+  position: relative !important;
+  display: inline-block !important;
+  width: 8px !important;
+  height: 8px !important;
+  background-color: #22c55e !important; /* Xanh lá tươi */
+  border-radius: 50% !important;
+  margin-right: 6px !important;
+  vertical-align: middle !important;
+}
+
+/* Vòng sóng radar lan tỏa tỏa sáng */
+.hva-pro-online-dot::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  background-color: #22c55e !important;
+  transform: translate(-50%, -50%) !important;
+  animation: hvaDotPulse 1.8s infinite ease-out !important;
+}
+
+@keyframes hvaDotPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(3.2);
+    opacity: 0;
+  }
+}
+  
 </style>
 </head>
 <!-- 🔴 CORE PASS — SHELL/HVA PAGE FRAME — LOCK -->
