@@ -898,7 +898,8 @@ function resetForm(){
   ['classSize','attendance','discipline','cooperation','suggestions'].forEach(id => $(id).value = '');
 }
 
-/* GỬI BÁO CÁO VỀ TAB NVS_CHU_NHIEM */
+
+  /* GỬI BÁO CÁO VỀ TAB NVS_CHU_NHIEM */
 async function submitReport(ev){
   if(ev) ev.preventDefault();
   if(!state.signatureData){
