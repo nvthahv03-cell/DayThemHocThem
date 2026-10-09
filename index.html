@@ -1156,6 +1156,102 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     white-space: nowrap !important;
   }
 }
+
+/* Phân tách 2 cột rõ ràng: Sở lệch trái, Quốc hiệu lệch phải, có khoảng hở ở giữa */
+#paper .official-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  margin-bottom: 22px !important;
+  width: 100% !important;
+}
+
+/* Khối bên trái: Cụm Sở & Trường */
+#paper .official-head .agency {
+  flex: 0 0 45% !important;
+  max-width: 45% !important;
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+.agency-parent {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 11.5pt !important; /* Cỡ 11.5pt để vừa vặn, không chạm khối bên phải */
+  text-transform: uppercase !important;
+  font-weight: normal !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+  letter-spacing: -0.02em !important;
+}
+
+.agency-unit {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 12.5pt !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  margin-top: 2px !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+/* Khối bên phải: Quốc hiệu - Tiêu ngữ */
+#paper .official-head .nation {
+  flex: 0 0 52% !important;
+  max-width: 52% !important;
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+.nation-title {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 12pt !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+  letter-spacing: -0.01em !important;
+}
+
+.nation-motto {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 13pt !important;
+  font-weight: bold !important;
+  margin-top: 2px !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+/* Tinh chỉnh cho điện thoại di động */
+@media (max-width: 720px) {
+  #paper .official-head {
+    display: flex !important;
+    justify-content: space-between !important;
+  }
+  #paper .official-head .agency {
+    flex: 0 0 46% !important;
+    max-width: 46% !important;
+  }
+  #paper .official-head .nation {
+    flex: 0 0 52% !important;
+    max-width: 52% !important;
+  }
+  .agency-parent {
+    font-size: 7.8pt !important;
+  }
+  .agency-unit {
+    font-size: 8.5pt !important;
+  }
+  .nation-title {
+    font-size: 8pt !important;
+  }
+  .nation-motto {
+    font-size: 9pt !important;
+  }
+}
   
 </style>
 </head>
