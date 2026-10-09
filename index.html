@@ -686,11 +686,12 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   line-height: 1.25 !important;
   white-space: nowrap !important;
 }
+/* Gạch dưới TRƯỜNG THPT HÒA VANG: đưa sát lên mí chữ */
 .agency-line,
 .school-mark .official-line.short {
-  width: 70px !important;
+  width: 75px !important;
   border-top: 0.5pt solid #000000 !important;
-  margin: 3px auto 0 !important;
+  margin: 1px auto 0 !important; /* Đưa sát lên sát chữ */
 }
 
 /* Khối phải: Quốc hiệu - Tiêu ngữ (54%) */
@@ -719,11 +720,12 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   line-height: 1.25 !important;
   white-space: nowrap !important;
 }
+/* Gạch dưới "Độc lập - Tự do - Hạnh phúc": dài bằng chữ và đưa sát mí chữ */
 .nation-line,
 .motto-mark .official-line {
-  width: 140px !important;
+  width: 175px !important; /* Độ dài bằng trọn vẹn dòng chữ Độc lập - Tự do - Hạnh phúc */
   border-top: 0.5pt solid #000000 !important;
-  margin: 3px auto 0 !important;
+  margin: 1px auto 0 !important; /* Đưa sát lên sát chữ */
 }
 
 /* ==============================================================================
@@ -753,10 +755,11 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   color: #000000 !important;
 }
 
+/* Gạch dưới trích yếu: Đưa sát lên 1 tí */
 .title-decor-line {
   width: 150px !important;
   border-top: 0.5pt solid #000000 !important;
-  margin: 5px auto 20px !important;
+  margin: 2px auto 18px !important; /* Đưa sát lên mí dòng trích yếu */
 }
 
 /* Thân nội dung văn bản: 14pt, căn đều hai bên */
@@ -867,15 +870,15 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   }
   .agency-parent { font-size: 7.5pt !important; }
   .agency-unit { font-size: 8pt !important; }
-  .agency-line, .school-mark .official-line.short { width: 45px !important; }
+  .agency-line, .school-mark .official-line.short { width: 50px !important; margin: 1px auto 0 !important; }
   
   .nation-title { font-size: 7.5pt !important; }
   .nation-motto { font-size: 8.5pt !important; }
-  .nation-line, .motto-mark .official-line { width: 85px !important; }
+  .nation-line, .motto-mark .official-line { width: 110px !important; margin: 1px auto 0 !important; }
 
   #paper .official-title { font-size: 12pt !important; margin: 14px 0 3px !important; }
-  #paper .official-subtitle { font-size: 11pt !important; margin-bottom: 4px !important; }
-  .title-decor-line { width: 110px !important; margin: 4px auto 14px !important; }
+  #paper .official-subtitle { font-size: 11pt !important; margin-bottom: 2px !important; }
+  .title-decor-line { width: 110px !important; margin: 2px auto 14px !important; }
 
   #paper .report-body,
   #paper .report-body p,
@@ -921,14 +924,15 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   }
   .agency-parent { font-size: 12.5pt !important; }
   .agency-unit { font-size: 13pt !important; }
-  .agency-line { width: 85px !important; }
+  .agency-line { width: 90px !important; margin: 1px auto 0 !important; }
 
   .nation-title { font-size: 12.5pt !important; }
   .nation-motto { font-size: 13.5pt !important; }
-  .nation-line { width: 155px !important; }
+  .nation-line { width: 195px !important; margin: 1px auto 0 !important; } /* In ra vừa khít 100% độ dài dòng chữ */
 
   #paper .official-title { font-size: 14pt !important; }
   #paper .official-subtitle { font-size: 14pt !important; }
+  .title-decor-line { width: 160px !important; margin: 2px auto 18px !important; }
 
   #paper .report-body,
   #paper .report-body p,
