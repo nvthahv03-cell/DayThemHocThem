@@ -1252,6 +1252,117 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     font-size: 9pt !important;
   }
 }
+
+/* ==============================================================================
+   QUY CHUẨN IN ẤN TRANG A4 THEO NGHỊ ĐỊNH 30 (KHÓA CHUẨN 14PT, KHÔNG CO NHỎ)
+   ============================================================================== */
+@page {
+  size: A4 portrait;
+  margin: 20mm 15mm 20mm 25mm; /* Chuẩn thể thức: Trên 20, Dưới 20, Trái 25, Phải 15 */
+}
+
+@media print {
+  /* 1. Ẩn toàn bộ giao diện thừa: banner, thanh công cụ, nút bấm */
+  body {
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 14pt !important;
+  }
+
+  header, .hva-pro-header, .steps, .btn, .preview-toolbar, 
+  .no-print, button, #toast, .card-header {
+    display: none !important;
+  }
+
+  /* 2. Ép tờ giấy hiển thị trọn vẹn 100% trang in, không bo viền, không đổ bóng */
+  .official-paper, #paper {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  /* 3. Khóa cứng kích cỡ chữ chuẩn thể thức hành chính BC-CM10-HVA */
+  /* Mã mẫu */
+  #paper .form-code {
+    font-size: 10pt !important;
+    font-style: italic !important;
+    text-align: right !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Quốc hiệu & Cơ quan: 13pt */
+  .agency-parent {
+    font-size: 12.5pt !important;
+    white-space: nowrap !important;
+  }
+  .agency-unit {
+    font-size: 13pt !important;
+    font-weight: bold !important;
+    white-space: nowrap !important;
+  }
+  .nation-title {
+    font-size: 12.5pt !important;
+    font-weight: bold !important;
+    white-space: nowrap !important;
+  }
+  .nation-motto {
+    font-size: 13.5pt !important;
+    font-weight: bold !important;
+    white-space: nowrap !important;
+  }
+
+  /* Tiêu đề BÁO CÁO & Trích yếu: 14pt */
+  #paper .official-title {
+    font-size: 14pt !important;
+    font-weight: bold !important;
+    margin: 24px 0 6px !important;
+  }
+  #paper .official-subtitle {
+    font-size: 14pt !important;
+    font-weight: bold !important;
+  }
+
+  /* Thân nội dung văn bản: BẮT BUỘC ĐÚNG 14PT, GIÃN DÒNG THOÁNG ĐẸP */
+  #paper .report-body,
+  #paper .report-body p,
+  #paper .report-body span,
+  #paper .report-body b,
+  #pName, 
+  #pAssigned {
+    font-size: 14pt !important;
+    line-height: 1.5 !important; /* Giãn dòng 1.5 dòng để văn bản trải đều, đẹp mắt */
+    color: #000000 !important;
+  }
+
+  /* Khối ký tên */
+  .sign-date {
+    font-size: 13.5pt !important;
+    font-style: italic !important;
+  }
+  .sign-role {
+    font-size: 14pt !important;
+    font-weight: bold !important;
+  }
+  .sign-guide {
+    font-size: 11pt !important;
+    font-style: italic !important;
+  }
+  .sign-name {
+    font-size: 14pt !important;
+    font-weight: bold !important;
+  }
+
+  /* Chữ ký hình ảnh khi in */
+  .signature-on-paper img {
+    max-height: 65px !important;
+    mix-blend-mode: multiply !important;
+  }
+}
   
 </style>
 </head>
