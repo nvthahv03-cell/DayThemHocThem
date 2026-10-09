@@ -365,7 +365,7 @@ function fetchClassFromSheet(username){
     };
 
     // Đọc cột W (GVCN) ứng với cột N (Tên đăng nhập) từ tab Du_lieu_NhanSu_HVA
-    const tq = "select W where lower(N) = '" + user.replace(/'/g, "''") + "'";
+    const tq = "select W where lower(O) = '" + user.replace(/'/g, "''") + "'";
     script.src = 'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq'
       + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_HVA')
       + '&headers=6'
