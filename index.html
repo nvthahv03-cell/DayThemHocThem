@@ -322,10 +322,10 @@ async function dthtStandaloneLogin(){
   }
 }
 
-function initPortal(){
+async function initPortal(){
   const token = authToken();
   const user = currentUser();
-  const username = user.tenDangNhap || user.username || '';
+  const username = (user.tenDangNhap || user.username || '').trim().toLowerCase();
 
   if(!token || !username){
     $('dthtAuth').classList.remove('hidden');
@@ -337,7 +337,58 @@ function initPortal(){
   $('userNameLabel').textContent = user.hoTen || user.fullName || username;
   $('userTeamLabel').textContent = user.toBoPhan || user.tenTo || 'Ban Giám hiệu';
   $('userRoleLabel').textContent = user.chucVu || user.viTriViecLam || 'Giáo viên';
-  $('userClassLabel').textContent = user.lopChuNhiem || user.lopCN || 'Không';
+  
+  // Tra cứu lớp chủ nhiệm trực tiếp từ cột W của Sheet nhân sự
+  let lopCN = user.lopChuNhiem || '';
+  if(!lopCN || lopCN === 'Không'){
+    try {
+      lopCN = await fetchClassFromSheet(username);
+      if(lopCN){
+        user.lopChuNhiem = lopCN;
+        localStorage.setItem('user', JSON.stringify(user));
+      }
+    } catch(e){}
+  }
+
+  $('userClassLabel').textContent = lopCN || 'Không';
+}
+
+function fetchClassFromSheet(username){
+  return new Promise(resolve => {
+    const cb = '__menuClass_' + Date.now();
+    const script = document.createElement('script');
+    let done = false;
+    const finish = val => {
+      if(done) return; done = true;
+      try{ delete window[cb]; script.remove(); }catch(_){}
+      resolve(val);
+    };
+    setTimeout(() => finish(''), 6000);
+
+    window[cb] = res => {
+      try {
+        const rows = res?.table?.rows || [];
+        for(const r of rows){
+          const cells = r?.c || [];
+          // Cột O (chỉ số 14) là Tên đăng nhập
+          const login = String(cells[14]?.v ?? cells[14]?.f ?? '').trim().toLowerCase();
+          if(login === username){
+            // Cột W (chỉ số 22) là GVCN
+            const lop = String(cells[22]?.v ?? cells[22]?.f ?? '').trim();
+            finish(lop || '');
+            return;
+          }
+        }
+      } catch(e){}
+      finish('');
+    };
+
+    script.src = 'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq?sheet='
+      + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
+      + '&tqx=' + encodeURIComponent('responseHandler:' + cb)
+      + '&_=' + Date.now();
+    document.head.appendChild(script);
+  });
 }
 
 document.addEventListener('DOMContentLoaded', initPortal);
