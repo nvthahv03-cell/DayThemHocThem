@@ -525,61 +525,80 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
 @media(max-width:900px){.identity-card{grid-template-columns:1fr!important}.identity-col+.identity-col{border-left:0!important;border-top:1px solid #86bfe6!important}}
 
-/* ===== DTHT FINAL PASS · 06/10/2026 · CHỈ MÃ MẪU + BODY 14PT ===== */
-
-/* Mã mẫu: phía trên cột Quốc hiệu, đúng vị trí mẫu hành chính */
-#paper{
-  position:relative!important;
+/* ==============================================================================
+   1. NÚT TRỰC TUYẾN & CHẤM TRÒN NHẤP NHÁY RADAR & NHÃN PHIÊN BẢN
+   ============================================================================== */
+.hva-pro-online {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  background: rgba(4, 98, 140, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.04em !important;
 }
 
-#paper .form-code{
-  position:absolute!important;
-  top:8mm!important;
-  right:20mm!important;
-  width:50%!important;
-
-  margin:0!important;
-  padding:0!important;
-
-  text-align:center!important;
-  white-space:nowrap!important;
-
-  font-family:"Times New Roman",Times,serif!important;
-  font-size:10pt!important;
-  font-style:italic!important;
-  font-weight:400!important;
-  line-height:1!important;
+/* Chấm tròn xanh phát sáng */
+.hva-pro-online-dot {
+  position: relative !important;
+  display: inline-block !important;
+  width: 9px !important;
+  height: 9px !important;
+  background-color: #22c55e !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
 }
 
-/* Nội dung báo cáo đúng chuẩn thể thức BC-CM10-HVA */
-#paper .report-body,
-#paper .report-body p,
-#paper .report-body span {
-  font-family: "Times New Roman", Times, serif !important;
-  font-size: 14pt !important;
-  line-height: 1.3 !important;
-  color: #000000 !important;
-  font-weight: normal !important;
+/* Sóng xung kích nhấp nháy phát tỏa liên tục */
+.hva-pro-online-dot::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  background-color: #22c55e !important;
+  animation: dotLivePulse 1.6s infinite ease-out !important;
+  pointer-events: none !important;
 }
 
-/* Chỉ in đậm các nhãn tiêu đề mục 1-5, Kính gửi, năm học */
-#paper .report-body b,
-#paper .report-body strong {
-  font-family: "Times New Roman", Times, serif !important;
-  font-size: 14pt !important;
-  font-weight: bold !important;
+@keyframes dotLivePulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
 }
 
-/* Khóa tên giáo viên và môn phân công: chữ đứng, thường, cùng cỡ 14pt */
-#pName, 
-#pAssigned, 
-.teacher-name-val {
-  font-family: "Times New Roman", Times, serif !important;
-  font-size: 14pt !important;
-  font-weight: normal !important;
+/* Nhãn phiên bản: Chữ xanh dương đậm trên nền thẻ trắng sắc nét */
+.hva-pro-version,
+#hvaVersionLabel {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #ffffff !important;
+  color: #003366 !important;
+  font-weight: 900 !important;
+  font-size: 10.5px !important;
+  padding: 1px 6px !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(0, 51, 102, 0.25) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+  line-height: 1.2 !important;
+  margin-left: 2px !important;
+  text-shadow: none !important;
 }
 
-/* Nút Xác thực & Ký xác nhận khi ĐÃ KÝ: Xanh dương đậm, chữ trắng đậm nổi bật */
+/* Nút Xác thực & Ký xác nhận khi ĐÃ KÝ */
 #previewSignBtn,
 .preview-sign-action,
 .preview-sign-action.signed-ok {
@@ -604,234 +623,20 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   box-shadow: 0 6px 18px rgba(7, 92, 173, 0.45) !important;
 }
 
-/* ===== BẢN XEM TRƯỚC VĂN BẢN HÀNH CHÍNH CHUẨN ĐẸP TRÊN ĐIỆN THOẠI ===== */
-@media (max-width: 720px) {
-  /* 1. Khung trang giấy A4 giả lập trang nhã, đổ bóng nhẹ */
-  .official-paper {
-    padding: 24px 16px 30px !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-    background: #ffffff !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
-    box-sizing: border-box !important;
-  }
-
-  /* 2. Mã mẫu văn bản nhỏ gọn phía góc phải */
-  #paper .form-code {
-    position: static !important;
-    width: 100% !important;
-    text-align: right !important;
-    margin-bottom: 6px !important;
-    font-size: 8.5pt !important;
-    color: #475569 !important;
-  }
-
-  /* 3. Phần Quốc hiệu và Đơn vị: Cân xứng 2 cột, tỉ lệ chuẩn 45% - 55% */
-  #paper .official-head {
-    display: grid !important;
-    grid-template-columns: 46% 54% !important;
-    gap: 6px !important;
-    text-align: center !important;
-    margin-bottom: 20px !important;
-    line-height: 1.25 !important;
-  }
-
-  /* Đơn vị bên trái */
-  .official-head .agency {
-    font-size: 8pt !important;
-  }
-  .official-head .agency b {
-    font-size: 8.5pt !important;
-    display: block;
-    margin-top: 2px;
-  }
-  .school-mark .official-line.short {
-    width: 45px !important;
-    max-width: 45px !important;
-    border-top: 1px solid #111 !important;
-    margin: 2px auto 0 !important;
-  }
-
-  /* Quốc hiệu bên phải */
-  .official-head .nation b {
-    font-size: 8.2pt !important;
-    letter-spacing: -0.01em;
-    display: block;
-  }
-  .motto-mark {
-    font-size: 8.5pt !important;
-    margin-top: 2px;
-  }
-  .motto-mark .official-line {
-    width: 80px !important;
-    max-width: 80px !important;
-    border-top: 1px solid #111 !important;
-    margin: 2px auto 0 !important;
-  }
-
-  /* 4. Tiêu đề BÁO CÁO trang trọng (Chuẩn Nghị định 30: 14pt, ĐẬM, ĐEN) */
-#paper .official-title {
-  font-family: "Times New Roman", Times, serif !important;
-  font-size: 14pt !important;
-  font-weight: bold !important;
-  text-transform: uppercase !important;
-  margin: 20px 0 4px !important;
-  text-align: center !important;
-  letter-spacing: 0.02em !important;
-  color: #000000 !important;
-}
-
-#paper .official-subtitle {
-  font-family: "Times New Roman", Times, serif !important;
-  font-size: 14pt !important; /* Đưa về đúng 14pt như BÁO CÁO */
-  font-weight: bold !important;
-  margin-bottom: 6px !important;
-  text-align: center !important;
-  line-height: 1.3 !important;
-  color: #000000 !important; /* Màu đen tuyền chuẩn văn bản in ấn */
-}
-  /* 5. Thân văn bản: Chuẩn 14pt, căn đều 2 bên, giãn dòng chuẩn hành chính */
-#paper .report-body,
-#paper .report-body p {
-  font-size: 14pt !important;
-  line-height: 1.5 !important;
-  text-align: justify !important;
-  text-justify: inter-word !important;
-  margin: 10px 0 !important;
-}
-
-/* 6. Góc chữ ký phía dưới bên phải: Chuẩn 13-14pt */
-.official-sign {
-  width: 50% !important;
-  margin-left: auto !important;
-  margin-top: 24px !important;
-  text-align: center !important;
-  font-size: 14pt !important;
-  line-height: 1.35 !important;
-}
-
-.official-sign > div:first-child {
-  font-size: 13.5pt !important; /* Địa danh, ngày tháng: 13.5pt nghiêng */
-  font-style: italic !important;
-  margin-bottom: 6px !important;
-}
-  /* Khử nền ảnh chữ ký để hòa vào mặt giấy mượt mà */
-  .signature-on-paper {
-    height: 58px !important;
-    margin: 4px auto !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .signature-on-paper img {
-    max-height: 54px !important;
-    max-width: 140px !important;
-    object-fit: contain !important;
-    mix-blend-mode: multiply !important; /* Tự động hòa tan nền trắng/xám vào trang giấy */
-    filter: contrast(1.15) !important;
-  }
-
-  /* 7. Thanh nút Chỉnh sửa / Đã ký trên đầu gọn gàng */
-  .preview-toolbar {
-    flex-direction: row !important;
-    justify-content: flex-end !important;
-    gap: 8px !important;
-    margin-bottom: 12px !important;
-  }
-  .preview-toolbar .btn {
-    padding: 7px 12px !important;
-    font-size: 11px !important;
-    border-radius: 8px !important;
-  }
-}
-
-
-/* ==============================================================================
-   1. NÚT TRỰC TUYẾN & CHẤM TRÒN NHẤP NHÁY RADAR & NHÃN PHIÊN BẢN
-   ============================================================================== */
-.hva-pro-online {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 7px !important;
-  background: rgba(4, 98, 140, 0.85) !important;
-  border: 1px solid rgba(255, 255, 255, 0.35) !important;
-  padding: 4px 10px !important;
-  border-radius: 999px !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-  color: #ffffff !important;
-  font-weight: 800 !important;
-  font-size: 11.5px !important;
-  letter-spacing: 0.04em !important;
-}
-
-/* Chấm tròn phát sáng và sóng xung kích radar */
-.hva-pro-online-dot {
-  position: relative !important;
-  display: inline-block !important;
-  width: 9px !important;
-  height: 9px !important;
-  background-color: #22c55e !important; /* Xanh lá tươi */
-  border-radius: 50% !important;
-  flex-shrink: 0 !important;
-}
-
-.hva-pro-online-dot::after {
-  content: "" !important;
-  position: absolute !important;
-  top: -1px !important;
-  left: -1px !important;
-  width: 11px !important;
-  height: 11px !important;
-  border-radius: 50% !important;
-  background-color: #22c55e !important;
-  animation: dotLivePulse 1.6s infinite ease-out !important;
-  pointer-events: none !important;
-}
-
-@keyframes dotLivePulse {
-  0% {
-    transform: scale(0.9);
-    opacity: 0.95;
-  }
-  100% {
-    transform: scale(3.2);
-    opacity: 0;
-  }
-}
-
-/* Nhãn phiên bản: Chữ xanh dương đậm trên nền trắng nổi bật */
-.hva-pro-version,
-#hvaVersionLabel {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: #ffffff !important;
-  color: #003366 !important; /* Xanh dương đậm HVA */
-  font-weight: 900 !important;
-  font-size: 10.5px !important;
-  padding: 1px 6px !important;
-  border-radius: 6px !important;
-  border: 1px solid rgba(0, 51, 102, 0.25) !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) !important;
-  line-height: 1.2 !important;
-  margin-left: 2px !important;
-}
-
 /* ==============================================================================
    2. KHUNG GIẤY VĂN BẢN VÀ ĐẦU TRANG (CHỐNG ĐÈ CHỮ TUYỆT ĐỐI)
    ============================================================================== */
-.official-paper {
+.official-paper, #paper {
+  position: relative !important;
   font-family: "Times New Roman", Times, serif !important;
   color: #000000 !important;
   background: #ffffff !important;
   box-sizing: border-box !important;
-  padding: 30mm 20mm 25mm 25mm !important;
-  line-height: 1.25 !important;
+  padding: 25mm 20mm 20mm 25mm !important;
+  line-height: 1.3 !important;
 }
 
-/* Mã mẫu: 10pt, nghiêng, căn phải */
+/* 1. Mã mẫu: 10pt nghiêng, góc trên bên phải */
 #paper .form-code {
   position: static !important;
   width: 100% !important;
@@ -839,11 +644,13 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   font-family: "Times New Roman", Times, serif !important;
   font-size: 10pt !important;
   font-style: italic !important;
+  font-weight: normal !important;
   color: #000000 !important;
-  margin-bottom: 6px !important;
+  margin: 0 0 8px 0 !important;
+  line-height: 1 !important;
 }
 
-/* Bố cục đầu trang dùng TABLE FIXED: Khóa cứng 2 cột không bao giờ đè nhau */
+/* 2. Bố cục đầu trang dùng TABLE FIXED: Khóa cứng 2 cột không bao giờ xô lệch */
 #paper .official-head {
   display: table !important;
   width: 100% !important;
@@ -862,6 +669,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   box-sizing: border-box !important;
 }
 .agency-parent {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: 11pt !important;
   text-transform: uppercase !important;
   font-weight: normal !important;
@@ -870,6 +678,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   letter-spacing: -0.02em !important;
 }
 .agency-unit {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: 11.5pt !important;
   text-transform: uppercase !important;
   font-weight: bold !important;
@@ -877,7 +686,8 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   line-height: 1.25 !important;
   white-space: nowrap !important;
 }
-.agency-line {
+.agency-line,
+.school-mark .official-line.short {
   width: 70px !important;
   border-top: 0.5pt solid #000000 !important;
   margin: 3px auto 0 !important;
@@ -893,6 +703,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   box-sizing: border-box !important;
 }
 .nation-title {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: 11pt !important;
   text-transform: uppercase !important;
   font-weight: bold !important;
@@ -901,128 +712,171 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   letter-spacing: -0.01em !important;
 }
 .nation-motto {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: 12pt !important;
   font-weight: bold !important;
   margin-top: 2px !important;
   line-height: 1.25 !important;
   white-space: nowrap !important;
 }
-.nation-line {
+.nation-line,
+.motto-mark .official-line {
   width: 140px !important;
   border-top: 0.5pt solid #000000 !important;
   margin: 3px auto 0 !important;
 }
 
 /* ==============================================================================
-   3. TIÊU ĐỀ & THÂN NỘI DUNG BÁO CÁO (CHUẨN 14PT)
+   3. TIÊU ĐỀ & THÂN NỘI DUNG BÁO CÁO (KHÓA CHUẨN 14PT)
    ============================================================================== */
+/* Tiêu đề BÁO CÁO: 14pt, IN HOA, ĐẬM, CĂN GIỮA */
 #paper .official-title {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: 14pt !important;
   font-weight: bold !important;
   text-transform: uppercase !important;
   text-align: center !important;
-  margin: 20px 0 4px !important;
+  margin: 22px 0 4px !important;
+  letter-spacing: 0.02em !important;
+  color: #000000 !important;
+  line-height: 1.3 !important;
 }
+
+/* Dòng trích yếu (Về việc dạy thêm ngoài nhà trường): 14pt, ĐẬM, CĂN GIỮA */
 #paper .official-subtitle {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: 14pt !important;
   font-weight: bold !important;
   text-align: center !important;
   margin: 0 !important;
   line-height: 1.3 !important;
+  color: #000000 !important;
 }
+
 .title-decor-line {
   width: 150px !important;
   border-top: 0.5pt solid #000000 !important;
   margin: 5px auto 20px !important;
 }
 
-/* Thân nội dung văn bản */
+/* Thân nội dung văn bản: 14pt, căn đều hai bên */
 #paper .report-body,
 #paper .report-body p,
 #paper .report-body span {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: 14pt !important;
-  line-height: 1.3 !important;
+  line-height: 1.4 !important;
   color: #000000 !important;
   margin: 8px 0 !important;
   text-align: justify !important;
+  text-justify: inter-word !important;
   font-weight: normal !important;
 }
+
 #paper .report-body b,
 #paper .report-body strong {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: 14pt !important;
   font-weight: bold !important;
 }
 
-/* Họ tên và môn học đứng thường, cỡ chuẩn theo dòng */
+/* Họ tên và môn học đứng thường, cùng cỡ 14pt của dòng */
 #paper #pName,
 #paper #pAssigned,
 #paper .teacher-name-val {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: inherit !important;
   font-weight: normal !important;
   display: inline !important;
 }
 
 /* ==============================================================================
-   4. KHỐI KÝ TÊN BÊN PHẢI
+   4. KHỐI KÝ TÊN BÊN PHẢI (CHUẨN 13.5PT - 14PT)
    ============================================================================== */
 #paper .official-sign {
   width: 50% !important;
   margin-left: auto !important;
   margin-top: 22px !important;
   text-align: center !important;
-  line-height: 1.25 !important;
+  line-height: 1.3 !important;
 }
+
+/* Địa danh, ngày tháng: 13.5pt nghiêng */
+.official-sign .sign-date,
+.official-sign > div:first-child,
 .sign-date {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: 13.5pt !important;
   font-style: italic !important;
+  font-weight: normal !important;
+  color: #000000 !important;
   margin-bottom: 4px !important;
 }
+
+/* Chức danh: 14pt IN HOA ĐẬM */
 .sign-role {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: 14pt !important;
   font-weight: bold !important;
   text-transform: uppercase !important;
+  color: #000000 !important;
 }
+
+/* Hướng dẫn ký: nghiêng, không đậm */
 .sign-guide {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: 11pt !important;
   font-style: italic !important;
+  font-weight: normal !important;
   color: #333333 !important;
   margin: 2px 0 6px !important;
 }
+
+/* Vùng hiển thị chữ ký */
 .signature-on-paper {
-  min-height: 62px !important;
+  min-height: 60px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   margin: 2px 0 !important;
 }
+
 .signature-on-paper img {
   max-height: 60px !important;
   max-width: 160px !important;
   object-fit: contain !important;
   mix-blend-mode: multiply !important;
 }
+
+/* Họ tên người báo cáo: 14pt ĐẬM */
 .sign-name {
+  font-family: "Times New Roman", Times, serif !important;
   font-size: 14pt !important;
   font-weight: bold !important;
+  color: #000000 !important;
   margin-top: 4px !important;
 }
 
 /* ==============================================================================
-   5. HIỂN THỊ TRÊN ĐIỆN THOẠI DI ĐỘNG (TỰ CO TỈ LỆ)
+   5. HIỂN THỊ TRÊN MÀN HÌNH ĐIỆN THOẠI (CO TỈ LỆ VỪA MÀN HÌNH NHỎ)
    ============================================================================== */
 @media (max-width: 720px) {
   .official-paper {
-    padding: 20px 14px 28px !important;
+    padding: 16px 12px 24px !important;
+    border-radius: 8px !important;
   }
   .agency-parent { font-size: 7.5pt !important; }
   .agency-unit { font-size: 8pt !important; }
-  .agency-line { width: 45px !important; }
+  .agency-line, .school-mark .official-line.short { width: 45px !important; }
+  
   .nation-title { font-size: 7.5pt !important; }
   .nation-motto { font-size: 8.5pt !important; }
-  .nation-line { width: 90px !important; }
+  .nation-line, .motto-mark .official-line { width: 85px !important; }
+
   #paper .official-title { font-size: 12pt !important; margin: 14px 0 3px !important; }
-  #paper .official-subtitle { font-size: 10.5pt !important; }
+  #paper .official-subtitle { font-size: 11pt !important; margin-bottom: 4px !important; }
   .title-decor-line { width: 110px !important; margin: 4px auto 14px !important; }
+
   #paper .report-body,
   #paper .report-body p,
   #paper .report-body span,
@@ -1030,13 +884,16 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     font-size: 10.5pt !important;
     line-height: 1.45 !important;
   }
+
   #paper .official-sign { width: 60% !important; }
-  .sign-date { font-size: 9.5pt !important; }
+  .official-sign .sign-date, .official-sign > div:first-child, .sign-date { font-size: 9.5pt !important; }
   .sign-role, .sign-name { font-size: 10.5pt !important; }
+  .signature-on-paper { min-height: 48px !important; }
+  .signature-on-paper img { max-height: 45px !important; }
 }
 
 /* ==============================================================================
-   6. QUY CHUẨN IN ẤN TRANG A4 (NGHỊ ĐỊNH 30 - 14PT ĐẦY TRANG)
+   6. QUY CHUẨN IN ẤN TRANG A4 (NGHỊ ĐỊNH 30 - 14PT ĐẦY TRANG, KHÔNG CO NHỎ)
    ============================================================================== */
 @page {
   size: A4 portrait;
@@ -1065,15 +922,29 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   .agency-parent { font-size: 12.5pt !important; }
   .agency-unit { font-size: 13pt !important; }
   .agency-line { width: 85px !important; }
+
   .nation-title { font-size: 12.5pt !important; }
   .nation-motto { font-size: 13.5pt !important; }
   .nation-line { width: 155px !important; }
+
+  #paper .official-title { font-size: 14pt !important; }
+  #paper .official-subtitle { font-size: 14pt !important; }
+
   #paper .report-body,
   #paper .report-body p,
   #paper .report-body span,
   #paper .report-body b {
     font-size: 14pt !important;
     line-height: 1.5 !important;
+  }
+
+  .official-sign .sign-date,
+  .official-sign > div:first-child,
+  .sign-date {
+    font-size: 13.5pt !important;
+  }
+  .sign-role, .sign-name {
+    font-size: 14pt !important;
   }
 }
   
