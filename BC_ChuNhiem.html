@@ -775,41 +775,29 @@ function loadClassAssignmentFromSheet(username){
     };
     setTimeout(() => finish(null), 8000);
 
-    window[cb] = payload => {
-      try {
-        const rows = payload?.table?.rows || [];
-        for(const r of rows){
-          const cells = r?.c || [];
-          // Chuyển toàn bộ các ô trong dòng thành chuỗi chữ
-          const rowVals = cells.map(cell => String(cell?.v ?? cell?.f ?? '').trim());
-          
-          // Kiểm tra xem dòng này có chứa Tên đăng nhập (cột O) không
-          const isUserRow = rowVals.some(v => v.toLowerCase() === user);
+   window[cb] = payload => {
+  try {
+    const rows = payload?.table?.rows || [];
+    for(const r of rows){
+      const cells = r?.c || [];
+      const login = String(cells[14]?.v ?? cells[14]?.f ?? '').trim().toLowerCase();
+      
+      if(login === user){
+        const toBoPhan = String(cells[12]?.v ?? cells[12]?.f ?? '').trim();
+        const monDay   = String(cells[13]?.v ?? cells[13]?.f ?? '').trim();
+        const lopCN    = String(cells[22]?.v ?? cells[22]?.f ?? '').trim();
 
-          if(isUserRow){
-            // Cột M (Index 12): Tổ/Bộ phận | Cột N (Index 13): Môn dạy
-            const toBoPhan = rowVals[12] || 'Ngoại Ngữ';
-            const monDay   = rowVals[13] || 'Tiếng Anh';
-            
-            // Tìm ô chứa định dạng lớp học (10/x, 11/x, 12/x) trên chính dòng này
-            // Ưu tiên đọc trực tiếp ô cột W (Index 22), nếu trống thì quét tìm trong dòng
-            let lopCN = rowVals[22] || '';
-            if(!lopCN || !/^(10|11|12)\/\d+$/i.test(lopCN)){
-              const found = rowVals.find(v => /^(10|11|12)\/\d+$/i.test(v));
-              if(found) lopCN = found;
-            }
-
-            finish({
-              toBoPhan: toBoPhan,
-              monDay: monDay,
-              lopChuNhiem: lopCN || ''
-            });
-            return;
-          }
-        }
-      } catch(e){ console.warn(e); }
-      finish(null);
-    };
+        finish({
+          toBoPhan: toBoPhan,
+          monDay: monDay,
+          lopChuNhiem: lopCN // Đọc trực tiếp ô cột W (chỉ số 22)
+        });
+        return;
+      }
+    }
+  } catch(e){ console.warn(e); }
+  finish(null);
+};
 
     // Tải toàn bộ dòng không dùng WHERE để tránh lỗi bộ lọc API
     script.src = 'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq?sheet='
