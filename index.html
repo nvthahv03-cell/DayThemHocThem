@@ -18,15 +18,27 @@
 }
 *{box-sizing:border-box} body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f8fb;color:var(--ink)}
 
-/* BANNER HEADER CHUẨN HVA */
+/* BANNER HEADER CHUẨN HVA MASTER */
 .hva-pro-header{position:sticky;top:0;z-index:40;margin:12px 14px 0;min-height:126px;border-radius:16px;overflow:hidden;isolation:isolate;color:var(--hva-h-white);background:radial-gradient(circle at 82% 34%,rgba(41,245,255,.55),transparent 22%),radial-gradient(circle at 60% 118%,rgba(0,220,255,.55),transparent 34%),linear-gradient(108deg,#063b80 0%,#0758b5 27%,#057fd7 53%,#03aee2 77%,#08d1dc 100%);border:1px solid rgba(148,245,255,.52);box-shadow:0 14px 34px rgba(2,73,130,.24),inset 0 1px 0 rgba(255,255,255,.24)}
+.hva-pro-header::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;opacity:.92;background:radial-gradient(circle at 46% 24%,#a7fbff 0 1.5px,transparent 2.6px),radial-gradient(circle at 53% 72%,#79f5ff 0 1.6px,transparent 2.7px),radial-gradient(circle at 61% 20%,#b7fdff 0 1.5px,transparent 2.6px),radial-gradient(circle at 70% 67%,#75f4ff 0 1.6px,transparent 2.7px),radial-gradient(circle at 77% 28%,#c4feff 0 1.4px,transparent 2.5px),linear-gradient(60deg,transparent 49.3%,rgba(119,244,255,.52) 50%,transparent 50.7%) 42% 0/112px 80px,linear-gradient(120deg,transparent 49.3%,rgba(104,238,255,.46) 50%,transparent 50.7%) 47% 0/146px 94px}
+.hva-pro-header::after{content:"";position:absolute;z-index:-1;width:280px;height:280px;right:-30px;top:-74px;border-radius:50%;pointer-events:none;opacity:.52;border:1px solid rgba(173,252,255,.95);background:repeating-radial-gradient(circle,transparent 0 20px,rgba(155,248,255,.46) 21px 22px),repeating-linear-gradient(90deg,transparent 0 26px,rgba(151,246,255,.34) 27px 28px),repeating-linear-gradient(0deg,transparent 0 26px,rgba(151,246,255,.31) 27px 28px)}
 .hva-pro-header-inner{min-height:124px;max-width:1460px;margin:0 auto;padding:13px 24px;display:grid;grid-template-columns:58px minmax(570px,1fr) auto;align-items:center;gap:20px}
 .hva-pro-back{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#eaf8ff;background:linear-gradient(145deg,rgba(16,112,187,.95),rgba(7,73,141,.95));border:1.5px solid rgba(79,192,255,.50);box-shadow:0 6px 16px rgba(0,36,78,.20);cursor:pointer}.hva-pro-back i{font-size:27px}
 .hva-pro-brand{min-width:0;display:flex;align-items:center}.hva-pro-divider{width:1px;height:70px;flex:0 0 1px;background:linear-gradient(transparent,var(--hva-h-line) 16%,var(--hva-h-line) 84%,transparent)}
 .hva-pro-brandtext{min-width:0;width:min(620px,100%);text-align:center;line-height:1.06}.hva-pro-kicker{font-size:14px;font-weight:800;letter-spacing:.17em;color:rgba(226,244,255,.90);white-space:nowrap}.hva-pro-school{margin-top:7px;font-size:30px;font-weight:800;letter-spacing:-.025em;color:#fff;white-space:nowrap;text-shadow:0 2px 10px rgba(0,31,72,.28)}.hva-pro-slogan{margin-top:8px;font-size:15px;font-weight:600;color:rgba(235,248,255,.90);white-space:nowrap}.hva-pro-slogan b{font-weight:800;padding:0 5px;color:#d9f7ff}
 .hva-pro-tools{display:flex;align-items:center;justify-content:flex-end;gap:9px;white-space:nowrap}
+
+/* NÚT TRỰC TUYẾN KẾ THỪA CHUẨN HIỆU ỨNG NHẤP NHÁY (PULSE GLOW) */
 .hva-pro-online{height:42px;padding:0 17px;display:flex;align-items:center;gap:10px;border-radius:22px;border:1.5px solid rgba(83,246,237,.88);background:rgba(2,77,119,.40);font-size:12px;font-weight:800}
-.hva-pro-online-dot{width:11px;height:11px;border-radius:50%;background:#19e98a;box-shadow:0 0 0 5px rgba(25,233,138,.12),0 0 13px rgba(25,233,138,.82)}
+.hva-pro-online-dot{
+  width:11px;height:11px;border-radius:50%;background:#19e98a;
+  box-shadow:0 0 0 5px rgba(25,233,138,.15),0 0 13px rgba(25,233,138,.9);
+  animation:hvaDotPulse 1.8s infinite ease-in-out;
+}
+@keyframes hvaDotPulse{
+  0%,100%{transform:scale(1);opacity:1;box-shadow:0 0 0 4px rgba(25,233,138,.20),0 0 10px rgba(25,233,138,.85)}
+  50%{transform:scale(1.22);opacity:.75;box-shadow:0 0 0 8px rgba(25,233,138,.0),0 0 18px rgba(25,233,138,1)}
+}
 .hva-pro-version{font-size:9px;font-weight:900;letter-spacing:.14em;color:rgba(235,251,255,.86);line-height:1}
 
 .shell{max-width:1180px;margin:24px auto 60px;padding:0 16px}
@@ -322,6 +334,49 @@ async function dthtStandaloneLogin(){
   }
 }
 
+/* LẤY CHUẨN LỚP CHỦ NHIỆM TỪ SHEET NHÂN SỰ GỐC DÙNG QUERY SELECT W WHERE LOWER(N) = ... */
+function fetchClassFromSheet(username){
+  const user = String(username || '').trim().toLowerCase();
+  if(!user) return Promise.resolve('');
+  
+  return new Promise(resolve => {
+    const cb = '__hvaClassQuery_' + Date.now();
+    const script = document.createElement('script');
+    let done = false;
+    const finish = val => {
+      if(done) return; done = true;
+      try{ delete window[cb]; script.remove(); }catch(_){}
+      resolve(val);
+    };
+    const timer = setTimeout(() => finish(''), 7000);
+
+    window[cb] = res => {
+      clearTimeout(timer);
+      try {
+        const rows = res?.table?.rows || [];
+        if(rows.length > 0){
+          const c = rows[0]?.c || [];
+          const lop = String(c[0]?.v ?? c[0]?.f ?? '').trim();
+          finish(lop);
+          return;
+        }
+      } catch(e){}
+      finish('');
+    };
+
+    // Đọc cột W (GVCN) ứng với cột N (Tên đăng nhập) từ tab Du_lieu_NhanSu_HVA
+    const tq = "select W where lower(N) = '" + user.replace(/'/g, "''") + "'";
+    script.src = 'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq'
+      + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_HVA')
+      + '&headers=6'
+      + '&tqx=' + encodeURIComponent('responseHandler:' + cb)
+      + '&tq=' + encodeURIComponent(tq)
+      + '&_=' + Date.now();
+    script.onerror = () => { clearTimeout(timer); finish(''); };
+    document.head.appendChild(script);
+  });
+}
+
 async function initPortal(){
   const token = authToken();
   const user = currentUser();
@@ -338,79 +393,15 @@ async function initPortal(){
   $('userTeamLabel').textContent = user.toBoPhan || user.tenTo || 'Ban Giám hiệu';
   $('userRoleLabel').textContent = user.chucVu || user.viTriViecLam || 'Giáo viên';
   
-  // Quét trực tiếp thông tin chuẩn từ Sheet nhân sự
-  try {
-    const profile = await fetchProfileFromSheet(username);
-    if(profile){
-      if(profile.toBoPhan) $('userTeamLabel').textContent = profile.toBoPhan;
-      if(profile.lopChuNhiem){
-        user.lopChuNhiem = profile.lopChuNhiem;
-        $('userClassLabel').textContent = profile.lopChuNhiem;
-      } else {
-        user.lopChuNhiem = 'Không';
-        $('userClassLabel').textContent = 'Không';
-      }
-      localStorage.setItem('user', JSON.stringify(user));
-    } else {
-      $('userClassLabel').textContent = user.lopChuNhiem || 'Không';
-    }
-  } catch(e){
-    $('userClassLabel').textContent = user.lopChuNhiem || 'Không';
+  // Tự động kiểm tra và lấy lớp chủ nhiệm
+  const lopCN = await fetchClassFromSheet(username);
+  if(lopCN){
+    user.lopChuNhiem = lopCN;
+    $('userClassLabel').textContent = lopCN;
+    localStorage.setItem('user', JSON.stringify(user));
+  } else {
+    $('userClassLabel').textContent = 'Không';
   }
-}
-
-/* TRA CỨU ĐÚNG CỘT TỪ SHEET: M (TỔ), O (LOGIN), W (GVCN) */
-function fetchProfileFromSheet(username){
-  return new Promise(resolve => {
-    const cb = '__menuClass_' + Date.now();
-    const script = document.createElement('script');
-    let done = false;
-    const finish = val => {
-      if(done) return; done = true;
-      try{ delete window[cb]; script.remove(); }catch(_){}
-      resolve(val);
-    };
-    setTimeout(() => finish(null), 7000);
-
-    window[cb] = res => {
-      try {
-        const rows = res?.table?.rows || [];
-        for(const r of rows){
-          const cells = r?.c || [];
-          const rowVals = cells.map(c => String(c?.v ?? c?.f ?? '').trim());
-          
-          // Cột O (chỉ số 14) là Tên đăng nhập
-          const login = (rowVals[14] || '').toLowerCase();
-          
-          // Kiểm tra khớp tên đăng nhập ở cột O hoặc trong dòng
-          if(login === username || rowVals.some(v => v.toLowerCase() === username)){
-            const toBoPhan = rowVals[12] || ''; // Cột M (chỉ số 12): Tổ/Bộ phận
-            
-            // Cột W (chỉ số 22): GVCN
-            let lopCN = rowVals[22] || '';
-            // Quét dự phòng nếu ô lớp chứa dropdown hoặc nằm lân cận dạng 10/x, 11/x, 12/x
-            if(!lopCN || !/^(10|11|12)\/\d+$/i.test(lopCN)){
-              const found = rowVals.find(v => /^(10|11|12)\/\d+$/i.test(v));
-              if(found) lopCN = found;
-            }
-
-            finish({
-              toBoPhan: toBoPhan,
-              lopChuNhiem: lopCN
-            });
-            return;
-          }
-        }
-      } catch(e){}
-      finish(null);
-    };
-
-    script.src = 'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq?sheet='
-      + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
-      + '&tqx=' + encodeURIComponent('responseHandler:' + cb)
-      + '&_=' + Date.now();
-    document.head.appendChild(script);
-  });
 }
 
 document.addEventListener('DOMContentLoaded', initPortal);
