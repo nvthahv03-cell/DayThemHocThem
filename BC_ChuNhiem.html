@@ -546,10 +546,69 @@ input::placeholder, textarea::placeholder{color:#8a9bad!important;opacity:1!impo
 </div>
 
 <script>
+<script>
 /* ==============================================================================
-   CORE LOGIC HVA - KẾ THỪA NGUYÊN BẢN CƠ CHẾ CCCD & CHỮ KÝ TỪ DTHT MASTER
+   KẾ THỪA NGUYÊN BẢN 100% DTHT MASTER: CẦU NỐI API + GỬI BÁO CÁO + CCCD
    ============================================================================== */
-const HVA_BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz3RGGmU_75a_lbRn7vnyX4prrWiWZT9WO3SHI19GOwKpLkt6mJ0eJqsBjmcAl2z8wEUg/exec';
+(function(global){
+  'use strict';
+  const DTHT_BACKEND_URL = "https://script.google.com/macros/s/AKfycbxXCprStGvh3iu_72ri1JoncQ6kTwqaytimvbLy5Sn02At-__9g07jot32yQ7xVeKRB/exec";
+
+  function currentUser(){
+    try{ return JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}') || {}; }
+    catch(e){ return {}; }
+  }
+
+  function authToken(){
+    const me = currentUser();
+    return String(
+      localStorage.getItem('hvaSessionToken') ||
+      sessionStorage.getItem('hvaSessionToken') ||
+      me.sessionToken || me.token || me.authToken || ''
+    ).trim();
+  }
+
+  async function parseResponse(r){
+    let data = null;
+    try{ data = await r.json(); }
+    catch(e){ throw new Error('Backend NVS không trả JSON hợp lệ.'); }
+    if(!r.ok) throw new Error((data && (data.thongBao || data.message)) || ('HTTP ' + r.status));
+    if(data && (data.ok === false || data.success === false)){
+      throw new Error(data.thongBao || data.message || data.ma || data.code || 'Yêu cầu không thành công.');
+    }
+    return data;
+  }
+
+  async function post(action, payload = {}){
+    const me = currentUser();
+    const token = authToken();
+    const body = Object.assign({}, payload, {
+      action,
+      username: me.tenDangNhap || me.username || me.userName || me.maGV || '',
+      sessionToken: token
+    });
+
+    const r = await fetch(DTHT_BACKEND_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=UTF-8'},
+      body: JSON.stringify(body),
+      cache: 'no-store',
+      redirect: 'follow'
+    });
+    return await parseResponse(r);
+  }
+
+  global.HVA_API = global.HVA_API || {};
+  global.HVA_API.dtht = {
+    submitReport: async payload => await post('submitDTHT', payload)
+  };
+})(window);
+
+async function callAPI(method, ...args){
+  const fn = window.HVA_API?.dtht?.[method];
+  if(typeof fn !== 'function') throw new Error('Chưa nối backend HVA: HVA_API.dtht.' + method);
+  return await fn(...args);
+}
 
 let state = {
   user: null,
@@ -562,8 +621,8 @@ let state = {
 
 const $ = id => document.getElementById(id);
 
-function goBackHVA(){ if(history.length>1) history.back(); else location.href='index.html'; }
-function setStep(n){ for(let i=1;i<=3;i++) $('s'+i)?.classList.toggle('on', i<=n); }
+function goBackHVA(){ if(history.length > 1) history.back(); else location.href = 'index.html'; }
+function setStep(n){ for(let i = 1; i <= 3; i++) $('s' + i)?.classList.toggle('on', i <= n); }
 
 function dthtCurrentUser(){
   try{ return JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}') || {}; }
@@ -571,22 +630,21 @@ function dthtCurrentUser(){
 }
 
 function dthtTogglePassword(){
-  const input = $('dthtLoginPass'), icon = $('dthtPassEyeIcon');
+  const input = $('dthtLoginPass'), icon =$('dthtPassEyeIcon');
   const show = input.type === 'password';
   input.type = show ? 'text' : 'password';
   icon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
 }
 
 function toggleSignerCccd(){
-  const input = $('signerCccd'), icon = $('cccdEyeIcon');
+  const input = $('signerCccd'), icon =$('cccdEyeIcon');
   const show = input.type === 'password';
   input.type = show ? 'text' : 'password';
   icon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
 }
 
 function showHvaNotice(type, title, message){
-  const box = $('hvaNotice'), icon = $('hvaNoticeIcon');
-  $('hvaNoticeTitle').textContent = title || 'Thông báo';
+  const box = $('hvaNotice'), icon = $('hvaNoticeIcon');$('hvaNoticeTitle').textContent = title || 'Thông báo';
   $('hvaNoticeMessage').textContent = message || '';
   box.dataset.type = type || 'info';
   icon.innerHTML = type === 'success'
@@ -597,36 +655,6 @@ function showHvaNotice(type, title, message){
   box.classList.remove('hidden');
 }
 function closeHvaNotice(){ $('hvaNotice').classList.add('hidden'); }
-
-/* ĐĂNG NHẬP HVA */
-async function dthtStandaloneLogin(){
-  const u = ($('dthtLoginUser').value || '').trim();
-  const p = ($('dthtLoginPass').value || '').trim();
-  const msg = $('dthtAuthMsg');
-  if(!u || !p || !/^\d{4}$/.test(p)){
-    msg.textContent = 'Vui lòng nhập tên đăng nhập và 4 số mật khẩu.';
-    return;
-  }
-  msg.textContent = 'Đang xác thực...';
-  try {
-    const res = await fetch(HVA_BACKEND_URL, {
-      method: 'POST',
-      headers: {'Content-Type':'text/plain;charset=UTF-8'},
-      body: JSON.stringify({ action: 'login', tenDangNhap: u, matKhau: 'HVA@' + p })
-    });
-    const data = await res.json();
-    if(data && data.ok === true && data.nguoiDung){
-      localStorage.setItem('user', JSON.stringify(data.nguoiDung));
-      localStorage.setItem('hvaSessionToken', String(data.sessionToken));
-      $('dthtAuth').classList.add('hidden');
-      initApp();
-    } else {
-      throw new Error(data.thongBao || 'Đăng nhập không thành công.');
-    }
-  } catch(e) {
-    msg.textContent = e.message || 'Lỗi mạng khi đăng nhập.';
-  }
-}
 
 /* CHUẨN HÓA LỚP HỌC (GIẢI MÃ DATE) */
 function parseHvaClassVal(raw){
@@ -658,7 +686,7 @@ function initApp(){
   state.user = me;
   $('identityName').textContent = me.hoTen || me.fullName || username;
   $('identityTeam').textContent = me.toBoPhan || me.tenTo || 'Ban Giám hiệu';
-  if($('identitySubject')) $('identitySubject').textContent = me.monDay || 'Chưa phân môn';
+  if($('identitySubject'))$('identitySubject').textContent = me.monDay || 'Chưa phân môn';
 
   let lop = parseHvaClassVal(me.lopChuNhiem);
   if(!lop || lop === 'Không') lop = 'Không chủ nhiệm';
@@ -671,7 +699,7 @@ function initApp(){
   $('apiStatus').textContent = 'HVA sẵn sàng lập báo cáo công tác chủ nhiệm.';
 }
 
-/* 🔴 NGUYÊN BẢN HÀM XÁC THỰC CCCD TỪ DTHT MASTER (KHÔNG LO LỆCH CỘT) */
+/* NGUYÊN BẢN HÀM XÁC THỰC CCCD TỪ DTHT MASTER */
 function dthtVerifyCccdFromSheet(username, inputCccd){
   const user = String(username || '').trim().toLowerCase();
   const entered = String(inputCccd || '').replace(/\D/g, '');
@@ -691,7 +719,6 @@ function dthtVerifyCccdFromSheet(username, inputCccd){
     };
 
     const timer = setTimeout(() => {
-      console.warn('[DTHT CCCD] Quá thời gian phản hồi từ Google Sheets.');
       finish(false);
     }, 10000);
 
@@ -713,9 +740,7 @@ function dthtVerifyCccdFromSheet(username, inputCccd){
             return;
           }
         }
-      }catch(e){
-        console.error('[DTHT CCCD Parse Error]', e);
-      }
+      }catch(e){}
       finish(false);
     };
 
@@ -734,11 +759,11 @@ function dthtVerifyCccdFromSheet(username, inputCccd){
   });
 }
 
-/* QUẢN LÝ CHỮ KÝ (NGUYÊN BẢN CƠ CHẾ DTHT) */
+/* QUẢN LÝ CHỮ KÝ */
 function signatureKey(){ return 'hvaCNSignature:' + (state.user?.tenDangNhap || '').toLowerCase(); }
 
 function refreshSignatureUI(){
-  const box = $('signaturePreview'), signBtn = $('signDocumentBtn'), st = $('signerStatus');
+  const box = $('signaturePreview'), signBtn = $('signDocumentBtn'), st =$('signerStatus');
   if(box){
     box.innerHTML = state.signatureData ? `<img src="${state.signatureData}" alt="Chữ ký">` : '<div class="signature-empty">Vui lòng tải ảnh chữ ký cá nhân.</div>';
   }
@@ -798,7 +823,6 @@ function openSignerVerify(){
 }
 function closeSignerVerify(){ $('signerVerifyModal').classList.add('hidden'); }
 
-/* 🔴 THỰC THI XÁC THỰC CCCD NGUYÊN BẢN THEO FLOW DTHT */
 async function verifySignerIdentity(){
   const cccd = String($('signerCccd').value || '').replace(/\s+/g, '');
   const msg = $('signerVerifyMsg'), btn =$('verifySignerBtn');
@@ -898,61 +922,106 @@ function resetForm(){
   ['classSize','attendance','discipline','cooperation','suggestions'].forEach(id => $(id).value = '');
 }
 
+/* PAYLOAD TƯƠNG THÍCH CHUẨN DTHT */
+function payload(){
+  const cccd = String($('signerCccd') ?$('signerCccd').value : '').replace(/\D/g, '');
+  const userObj = dthtCurrentUser();
+  const token = String(
+    localStorage.getItem('hvaSessionToken') ||
+    sessionStorage.getItem('hvaSessionToken') ||
+    userObj.sessionToken || userObj.token || ''
+  ).trim();
 
-  /* GỬI BÁO CÁO VỀ TAB NVS_CHU_NHIEM */
+  const lop = $('assignedClass') ?$('assignedClass').value.trim() : '';
+  const siSo = $('classSize') ?$('classSize').value.trim() : '';
+  const chuyenCan = $('attendance') ?$('attendance').value.trim() : '';
+  const ky = $('reportPeriod') ?$('reportPeriod').value : 'Tháng 10/2026';
+  const nenNep = $('discipline') ?$('discipline').value.trim() : '';
+  const phoiHop = $('cooperation') ?$('cooperation').value.trim() : '';
+  const deXuat = $('suggestions') ?$('suggestions').value.trim() : '';
+
+  return {
+    sessionToken: token,
+    token: token,
+    teacherKey: state.user?.tenDangNhap || userObj.tenDangNhap || '',
+    teacherName: state.user?.hoTen || userObj.hoTen || userObj.fullName || '',
+    team: state.user?.toBoPhan || userObj.toBoPhan || userObj.tenTo || '',
+    schoolYear: '2026-2027',
+    signerVerified: true,
+    signed: true,
+    participates: true,
+    coThamGia: true,
+    namHoc: '2026-2027',
+    nguoiNhan: 'Hiệu trưởng Trường THPT Hòa Vang',
+    cccd: cccd,
+
+    assignedSubject: 'Chủ nhiệm: ' + lop,
+    tutorSubject: 'Lớp ' + lop + ' · Sĩ số: ' + siSo,
+    tutorTime: 'Chuyên cần: ' + chuyenCan,
+    tutorForm: 'Kỳ báo cáo: ' + ky,
+    tutorPlace: 'Nền nếp: ' + nenNep + ' | Phối hợp: ' + phoiHop,
+    relationship: 'Đề xuất: ' + (deXuat || 'Không có'),
+
+    monHocDayThem: 'Lớp ' + lop + ' · Sĩ số: ' + siSo,
+    ngayTrongTuan: 'Chuyên cần: ' + chuyenCan,
+    khungGio: 'Kỳ báo cáo: ' + ky,
+    thoiDiemBatDau: 'Năm học 2026-2027',
+    hinhThucDayThem: nenNep,
+    diaDiemDayThem: phoiHop,
+    dienThoaiCoSo: lop,
+    moiQuanHeChuTheDKKD: deXuat || 'Không có'
+  };
+}
+
+/* HÀM GỬI BÁO CÁO QUA CẦU NỐI DTHT MASTER */
 async function submitReport(ev){
-  if(ev) ev.preventDefault();
+  if(ev && typeof ev.preventDefault === 'function') ev.preventDefault();
+
+  if(window.__dthtSubmitting) return;
+
   if(!state.signatureData){
     showHvaNotice('error', 'Chưa có chữ ký', 'Thầy/Cô vui lòng tải ảnh chữ ký trước khi gửi BGH.');
     return;
   }
   if(!state.signerVerified){
-    showHvaNotice('error', 'Chưa xác thực CCCD', 'Thầy/Cô vui lòng xác thực người ký bằng CCCD trước khi gửi BGH.');
+    showHvaNotice('error', 'Chưa xác thực người ký', 'Thầy/Cô vui lòng xác thực người ký bằng CCCD trước khi gửi BGH.');
     return;
   }
-  state.signed = true;
-  refreshSignatureUI();
 
+  state.signed = true;
   const btn = $('submitReportBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Đang gửi dữ liệu...';
+  const originalHtml = btn ? btn.innerHTML : '';
+  window.__dthtSubmitting = true;
+
+  if(btn){
+    btn.disabled = true;
+    btn.setAttribute('aria-busy','true');
+    btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Đang gửi dữ liệu...';
+  }
 
   try {
-    const payload = {
-      action: 'luuBaoCaoChuNhiem',
-      tenDangNhap: state.user?.tenDangNhap || '',
-      hoTen: state.user?.hoTen || state.user?.fullName || '',
-      toBoPhan: state.user?.toBoPhan || state.user?.tenTo || '',
-      monDay: state.user?.monDay || '',
-      lopChuNhiem: $('assignedClass').value,
-      kyBaoCao: $('reportPeriod').value,
-      siSo: $('classSize').value,
-      chuyenCan: $('attendance').value,
-      nenNep: $('discipline').value,
-      phoiHop: $('cooperation').value,
-      deXuat: $('suggestions').value,
-      daKy: true,
-      chuKyBase64: state.signatureData
-    };
+    const pData = payload();
+    const res = await callAPI('submitReport', pData);
 
-    const r = await fetch(HVA_BACKEND_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'text/plain;charset=UTF-8'},
-      body: JSON.stringify(payload)
-    });
-    const res = await r.json();
-
-    if(res && res.ok === true){
+    setStep(3);
+    if(btn){
+      btn.disabled = true;
+      btn.removeAttribute('aria-busy');
       btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Đã gửi thành công';
-      setStep(3);
-      showHvaNotice('success', 'Gửi báo cáo thành công', 'Báo cáo công tác chủ nhiệm đã được chuyển đến Ban Giám hiệu!');
-    } else {
-      throw new Error(res?.message || 'Lỗi lưu dữ liệu máy chủ.');
     }
+    showHvaNotice('success', 'Gửi báo cáo thành công', 'Báo cáo công tác chủ nhiệm đã được hệ thống ghi nhận thành công!');
   } catch(e) {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="bi bi-send-check"></i> Xác nhận & gửi BGH';
+    console.error('[Submit Error]', e);
+    window.__dthtSubmitting = false;
+    if(btn){
+      btn.disabled = false;
+      btn.removeAttribute('aria-busy');
+      btn.innerHTML = originalHtml || '<i class="bi bi-send-check"></i> Xác nhận & gửi BGH';
+    }
+    setStep(2);
     showHvaNotice('error', 'Chưa gửi được báo cáo', 'Chi tiết: ' + (e.message || e));
+  } finally {
+    window.__dthtSubmitting = false;
   }
 }
 
