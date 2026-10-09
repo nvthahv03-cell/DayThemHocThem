@@ -534,12 +534,32 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   line-height:1!important;
 }
 
-/* Nội dung báo cáo đúng 14pt */
+/* Nội dung báo cáo đúng chuẩn thể thức BC-CM10-HVA */
 #paper .report-body,
 #paper .report-body p,
-#paper .report-body span,
-#paper .report-body b{
-  font-size:14pt!important;
+#paper .report-body span {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 14pt !important;
+  line-height: 1.3 !important;
+  color: #000000 !important;
+  font-weight: normal !important;
+}
+
+/* Chỉ in đậm các nhãn tiêu đề mục 1-5, Kính gửi, năm học */
+#paper .report-body b,
+#paper .report-body strong {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 14pt !important;
+  font-weight: bold !important;
+}
+
+/* Khóa tên giáo viên và môn phân công: chữ đứng, thường, cùng cỡ 14pt */
+#pName, 
+#pAssigned, 
+.teacher-name-val {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 14pt !important;
+  font-weight: normal !important;
 }
 
 /* Nút Xác thực & Ký xác nhận khi ĐÃ KÝ: Xanh dương đậm, chữ trắng đậm nổi bật */
@@ -2294,9 +2314,7 @@ function fillPreview(p){
   const yes=p.participates===true;
   $('previewYesBody').classList.toggle('hidden',!yes);
   $('previewNoBody').classList.toggle('hidden',yes);
-  $('previewSubtitle').textContent=yes
-    ? 'Về việc tham gia dạy thêm ngoài nhà trường'
-    : 'Về việc không tham gia dạy thêm ngoài nhà trường';
+  $('previewSubtitle').textContent = 'Về việc dạy thêm ngoài nhà trường';
 
   if(yes){
     $('pSubject').textContent=p.tutorSubject;
