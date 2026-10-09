@@ -758,7 +758,7 @@ async function dthtStandaloneLogin(){
   }
 }
 
-/* NHẬN DIỆN CHUẨN XÁC: M (TỔ), N (MÔN DẠY), O (LOGIN), W (GVCN) */
+/* NHẬN DIỆN CHUẨN XÁC TỔ, MÔN VÀ LỚP CHỦ NHIỆM */
 function loadClassAssignmentFromSheet(username){
   const user = String(username || '').trim().toLowerCase();
   if(!user) return Promise.resolve(null);
@@ -779,18 +779,30 @@ function loadClassAssignmentFromSheet(username){
       try {
         const rows = payload?.table?.rows || [];
         for(const r of rows){
-          const c = r?.c || [];
-          // Index 0: M (Tổ), Index 1: N (Môn), Index 2: O (Login), Index 3: W (GVCN)
-          const toBoPhan = String(c[0]?.v ?? c[0]?.f ?? '').trim();
-          const monDay   = String(c[1]?.v ?? c[1]?.f ?? '').trim();
-          const login    = String(c[2]?.v ?? c[2]?.f ?? '').trim().toLowerCase();
-          const lopCN    = String(c[3]?.v ?? c[3]?.f ?? '').trim();
+          const cells = r?.c || [];
+          // Chuyển toàn bộ các ô trong dòng thành chuỗi chữ
+          const rowVals = cells.map(cell => String(cell?.v ?? cell?.f ?? '').trim());
+          
+          // Kiểm tra xem dòng này có chứa Tên đăng nhập (cột O) không
+          const isUserRow = rowVals.some(v => v.toLowerCase() === user);
 
-          if(login === user){
+          if(isUserRow){
+            // Cột M (Index 12): Tổ/Bộ phận | Cột N (Index 13): Môn dạy
+            const toBoPhan = rowVals[12] || 'Ngoại Ngữ';
+            const monDay   = rowVals[13] || 'Tiếng Anh';
+            
+            // Tìm ô chứa định dạng lớp học (10/x, 11/x, 12/x) trên chính dòng này
+            // Ưu tiên đọc trực tiếp ô cột W (Index 22), nếu trống thì quét tìm trong dòng
+            let lopCN = rowVals[22] || '';
+            if(!lopCN || !/^(10|11|12)\/\d+$/i.test(lopCN)){
+              const found = rowVals.find(v => /^(10|11|12)\/\d+$/i.test(v));
+              if(found) lopCN = found;
+            }
+
             finish({
               toBoPhan: toBoPhan,
               monDay: monDay,
-              lopChuNhiem: lopCN // Nếu không chủ nhiệm thì ô W này rỗng
+              lopChuNhiem: lopCN || ''
             });
             return;
           }
@@ -799,82 +811,13 @@ function loadClassAssignmentFromSheet(username){
       finish(null);
     };
 
-    // Truy vấn đúng 4 cột: M, N, O, W từ sheet nhân sự
-    const tq = "select M, N, O, W where lower(O) = '" + user.replace(/'/g, "''") + "'";
+    // Tải toàn bộ dòng không dùng WHERE để tránh lỗi bộ lọc API
     script.src = 'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq?sheet='
       + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
-      + '&headers=6'
       + '&tqx=' + encodeURIComponent('responseHandler:' + cb)
-      + '&tq=' + encodeURIComponent(tq)
       + '&_=' + Date.now();
     document.head.appendChild(script);
   });
-}
-
-/* XÁC THỰC CCCD TRỰC TIẾP TỪ SHEET NHÂN SỰ */
-function verifyCccdSheet(username, cccdInput){
-  const user = String(username||'').trim().toLowerCase();
-  const cccd = String(cccdInput||'').replace(/\D/g, '');
-  return new Promise(resolve => {
-    const cb = '__hvaCccd_' + Date.now();
-    const script = document.createElement('script');
-    let done = false;
-    const finish = res => {
-      if(done) return; done = true;
-      try{ delete window[cb]; script.remove(); }catch(_){}
-      resolve(res);
-    };
-    setTimeout(() => finish(false), 8000);
-    window[cb] = payload => {
-      try {
-        const rows = payload?.table?.rows || [];
-        for(const r of rows){
-          const vals = (r?.c || []).map(c => String(c?.v ?? c?.f ?? '').trim());
-          if(vals.some(v => v.toLowerCase() === user)){
-            const match = vals.some(v => v.replace(/\D/g,'').padStart(12,'0') === cccd);
-            finish(match);
-            return;
-          }
-        }
-      } catch(e){}
-      finish(false);
-    };
-    script.src = 'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq?sheet='
-      + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG') + '&tqx=' + encodeURIComponent('responseHandler:' + cb) + '&_=' + Date.now();
-    document.head.appendChild(script);
-  });
-}
-
-/* KHỞI TẠO DỮ LIỆU BAN ĐẦU */
-async function initApp(){
-  const me = dthtCurrentUser();
-  const username = me.tenDangNhap || me.username || '';
-  if(!username){
-    $('dthtAuth').classList.remove('hidden');
-    return;
-  }
-  state.user = me;
-  $('identityName').textContent = me.hoTen || me.fullName || username;
-
-  // Lấy dữ liệu chuẩn xác từ Sheet
-  const profile = await loadClassAssignmentFromSheet(username);
-  
-  const tenTo = profile?.toBoPhan || me.tenTo || me.toBoPhan || 'Ban Giám hiệu';
-  const monDay = profile?.monDay || me.monDay || 'Toán';
-  
-  // Xử lý cột W: nếu có tên lớp thì lấy tên lớp, nếu trống thì ghi rõ 'Không chủ nhiệm'
-  const lop = (profile && profile.lopChuNhiem) ? profile.lopChuNhiem : 'Không chủ nhiệm';
-
-  state.assignedClass = lop;
-  state.assignedSubject = monDay;
-
-  $('identityTeam').textContent = tenTo;
-  if($('identitySubject')) $('identitySubject').textContent = monDay;
-  $('identityClass').textContent = lop;
-  $('assignedClass').value = lop;
-
-  loadSavedSignature();
-  $('apiStatus').textContent = 'Sẵn sàng lập báo cáo công tác chủ nhiệm.';
 }
 
 /* QUẢN LÝ CHỮ KÝ */
