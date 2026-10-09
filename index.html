@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="vi" class="bg-slate-50">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HVA - Cổng Nghiệp vụ số & Báo cáo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+<style>
+:root{
+  --hva-h-navy:#073b78;--hva-h-blue:#075cad;--hva-h-cyan:#08abc5;--hva-h-white:#f8fdff;
+  --hva-h-line:rgba(190,238,255,.58);--ink:#183249;--line:#d8e5ef;--soft:#f4f9fd;
+}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f8fb;color:var(--ink)}
+
+/* BANNER HEADER CHUẨN HVA */
+.hva-pro-header{position:sticky;top:0;z-index:40;margin:12px 14px 0;min-height:126px;border-radius:16px;overflow:hidden;isolation:isolate;color:var(--hva-h-white);background:radial-gradient(circle at 82% 34%,rgba(41,245,255,.55),transparent 22%),radial-gradient(circle at 60% 118%,rgba(0,220,255,.55),transparent 34%),linear-gradient(108deg,#063b80 0%,#0758b5 27%,#057fd7 53%,#03aee2 77%,#08d1dc 100%);border:1px solid rgba(148,245,255,.52);box-shadow:0 14px 34px rgba(2,73,130,.24),inset 0 1px 0 rgba(255,255,255,.24)}
+.hva-pro-header-inner{min-height:124px;max-width:1460px;margin:0 auto;padding:13px 24px;display:grid;grid-template-columns:58px minmax(570px,1fr) auto;align-items:center;gap:20px}
+.hva-pro-back{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#eaf8ff;background:linear-gradient(145deg,rgba(16,112,187,.95),rgba(7,73,141,.95));border:1.5px solid rgba(79,192,255,.50);box-shadow:0 6px 16px rgba(0,36,78,.20);cursor:pointer}.hva-pro-back i{font-size:27px}
+.hva-pro-brand{min-width:0;display:flex;align-items:center}.hva-pro-divider{width:1px;height:70px;flex:0 0 1px;background:linear-gradient(transparent,var(--hva-h-line) 16%,var(--hva-h-line) 84%,transparent)}
+.hva-pro-brandtext{min-width:0;width:min(620px,100%);text-align:center;line-height:1.06}.hva-pro-kicker{font-size:14px;font-weight:800;letter-spacing:.17em;color:rgba(226,244,255,.90);white-space:nowrap}.hva-pro-school{margin-top:7px;font-size:30px;font-weight:800;letter-spacing:-.025em;color:#fff;white-space:nowrap;text-shadow:0 2px 10px rgba(0,31,72,.28)}.hva-pro-slogan{margin-top:8px;font-size:15px;font-weight:600;color:rgba(235,248,255,.90);white-space:nowrap}.hva-pro-slogan b{font-weight:800;padding:0 5px;color:#d9f7ff}
+.hva-pro-tools{display:flex;align-items:center;justify-content:flex-end;gap:9px;white-space:nowrap}
+.hva-pro-online{height:42px;padding:0 17px;display:flex;align-items:center;gap:10px;border-radius:22px;border:1.5px solid rgba(83,246,237,.88);background:rgba(2,77,119,.40);font-size:12px;font-weight:800}
+.hva-pro-online-dot{width:11px;height:11px;border-radius:50%;background:#19e98a;box-shadow:0 0 0 5px rgba(25,233,138,.12),0 0 13px rgba(25,233,138,.82)}
+.hva-pro-version{font-size:9px;font-weight:900;letter-spacing:.14em;color:rgba(235,251,255,.86);line-height:1}
+
+.shell{max-width:1180px;margin:24px auto 60px;padding:0 16px}
+.hero{background:#fff;border:1px solid #dce8f1;border-radius:20px;padding:24px 28px;box-shadow:0 7px 22px rgba(15,76,129,.07);display:flex;justify-content:space-between;gap:16px;align-items:center}
+.hero h1{margin:0;color:#003b6f;font-size:24px;font-weight:900}
+.hero p{margin:6px 0 0;color:#294d6b;font-size:13.5px;font-weight:600}
+.legal{font-size:12.5px;background:#e6f5ff;color:#003b6f;border:1px solid #9fd5f3;padding:8px 14px;border-radius:999px;font-weight:800;white-space:nowrap}
+
+/* THẺ NHẬN DIỆN DANH TÍNH */
+.user-card{margin-top:16px;padding:20px 24px;border:1px solid #84ccec;border-radius:18px;background:linear-gradient(112deg,#d9efff 0%,#c9ebff 46%,#c9f4f5 100%);box-shadow:0 10px 26px rgba(5,99,166,.10);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.user-info{display:flex;align-items:center;gap:16px}
+.user-avatar{width:54px;height:54px;border-radius:16px;background:#075cad;color:#fff;display:grid;place-items:center;font-size:26px;box-shadow:0 6px 14px rgba(7,92,173,.25)}
+.user-name{font-size:20px;font-weight:900;color:#063f79;line-height:1.2}
+.user-meta{margin-top:4px;display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:#365f7f;font-weight:600}
+.user-meta b{color:#074b88;font-weight:800}
+.logout-btn{padding:9px 15px;border-radius:10px;background:#fff;color:#be123c;border:1.5px solid #fecdd3;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.18s}
+.logout-btn:hover{background:#fff1f2}
+
+/* LƯỚI DANH MỤC BÁO CÁO */
+.portal-section-title{margin:28px 0 14px;font-size:16px;font-weight:900;color:#123b60;display:flex;align-items:center;gap:8px}
+.portal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px}
+.portal-card{background:#fff;border:1.8px solid #dce8f1;border-radius:18px;padding:22px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 6px 20px rgba(15,76,129,.05);transition:all .2s ease;text-decoration:none;color:inherit;position:relative}
+.portal-card:hover{border-color:#075cad;transform:translateY(-3px);box-shadow:0 12px 28px rgba(7,92,173,.12)}
+.portal-badge{position:absolute;top:18px;right:18px;font-size:10px;font-weight:900;padding:4px 9px;border-radius:999px;letter-spacing:.04em}
+.badge-pass{background:#eaf8ef;color:#15803d;border:1px solid #bbf7d0}
+.badge-ready{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.badge-soon{background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1}
+
+.portal-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px}
+.portal-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:22px;flex-shrink:0}
+.icon-blue{background:#e0f2fe;color:#0284c7}
+.icon-emerald{background:#dcfce7;color:#16a34a}
+.icon-amber{background:#fef3c7;color:#d97706}
+
+.portal-code{font-size:11px;font-weight:900;color:#64748b;letter-spacing:.05em}
+.portal-name{font-size:17px;font-weight:900;color:#0f3f70;margin-top:2px;line-height:1.3}
+.portal-desc{font-size:12.5px;color:#526d83;line-height:1.5;margin-bottom:18px;flex:1}
+
+.portal-action{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid #edf2f7;font-size:12px;font-weight:800;color:#075cad}
+.portal-action i{font-size:16px;transition:transform .2s}
+.portal-card:hover .portal-action i{transform:translateX(4px)}
+
+/* MODAL ĐĂNG NHẬP */
+.dtht-auth{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#073b78,#075cad 52%,#08abc5);display:flex;align-items:center;justify-content:center;padding:18px}
+.dtht-auth.hidden{display:none!important}
+.dtht-auth-box{width:min(430px,100%);background:#fff;border-radius:24px;padding:30px;box-shadow:0 24px 70px rgba(0,31,72,.32)}
+.dtht-auth-title{font-size:22px;font-weight:900;color:#075cad;text-align:center;line-height:1.25}
+.dtht-auth-sub{font-size:13px;color:#607487;text-align:center;margin:8px 0 22px}
+.dtht-auth-field{margin-bottom:15px}
+.dtht-auth-field>label{display:block;margin:0 0 7px;color:#334155;font-size:12px;font-weight:800}
+.dtht-input-wrap{position:relative}
+.dtht-input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;pointer-events:none}
+.dtht-auth-box input{display:block;width:100%;height:50px;margin:0;border:1.5px solid #cbd5e1;border-radius:12px;background:#fff;color:#1e293b;font-size:16px;font-weight:600;outline:none;box-sizing:border-box}
+#dthtLoginUser{padding:0 14px 0 42px}
+#dthtLoginPass{padding:0 46px 0 90px}
+.dtht-pass-prefix{position:absolute;left:42px;top:50%;transform:translateY(-50%);color:#334155;font-size:14px;font-weight:900;pointer-events:none}
+.dtht-pass-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:transparent;color:#075cad;font-size:18px;cursor:pointer;border-radius:8px}
+.dtht-auth-btn{width:100%;height:48px;margin-top:5px;border:0;border-radius:12px;background:linear-gradient(100deg,#075296 0%,#0A68BD 58%,#0B8FD0 100%);color:#fff;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 12px 26px rgba(10,102,194,.22)}
+.dtht-auth-msg{min-height:20px;margin-top:12px;text-align:center;font-size:12px;font-weight:700;color:#be123c}
+
+@media(max-width:720px){
+  .hva-pro-header{margin:6px 6px 0;border-radius:13px;min-height:78px}
+  .hva-pro-header-inner{min-height:76px;padding:7px 9px;grid-template-columns:37px minmax(0,1fr) auto;gap:7px}
+  .hva-pro-back{width:36px;height:36px;border-radius:10px}.hva-pro-back i{font-size:18px}
+  .hva-pro-divider{height:42px}
+  .hva-pro-kicker{font-size:7px;letter-spacing:.08em;white-space:normal}
+  .hva-pro-school{font-size:14px;margin-top:3px;white-space:normal}
+  .hva-pro-slogan{font-size:8px;margin-top:4px;white-space:normal}
+  .hva-pro-online{height:31px;padding:0 9px;font-size:9px}
+  .hva-pro-version{font-size:7px}
+  .shell{margin-top:12px;padding:0 10px}
+  .hero{padding:16px;flex-direction:column;align-items:flex-start}
+  .hero h1{font-size:19px}
+  .portal-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- MODAL ĐĂNG NHẬP SSO HVA -->
+<div id="dthtAuth" class="dtht-auth hidden">
+  <div class="dtht-auth-box">
+    <div class="dtht-auth-title">HỆ THỐNG BÁO CÁO HVA</div>
+    <div class="dtht-auth-sub">Trường THPT Hòa Vang · Đăng nhập tài khoản công vụ</div>
+
+    <div class="dtht-auth-field">
+      <label for="dthtLoginUser">Tên đăng nhập</label>
+      <div class="dtht-input-wrap">
+        <span class="dtht-input-icon"><i class="bi bi-person"></i></span>
+        <input id="dthtLoginUser" autocomplete="username" placeholder="Nhập tên đăng nhập (ví dụ: thanv)">
+      </div>
+    </div>
+
+    <div class="dtht-auth-field">
+      <label for="dthtLoginPass">Mật khẩu</label>
+      <div class="dtht-input-wrap">
+        <span class="dtht-input-icon"><i class="bi bi-key"></i></span>
+        <span class="dtht-pass-prefix">HVA@</span>
+        <input id="dthtLoginPass" type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric"
+               autocomplete="current-password" placeholder="4 số bí mật"
+               onkeydown="if(event.key==='Enter') dthtStandaloneLogin()">
+        <button type="button" class="dtht-pass-eye" onclick="dthtTogglePassword()" aria-label="Hiện/ẩn mật khẩu">
+          <i id="dthtPassEyeIcon" class="bi bi-eye"></i>
+        </button>
+      </div>
+    </div>
+
+    <button id="dthtLoginBtn" type="button" class="dtht-auth-btn" onclick="dthtStandaloneLogin()">
+      <i class="bi bi-box-arrow-in-right"></i> <span id="dthtLoginBtnText">ĐĂNG NHẬP</span>
+    </button>
+    <div id="dthtAuthMsg" class="dtht-auth-msg"></div>
+  </div>
+</div>
+
+<!-- HEADER CHUẨN TRUNG TÂM QUẢN TRỊ SỐ HVA -->
+<header class="hva-pro-header">
+  <div class="hva-pro-header-inner">
+    <button type="button" class="hva-pro-back" onclick="location.reload()" aria-label="Làm mới"><i class="bi bi-house"></i></button>
+    <div class="hva-pro-brand"><span class="hva-pro-divider"></span><div class="hva-pro-brandtext"><div class="hva-pro-kicker">TRUNG TÂM QUẢN TRỊ SỐ HVA</div><div class="hva-pro-school">Trường THPT Hòa Vang</div><div class="hva-pro-slogan">Quản trị thông minh <b>•</b> Giáo dục sáng tạo</div></div></div>
+    <div class="hva-pro-tools"><div class="hva-pro-online"><span class="hva-pro-online-dot"></span><span>TRỰC TUYẾN</span><span class="hva-pro-version">PORTAL</span></div></div>
+  </div>
+</header>
+
+<main class="shell">
+  <section class="hero">
+    <div>
+      <h1>Cổng Nghiệp vụ số & Báo cáo</h1>
+      <p>Khai báo và ký số trực tuyến các biểu mẫu chuyên môn, quản lý lớp và nghiệp vụ sư phạm</p>
+    </div>
+    <div class="legal"><i class="bi bi-shield-lock-fill"></i> Xác thực điện tử HVA</div>
+  </section>
+
+  <!-- THẺ DANH TÍNH CỦA GIÁO VIÊN ĐANG ĐĂNG NHẬP -->
+  <div class="user-card" id="userCard">
+    <div class="user-info">
+      <div class="user-avatar"><i class="bi bi-person-circle"></i></div>
+      <div>
+        <div class="user-name" id="userNameLabel">Đang xác thực...</div>
+        <div class="user-meta">
+          <span><i class="bi bi-diagram-3"></i> Tổ: <b id="userTeamLabel">—</b></span>
+          <span><i class="bi bi-person-badge"></i> Vị trí: <b id="userRoleLabel">—</b></span>
+          <span><i class="bi bi-mortarboard"></i> CN: <b id="userClassLabel">—</b></span>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="logout-btn" onclick="logoutHVA()"><i class="bi bi-box-arrow-right"></i> Đăng xuất</button>
+  </div>
+
+  <!-- PHẦN A1: DANH MỤC BÁO CÁO HOẠT ĐỘNG CHUYÊN MÔN -->
+  <div class="portal-section-title">
+    <i class="bi bi-folder2-open"></i> A1. BÁO CÁO CHUYÊN MÔN & QUẢN LÝ (PASS - LOCK ENGINE)
+  </div>
+
+  <div class="portal-grid">
+    <!-- 1. BÁO CÁO DẠY THÊM, HỌC THÊM (BC-CM10) -->
+    <a href="BC_DayThemHocThem.html" class="portal-card">
+      <span class="portal-badge badge-pass"><i class="bi bi-check-circle-fill"></i> PASS - LOCK</span>
+      <div class="portal-head">
+        <div class="portal-icon icon-blue"><i class="bi bi-journal-check"></i></div>
+        <div>
+          <div class="portal-code">BC-CM10-HVA</div>
+          <div class="portal-name">Dạy thêm, học thêm</div>
+        </div>
+      </div>
+      <div class="portal-desc">
+        Kê khai thông tin giáo viên tham gia hoặc không tham gia dạy thêm ngoài nhà trường theo Mẫu số 03 (Quy định hiện hành).
+      </div>
+      <div class="portal-action">
+        <span>Thực hiện kê khai trực tuyến</span>
+        <i class="bi bi-arrow-right-circle-fill"></i>
+      </div>
+    </a>
+
+    <!-- 2. BÁO CÁO CÔNG TÁC CHỦ NHIỆM (BC-CN01) -->
+    <a href="BC_ChuNhiem_HVA.html" class="portal-card">
+      <span class="portal-badge badge-ready"><i class="bi bi-stars"></i> MỚI · V1</span>
+      <div class="portal-head">
+        <div class="portal-icon icon-emerald"><i class="bi bi-clipboard2-data"></i></div>
+        <div>
+          <div class="portal-code">BC-CN01-HVA</div>
+          <div class="portal-name">Công tác chủ nhiệm</div>
+        </div>
+      </div>
+      <div class="portal-desc">
+        Báo cáo tình hình sĩ số, chuyên cần, nền nếp, học sinh cá biệt và các đề xuất gửi Ban Giám hiệu theo tháng hoặc giữa kỳ.
+      </div>
+      <div class="portal-action">
+        <span>Lập báo cáo chủ nhiệm</span>
+        <i class="bi bi-arrow-right-circle-fill"></i>
+      </div>
+    </a>
+
+    <!-- 3. BÁO CÁO THỰC HIỆN NHIỆM VỤ ĐƯỢC GIAO (BC-CM01) -->
+    <div class="portal-card" style="opacity:0.75;cursor:not-allowed;">
+      <span class="portal-badge badge-soon"><i class="bi bi-hourglass-split"></i> ĐANG MỞ RỘNG</span>
+      <div class="portal-head">
+        <div class="portal-icon icon-amber"><i class="bi bi-award"></i></div>
+        <div>
+          <div class="portal-code">BC-CM01-HVA</div>
+          <div class="portal-name">Nhiệm vụ được giao</div>
+        </div>
+      </div>
+      <div class="portal-desc">
+        Báo cáo tổng kết việc thực hiện các phân công chuyên môn, hoạt động bồi dưỡng học sinh giỏi hoặc công tác kiêm nhiệm.
+      </div>
+      <div class="portal-action" style="color:#64748b;">
+        <span>Sắp triển khai</span>
+        <i class="bi bi-lock-fill"></i>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const DTHT_STANDALONE_BACKEND = 'https://script.google.com/macros/s/AKfycbz3RGGmU_75a_lbRn7vnyX4prrWiWZT9WO3SHI19GOwKpLkt6mJ0eJqsBjmcAl2z8wEUg/exec';
+
+const $ = id => document.getElementById(id);
+
+function currentUser(){
+  try{ return JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}') || {}; }
+  catch(e){ return {}; }
+}
+
+function authToken(){
+  return String(localStorage.getItem('hvaSessionToken') || sessionStorage.getItem('hvaSessionToken') || '').trim();
+}
+
+function dthtTogglePassword(){
+  const input = $('dthtLoginPass'), icon = $('dthtPassEyeIcon');
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  icon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+}
+
+function logoutHVA(){
+  if(confirm('Thầy/Cô có chắc chắn muốn đăng xuất khỏi hệ thống HVA?')){
+    localStorage.removeItem('user');
+    localStorage.removeItem('hvaSessionToken');
+    localStorage.removeItem('hvaSessionExpiresAt');
+    location.reload();
+  }
+}
+
+async function dthtStandaloneLogin(){
+  const userInput = $('dthtLoginUser'), passInput = $('dthtLoginPass');
+  const btn = $('dthtLoginBtn'), btnText = $('dthtLoginBtnText'), msg = $('dthtAuthMsg');
+  const username = (userInput.value || '').trim();
+  const rawPassword = (passInput.value || '').trim();
+
+  if(!username || !rawPassword){
+    msg.textContent = 'Vui lòng nhập tên đăng nhập và 4 số mật khẩu.';
+    return;
+  }
+  if(!/^\d{4}$/.test(rawPassword)){
+    msg.textContent = 'Mật khẩu HVA gồm đúng 4 chữ số.';
+    return;
+  }
+
+  btn.disabled = true;
+  btnText.textContent = 'ĐANG XÁC THỰC...';
+  msg.style.color = '#075cad';
+  msg.textContent = 'Đang kết nối máy chủ HVA...';
+
+  try {
+    const r = await fetch(DTHT_STANDALONE_BACKEND, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=UTF-8'},
+      body: JSON.stringify({
+        action: 'login',
+        tenDangNhap: username,
+        matKhau: 'HVA@' + rawPassword
+      })
+    });
+    const data = await r.json();
+
+    if(!data || data.ok !== true || !data.nguoiDung){
+      throw new Error((data && (data.thongBao || data.message)) || 'Đăng nhập không thành công.');
+    }
+
+    localStorage.setItem('user', JSON.stringify(data.nguoiDung));
+    localStorage.setItem('hvaSessionToken', String(data.sessionToken));
+    localStorage.setItem('hvaSessionExpiresAt', String(data.hetHanLuc));
+    localStorage.setItem('hvaLastUsername', String(data.nguoiDung.tenDangNhap || username));
+
+    $('dthtAuth').classList.add('hidden');
+    initPortal();
+  } catch(e) {
+    msg.style.color = '#be123c';
+    msg.textContent = e.message || 'Lỗi mạng khi đăng nhập.';
+  } finally {
+    btn.disabled = false;
+    btnText.textContent = 'ĐĂNG NHẬP';
+  }
+}
+
+function initPortal(){
+  const token = authToken();
+  const user = currentUser();
+  const username = user.tenDangNhap || user.username || '';
+
+  if(!token || !username){
+    $('dthtAuth').classList.remove('hidden');
+    const lastUser = localStorage.getItem('hvaLastUsername') || '';
+    if(lastUser) $('dthtLoginUser').value = lastUser;
+    return;
+  }
+
+  $('userNameLabel').textContent = user.hoTen || user.fullName || username;
+  $('userTeamLabel').textContent = user.toBoPhan || user.tenTo || 'Ban Giám hiệu';
+  $('userRoleLabel').textContent = user.chucVu || user.viTriViecLam || 'Giáo viên';
+  $('userClassLabel').textContent = user.lopChuNhiem || user.lopCN || 'Không';
+}
+
+document.addEventListener('DOMContentLoaded', initPortal);
+</script>
+</body>
+</html>
