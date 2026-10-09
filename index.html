@@ -684,7 +684,244 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     border-radius: 8px !important;
   }
 }
-  
+
+
+  /* ==============================================================================
+   CHUẨN HÓA ĐỊNH DẠNG VĂN BẢN HÀNH CHÍNH BC-CM10-HVA (THỂ THỨC CHUẨN)
+   ============================================================================== */
+.official-paper {
+  font-family: "Times New Roman", Times, serif !important;
+  color: #000000 !important;
+  background: #ffffff !important;
+  box-sizing: border-box !important;
+  padding: 30mm 20mm 25mm 25mm !important;
+  line-height: 1.25 !important;
+}
+
+/* 1. Mã mẫu: 10pt, nghiêng, căn phải */
+#paper .form-code {
+  position: static !important;
+  width: 100% !important;
+  text-align: right !important;
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 10pt !important;
+  font-style: italic !important;
+  font-weight: normal !important;
+  color: #000000 !important;
+  margin-bottom: 6px !important;
+  line-height: 1 !important;
+}
+
+/* 2. Phần đầu cơ quan & Quốc hiệu: Chia 2 khối độc lập, không xô lệch */
+#paper .official-head {
+  display: grid !important;
+  grid-template-columns: 45% 55% !important;
+  align-items: start !important;
+  text-align: center !important;
+  margin-bottom: 22px !important;
+  font-family: "Times New Roman", Times, serif !important;
+}
+
+/* Khối trái: Cơ quan chủ quản & Trường */
+.agency {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+.agency-parent {
+  font-size: 13pt !important;
+  text-transform: uppercase !important;
+  font-weight: normal !important;
+  line-height: 1.25 !important;
+}
+.agency-unit {
+  font-size: 13pt !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  margin-top: 2px !important;
+  line-height: 1.25 !important;
+}
+/* Gạch ngang dưới tên trường: Nét liền 0,5pt, dài khoảng 1/3–1/2 chiều dài dòng tên trường, căn giữa */
+.agency-line {
+  width: 75px !important;
+  border-top: 0.5pt solid #000000 !important;
+  margin: 3px auto 0 !important;
+}
+
+/* Khối phải: Quốc hiệu - Tiêu ngữ */
+.nation {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+.nation-title {
+  font-size: 13pt !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+.nation-motto {
+  font-size: 14pt !important;
+  font-weight: bold !important;
+  margin-top: 2px !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+/* Gạch ngang dưới tiêu ngữ: Nét liền 0,5pt, dài tương ứng dòng tiêu ngữ, căn giữa */
+.nation-line {
+  width: 155px !important;
+  border-top: 0.5pt solid #000000 !important;
+  margin: 3px auto 0 !important;
+}
+
+/* 3. Tiêu đề BÁO CÁO: 14pt, IN HOA, đậm, căn giữa */
+#paper .official-title {
+  font-size: 14pt !important;
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+  text-align: center !important;
+  margin: 22px 0 4px !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* Dòng trích yếu: 14pt, đậm, căn giữa */
+#paper .official-subtitle {
+  font-size: 14pt !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+}
+
+/* Gạch ngang dưới dòng trích yếu: Nét liền 0,5pt, dài 4cm (~150px), căn giữa */
+.title-decor-line {
+  width: 150px !important;
+  border-top: 0.5pt solid #000000 !important;
+  margin: 5px auto 20px !important;
+}
+
+/* 4. Thân nội dung báo cáo: 14pt, giãn dòng 1.25 */
+#paper .report-body,
+#paper .report-body p {
+  font-size: 14pt !important;
+  line-height: 1.25 !important;
+  color: #000000 !important;
+  margin: 8px 0 !important;
+  text-align: justify !important;
+}
+#paper .to-line {
+  margin-bottom: 12px !important;
+}
+.teacher-name-val {
+  font-weight: normal !important;
+}
+#paper .report-body b {
+  font-size: 14pt !important;
+  font-weight: bold !important;
+}
+
+/* 5. Khối ký tên bên phải */
+#paper .official-sign {
+  width: 50% !important;
+  margin-left: auto !important;
+  margin-top: 22px !important;
+  text-align: center !important;
+  line-height: 1.25 !important;
+}
+/* Địa danh ngày tháng năm: 13–14pt, nghiêng, căn giữa khối ký */
+.sign-date {
+  font-size: 13.5pt !important;
+  font-style: italic !important;
+  margin-bottom: 4px !important;
+}
+/* Chức danh: 14pt, IN HOA, đậm */
+.sign-role {
+  font-size: 14pt !important;
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+}
+/* Hướng dẫn ký: nghiêng, không đậm */
+.sign-guide {
+  font-size: 11pt !important;
+  font-style: italic !important;
+  font-weight: normal !important;
+  color: #333333 !important;
+  margin: 2px 0 6px !important;
+}
+/* Vùng đặt chữ ký điện tử hòa trộn mặt giấy */
+.signature-on-paper {
+  min-height: 62px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 2px 0 !important;
+}
+.signature-on-paper img {
+  max-height: 60px !important;
+  max-width: 160px !important;
+  object-fit: contain !important;
+  mix-blend-mode: multiply !important;
+}
+/* Họ tên người báo cáo: 14pt, đậm, căn giữa */
+.sign-name {
+  font-size: 14pt !important;
+  font-weight: bold !important;
+  margin-top: 4px !important;
+}
+
+/* ==============================================================================
+   RESPONSIVE MOBILE: TỰ CO GIÃN TỈ LỆ VỪA VẶN MÀ KHÔNG GÃY BỐ CỤC
+   ============================================================================== */
+@media (max-width: 720px) {
+  .official-paper {
+    padding: 20px 14px 28px !important;
+  }
+  #paper .official-head {
+    grid-template-columns: 46% 54% !important;
+  }
+  .agency-parent, .agency-unit {
+    font-size: 8.5pt !important;
+  }
+  .agency-line {
+    width: 48px !important;
+  }
+  .nation-title {
+    font-size: 8.5pt !important;
+  }
+  .nation-motto {
+    font-size: 9.5pt !important;
+  }
+  .nation-line {
+    width: 100px !important;
+  }
+  #paper .official-title {
+    font-size: 12pt !important;
+    margin: 14px 0 3px !important;
+  }
+  #paper .official-subtitle {
+    font-size: 10.5pt !important;
+  }
+  .title-decor-line {
+    width: 110px !important;
+    margin: 4px auto 14px !important;
+  }
+  #paper .report-body,
+  #paper .report-body p,
+  #paper .report-body b {
+    font-size: 10.5pt !important;
+    line-height: 1.45 !important;
+  }
+  #paper .official-sign {
+    width: 60% !important;
+  }
+  .sign-date {
+    font-size: 9.5pt !important;
+  }
+  .sign-role, .sign-name {
+    font-size: 10.5pt !important;
+  }
+}
 </style>
 </head>
 <!-- 🔴 CORE PASS — SHELL/HVA PAGE FRAME — LOCK -->
@@ -996,46 +1233,61 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     </div>
 
     <article class="preview official-paper" id="paper">
-     <div class="form-code">Mẫu BC-CM10-HVA</div>
+      <!-- 1. Mã mẫu: 10pt, nghiêng, căn phải -->
+      <div class="form-code">Mẫu BC-CM10-HVA</div>
+
+      <!-- 2. Phần đầu: Cơ quan & Quốc hiệu -->
       <div class="official-head">
         <div class="agency">
-          <div>SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div>
-          <div class="school-mark"><b>TRƯỜNG THPT HÒA VANG</b><span class="official-line short"></span></div>
+          <div class="agency-parent">SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div>
+          <div class="agency-unit">TRƯỜNG THPT HÒA VANG</div>
+          <div class="agency-line"></div>
         </div>
+
         <div class="nation">
-          <b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b>
-          <div class="motto-mark"><b>Độc lập - Tự do - Hạnh phúc</b><span class="official-line"></span></div>
+          <div class="nation-title">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
+          <div class="nation-motto">Độc lập - Tự do - Hạnh phúc</div>
+          <div class="nation-line"></div>
         </div>
       </div>
 
+      <!-- 3. Tên văn bản & Trích yếu nội dung -->
       <div class="official-title">BÁO CÁO</div>
       <div class="official-subtitle" id="previewSubtitle">Về việc tham gia dạy thêm ngoài nhà trường</div>
-<div class="report-body">
-      <p><b>Kính gửi:</b> Hiệu trưởng Trường THPT Hòa Vang</p>
-      <p>Họ và tên giáo viên: <b id="pName"></b></p>
-      <p>Môn học được phân công dạy học: <b id="pAssigned"></b></p>
+      <div class="title-decor-line"></div>
 
-      <div id="previewYesBody">
-        <p>Trân trọng báo cáo với Hiệu trưởng Trường THPT Hòa Vang về việc tham gia dạy thêm ngoài nhà trường của tôi trong năm học <b>2026–2027</b> như sau:</p>
-        <p><b>1. Môn học dạy thêm:</b> <span id="pSubject"></span></p>
-        <p><b>2. Thời gian dạy thêm:</b> <span id="pTime"></span></p>
-        <p><b>3. Hình thức dạy thêm:</b> <span id="pForm"></span></p>
-        <p><b>4. Địa điểm dạy thêm:</b> <span id="pPlace"></span></p>
-        <p><b>5. Mối quan hệ với chủ thể đứng tên đăng kí kinh doanh cơ sở dạy thêm:</b> <span id="pRelation"></span></p>
+      <!-- 4. Nội dung báo cáo (Toàn bộ 14pt, Times New Roman) -->
+      <div class="report-body">
+        <p class="to-line"><b>Kính gửi:</b> Hiệu trưởng Trường THPT Hòa Vang</p>
+        
+        <p>Họ và tên giáo viên: <span class="teacher-name-val" id="pName"></span></p>
+        <p>Môn học được phân công dạy học: <span id="pAssigned"></span></p>
+
+        <!-- Khối có tham gia dạy thêm -->
+        <div id="previewYesBody">
+          <p>Trân trọng báo cáo với Hiệu trưởng Trường THPT Hòa Vang về việc tham gia dạy thêm ngoài nhà trường của tôi trong năm học <b>2026–2027</b> như sau:</p>
+          <p><b>1. Môn học dạy thêm:</b> <span id="pSubject"></span></p>
+          <p><b>2. Thời gian dạy thêm:</b> <span id="pTime"></span></p>
+          <p><b>3. Hình thức dạy thêm:</b> <span id="pForm"></span></p>
+          <p><b>4. Địa điểm dạy thêm:</b> <span id="pPlace"></span></p>
+          <p><b>5. Mối quan hệ với chủ thể đứng tên đăng kí kinh doanh cơ sở dạy thêm:</b> <span id="pRelation"></span></p>
+        </div>
+
+        <!-- Khối không tham gia dạy thêm -->
+        <div id="previewNoBody" class="hidden">
+          <p>Trân trọng báo cáo với Hiệu trưởng Trường THPT Hòa Vang: hiện tại tôi <b>không tham gia dạy thêm ngoài nhà trường</b> trong năm học <b>2026–2027</b>.</p>
+        </div>
+
+        <p class="commit-line">Tôi xin chịu trách nhiệm hoàn toàn về những nội dung báo cáo nêu trên.</p>
       </div>
 
-      <div id="previewNoBody" class="hidden">
-        <p>Trân trọng báo cáo với Hiệu trưởng Trường THPT Hòa Vang: hiện tại tôi <b>không tham gia dạy thêm ngoài nhà trường</b> trong năm học <b>2026–2027</b>.</p>
-      </div>
-
-      <p>Tôi xin chịu trách nhiệm hoàn toàn về những nội dung báo cáo nêu trên.</p>
-</div>
+      <!-- 5. Khối ký xác nhận bên phải -->
       <div class="official-sign">
-        <div><i>Cẩm Lệ, ngày <span id="pDay">.....</span> tháng <span id="pMonth">.....</span> năm <span id="pYear">2026</span></i></div>
-        <b>NGƯỜI BÁO CÁO</b>
-        <i id="signGuide" class="sign-guide">(Ký và ghi rõ họ tên)</i>
+        <div class="sign-date"><i>Cẩm Lệ, ngày <span id="pDay">.....</span> tháng <span id="pMonth">.....</span> năm <span id="pYear">2026</span></i></div>
+        <div class="sign-role">NGƯỜI BÁO CÁO</div>
+        <div id="signGuide" class="sign-guide">(Ký và ghi rõ họ tên)</div>
         <div id="paperSignature" class="signature-on-paper"></div>
-        <b id="pSignName"></b>
+        <div class="sign-name" id="pSignName"></div>
       </div>
     </article>
 
