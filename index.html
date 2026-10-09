@@ -1040,6 +1040,122 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     opacity: 0;
   }
 }
+
+/* Khung chứa nút Trực tuyến + Nhãn phiên bản */
+.hva-pro-online {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: rgba(4, 98, 140, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  padding: 4px 10px 4px 10px !important;
+  border-radius: 999px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* 1. Chấm tròn xanh phát sáng nhấp nháy radar */
+.hva-pro-online-dot {
+  position: relative !important;
+  display: inline-block !important;
+  width: 9px !important;
+  height: 9px !important;
+  background-color: #22c55e !important; /* Xanh lá tươi */
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+}
+
+.hva-pro-online-dot::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  background-color: #22c55e !important;
+  transform: translate(-50%, -50%) !important;
+  animation: dotLivePulse 1.6s infinite ease-out !important;
+}
+
+@keyframes dotLivePulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(3.2);
+    opacity: 0;
+  }
+}
+
+/* 2. Nhãn phiên bản: Chữ XANH DƯƠNG ĐẬM trên nền trắng nổi bật */
+.hva-pro-version,
+#hvaVersionLabel {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #ffffff !important;
+  color: #003366 !important; /* Xanh dương đậm chuẩn nhận diện HVA */
+  font-weight: 900 !important;
+  font-size: 10.5px !important;
+  padding: 1px 6px !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(0, 51, 102, 0.25) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+  line-height: 1.2 !important;
+  text-shadow: none !important;
+  margin-left: 2px !important;
+}
+
+/* 1. Nới rộng tỉ lệ 2 cột: Cột trái 48%, cột phải 52% để vừa vặn cả 2 bên */
+#paper .official-head {
+  display: grid !important;
+  grid-template-columns: 48% 52% !important;
+  align-items: start !important;
+  text-align: center !important;
+  gap: 4px !important;
+  margin-bottom: 22px !important;
+}
+
+/* 2. Khóa cứng dòng Sở: không cho rớt chữ, vừa khít hàng ngang */
+.agency-parent {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 12.5pt !important; /* Hạ nhẹ 0.5pt để nằm trọn 1 dòng thẳng tắp */
+  text-transform: uppercase !important;
+  font-weight: normal !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important; /* Chống rớt chữ tuyệt đối */
+  letter-spacing: -0.01em !important;
+}
+
+.agency-unit {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 13pt !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  margin-top: 2px !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+/* 3. Đảm bảo trên điện thoại di động vẫn nằm trọn 1 dòng */
+@media (max-width: 720px) {
+  #paper .official-head {
+    grid-template-columns: 48% 52% !important;
+  }
+  .agency-parent {
+    font-size: 8pt !important;
+    white-space: nowrap !important;
+  }
+  .agency-unit {
+    font-size: 8.5pt !important;
+    white-space: nowrap !important;
+  }
+}
   
 </style>
 </head>
@@ -1116,8 +1232,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   <div class="hva-pro-header-inner">
     <button type="button" class="hva-pro-back" onclick="goBackHVA()" aria-label="Quay lại trang chủ HVA" title="Quay lại"><i class="bi bi-arrow-left"></i></button>
     <div class="hva-pro-brand"><span class="hva-pro-divider" aria-hidden="true"></span><div class="hva-pro-brandtext"><div class="hva-pro-kicker">TRUNG TÂM QUẢN TRỊ SỐ HVA</div><div class="hva-pro-school">Trường THPT Hòa Vang</div><div class="hva-pro-slogan">Quản trị thông minh <b>•</b> Giáo dục sáng tạo</div></div></div>
-    <div class="hva-pro-tools"><div class="hva-pro-online-wrap"><div class="hva-pro-online" title="Hệ thống đang trực tuyến"><span class="hva-pro-online-dot"></span><span>TRỰC TUYẾN</span></div><div class="hva-pro-version">V3_10</div></div></div>
-  </div>
+    <div class="hva-pro-tools"><div class="hva-pro-online-wrap"><div class="hva-pro-online" title="Hệ thống đang trực tuyến"><span class="hva-pro-online-dot"></span><span>TRỰC TUYẾN</span><span class="hva-pro-version" id="hvaVersionLabel">V7</span></div></div></div>
 </header>
 
 <main class="shell">
