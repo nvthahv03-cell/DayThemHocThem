@@ -914,14 +914,14 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
   #paper .official-head .nation {
     display: table-cell !important;
-    width: 52% !important;
+    width: 55% !important;
     padding-left: 2px !important;
     box-sizing: border-box !important;
   }
-  .nation-title {
-    font-size: 7.2pt !important;
-    white-space: normal !important;
-    word-break: keep-all !important;
+ .nation-title {
+    font-size: 6.8pt !important;
+    white-space: nowrap !important; /* Khóa cứng trên 1 dòng, tuyệt đối không cho rớt chữ NAM */
+    letter-spacing: -0.02em !important; /* Co nhẹ khoảng cách chữ một chút xíu để nằm gọn gàng */
     line-height: 1.2 !important;
   }
   .nation-motto {
