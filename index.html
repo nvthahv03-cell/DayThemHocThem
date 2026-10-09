@@ -670,49 +670,52 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     margin: 2px auto 0 !important;
   }
 
-  /* 4. Tiêu đề BÁO CÁO trang trọng */
-  #paper .official-title {
-    font-size: 14pt !important;
-    font-weight: 800 !important;
-    margin: 16px 0 6px !important;
-    text-align: center !important;
-    letter-spacing: 0.05em;
-  }
+  /* 4. Tiêu đề BÁO CÁO trang trọng (Chuẩn Nghị định 30: 14pt, ĐẬM, ĐEN) */
+#paper .official-title {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 14pt !important;
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+  margin: 20px 0 4px !important;
+  text-align: center !important;
+  letter-spacing: 0.02em !important;
+  color: #000000 !important;
+}
 
-  #paper .official-subtitle {
-    font-size: 11pt !important;
-    font-weight: 700 !important;
-    margin-bottom: 18px !important;
-    text-align: center !important;
-    line-height: 1.35 !important;
-    color: #1e293b;
-  }
+#paper .official-subtitle {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 14pt !important; /* Đưa về đúng 14pt như BÁO CÁO */
+  font-weight: bold !important;
+  margin-bottom: 6px !important;
+  text-align: center !important;
+  line-height: 1.3 !important;
+  color: #000000 !important; /* Màu đen tuyền chuẩn văn bản in ấn */
+}
+  /* 5. Thân văn bản: Chuẩn 14pt, căn đều 2 bên, giãn dòng chuẩn hành chính */
+#paper .report-body,
+#paper .report-body p {
+  font-size: 14pt !important;
+  line-height: 1.5 !important;
+  text-align: justify !important;
+  text-justify: inter-word !important;
+  margin: 10px 0 !important;
+}
 
-  /* 5. Thân văn bản: Font chữ 11.5pt, căn đều 2 bên (Justify), giãn dòng thanh thoát */
-  #paper .report-body,
-  #paper .report-body p {
-    font-size: 11pt !important;
-    line-height: 1.55 !important;
-    text-align: justify !important;
-    text-justify: inter-word !important;
-    margin: 8px 0 !important;
-  }
+/* 6. Góc chữ ký phía dưới bên phải: Chuẩn 13-14pt */
+.official-sign {
+  width: 50% !important;
+  margin-left: auto !important;
+  margin-top: 24px !important;
+  text-align: center !important;
+  font-size: 14pt !important;
+  line-height: 1.35 !important;
+}
 
-  /* 6. Góc chữ ký phía dưới bên phải */
-  .official-sign {
-    width: 58% !important;
-    margin-left: auto !important;
-    margin-top: 20px !important;
-    text-align: center !important;
-    font-size: 10.5pt !important;
-    line-height: 1.35 !important;
-  }
-
-  .official-sign > div:first-child {
-    font-size: 9.5pt !important;
-    margin-bottom: 4px;
-  }
-
+.official-sign > div:first-child {
+  font-size: 13.5pt !important; /* Địa danh, ngày tháng: 13.5pt nghiêng */
+  font-style: italic !important;
+  margin-bottom: 6px !important;
+}
   /* Khử nền ảnh chữ ký để hòa vào mặt giấy mượt mà */
   .signature-on-paper {
     height: 58px !important;
