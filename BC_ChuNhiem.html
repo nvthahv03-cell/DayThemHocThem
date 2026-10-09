@@ -492,16 +492,14 @@ async function loadCnProfile(username){
       $('identityClass').textContent=cls;
       $('apiStatus').textContent='Đã đối chiếu lớp chủ nhiệm '+cls+' từ dữ liệu nhân sự.';
     }else{
-      $('assignedClass').value='';
-      $('assignedClass').readOnly=true;
-      $('identityClass').textContent='Chưa phân công';
+      // Không xóa lớp đã có từ phiên đăng nhập khi Backend trả thiếu dữ liệu.
+      if (!$('assignedClass').value) $('identityClass').textContent='Chưa phân công';
       $('apiStatus').textContent='Tài khoản chưa có phân công GVCN tại cột W. Liên hệ bộ phận quản trị dữ liệu, không tự nhập lớp.';
     }
   }catch(e){
-    $('assignedClass').value='';
-    $('assignedClass').readOnly=true;
-    $('identityClass').textContent='Chưa xác minh';
-    $('apiStatus').textContent='Không thể đối chiếu lớp chủ nhiệm: '+e.message;
+    // Không ghi đè lớp đã được phiên đăng nhập xác định.
+    if (!$('assignedClass').value) $('identityClass').textContent='Chưa xác minh';
+    $('apiStatus').textContent='Chưa xác minh được lớp với Backend: '+e.message+'; vui lòng kiểm tra kết nối trước khi gửi.';
   }
 }
 
@@ -520,7 +518,7 @@ function initApp(){
   let lop = parseHvaClassVal(me.lopChuNhiem);
   if(!lop || lop === 'Không') lop = ''; // Không tự gán lớp khi hồ sơ thiếu
   $('identityClass').textContent = lop || 'Đang đối chiếu...';
-  $('assignedClass').value = '';
+  $('assignedClass').value = /^1[012]\/\d{1,2}$/.test(lop) ? lop : '';
   $('assignedClass').readOnly = true;
   if (!lop) $('apiStatus').textContent = 'Đang tra cứu lớp chủ nhiệm theo cột W của dữ liệu nhân sự...';
   loadCnProfile(username);
