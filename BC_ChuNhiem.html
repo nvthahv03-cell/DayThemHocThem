@@ -7,7 +7,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
   (function() {
-    const CURRENT_APP_VERSION = 'V2_10_2026';
+    const CURRENT_APP_VERSION = 'V3_10_2026';
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const currentUrlVer = urlParams.get('hva_v');
@@ -146,6 +146,73 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   header,.steps,.btn,.preview-toolbar,#declareCard{display:none!important}
   .official-paper{width:100%!important;max-width:none!important;margin:0!important;padding:0!important;box-shadow:none!important}
 }
+
+/* ===== BC-CN01 · MOBILE LAYOUT FIX · CHỈ GIAO DIỆN, KHÔNG ĐỔI NGHIỆP VỤ ===== */
+html,body{max-width:100%;overflow-x:clip}
+.shell,.card,.hero,.preview-shell,.preview-toolbar,.identity-card,.identity-col{min-width:0}
+.field,.field input,.field select,.field textarea{min-width:0;max-width:100%}
+@media screen and (max-width:900px){
+  .hva-pro-header{margin:7px 7px 0;min-height:80px;border-radius:13px}
+  .hva-pro-header-inner{min-height:80px;grid-template-columns:38px minmax(0,1fr) auto;gap:8px;padding:9px 10px}
+  .hva-pro-back{width:36px;height:36px;border-radius:10px}
+  .hva-pro-back i{font-size:19px}
+  .hva-pro-divider{height:44px}
+  .hva-pro-brandtext{width:100%;min-width:0}
+  .hva-pro-kicker{font-size:clamp(8px,1.6vw,12px);letter-spacing:.045em;white-space:normal}
+  .hva-pro-school{font-size:clamp(14px,2.6vw,22px);white-space:normal;margin-top:4px}
+  .hva-pro-slogan{font-size:clamp(8px,1.4vw,12px);white-space:normal;margin-top:4px}
+  .hva-pro-online{height:32px;padding:0 8px;font-size:9px;gap:5px}
+  .hva-pro-online-dot{width:8px;height:8px}
+  .hva-pro-version{font-size:8px}
+  .identity-card{grid-template-columns:minmax(0,1fr)!important}
+  .identity-col+.identity-col{border-left:0!important;border-top:1px solid #9bc9ea!important}
+  .grid{grid-template-columns:minmax(0,1fr)}
+  .field.full{grid-column:auto}
+}
+@media screen and (max-width:600px){
+  .shell{width:100%;margin:10px auto 32px;padding:0 8px}
+  .hero{padding:14px;flex-direction:column;align-items:flex-start;gap:9px}
+  .hero h1{font-size:19px}.hero p{font-size:12px}
+  .legal{white-space:normal;font-size:11px}
+  .steps{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:10px 0}
+  .step{padding:8px 5px;font-size:10px;line-height:1.3;min-width:0;overflow-wrap:anywhere}
+  .step span{width:21px;height:21px;margin-right:4px}
+  .card{padding:14px;margin-top:10px;border-radius:14px}
+  .identity-col{padding:14px!important}
+  .identity-person{align-items:flex-start;gap:9px}
+  .identity-avatar{width:40px;height:40px;flex-basis:40px}
+  .identity-name{font-size:17px!important;overflow-wrap:anywhere}
+  .identity-meta{flex-direction:column;gap:5px}
+  .signer-buttons,.actions{gap:8px}
+  .signer-buttons .btn,.actions .btn{min-height:42px;white-space:normal}
+  .grid{gap:14px;margin-top:12px}
+  input,select,textarea{font-size:16px!important;padding-left:13px}
+  .preview-shell{padding:8px!important;overflow:hidden}
+  .preview-toolbar{display:flex;flex-direction:column;align-items:stretch;gap:9px}
+  .preview-toolbar>div{display:flex;flex-wrap:wrap;gap:7px!important}
+  .preview-toolbar .btn{flex:1 1 130px}
+  .official-paper{width:100%!important;max-width:100%!important;padding:22px 12px 30px!important;box-sizing:border-box!important;font-size:13px!important;line-height:1.4!important;overflow-wrap:anywhere;box-shadow:0 5px 16px rgba(35,56,76,.12)!important}
+  .official-head{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:12px!important;margin-bottom:16px!important}
+  .agency-parent,.agency-unit,.nation-title,.nation-motto{white-space:normal!important;overflow-wrap:normal;font-size:11px!important;letter-spacing:0!important}
+  .nation-motto{font-size:12px!important}
+  .official-title{font-size:18px!important}
+  .official-subtitle{font-size:14px!important}
+  .official-paper p{font-size:13px!important;line-height:1.45!important}
+  .official-sign{width:70%!important;max-width:100%;margin-left:auto!important}
+  .sign-date{font-size:12px!important}.sign-role,.sign-name{font-size:13px!important}
+  #previewCard>.actions{display:flex;justify-content:stretch!important;flex-wrap:wrap}
+  #previewCard>.actions .btn{flex:1 1 135px}
+  .hva-modal{border-radius:20px;max-width:100%}
+  .hva-modal-head{padding:18px;gap:10px}
+  .hva-modal-body{padding:22px 16px}
+  .hva-sign-box{padding:20px 16px}
+}
+@media screen and (max-width:380px){
+  .hva-pro-kicker{font-size:7px}.hva-pro-school{font-size:13px}.hva-pro-slogan{font-size:7px}
+  .hva-pro-online{padding:0 5px;font-size:8px}
+  .hva-pro-header-inner{gap:5px;padding:7px}
+}
+
 </style>
 </head>
 <body>
@@ -239,7 +306,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
         </div>
         <div class="field">
           <label>Lớp chủ nhiệm <b>*</b></label>
-          <input id="assignedClass" readonly>
+          <input id="assignedClass" required placeholder="Ví dụ: 12/5 (nhập khi hồ sơ chưa có lớp)">
         </div>
         <div class="field">
           <label>1. Tình hình Sĩ số học sinh <b>*</b></label>
@@ -398,6 +465,35 @@ function parseHvaClassVal(raw){
   return s;
 }
 
+async function loadCnProfile(username){
+  try {
+    const url = new URL(DTHT_BACKEND_URL);
+    url.searchParams.set('action','getChuNhiemInitial');
+    url.searchParams.set('username',username);
+    url.searchParams.set('namHoc','2026-2027');
+    const response = await fetch(url.toString(), {cache:'no-store'});
+    const result = await response.json();
+    if(!result.ok) throw new Error(result.message || 'Không đọc được hồ sơ.');
+    const cls = parseHvaClassVal(result.lopChuNhiem || '');
+    if(cls && /^1[012]\/\d{1,2}$/.test(cls)){
+      $('assignedClass').value=cls;
+      $('assignedClass').readOnly=true;
+      $('identityClass').textContent=cls;
+      $('apiStatus').textContent='Đã đối chiếu lớp chủ nhiệm '+cls+' từ dữ liệu nhân sự.';
+    }else{
+      $('assignedClass').value='';
+      $('assignedClass').readOnly=true;
+      $('identityClass').textContent='Chưa phân công';
+      $('apiStatus').textContent='Tài khoản chưa có phân công GVCN tại cột W. Liên hệ bộ phận quản trị dữ liệu, không tự nhập lớp.';
+    }
+  }catch(e){
+    $('assignedClass').value='';
+    $('assignedClass').readOnly=true;
+    $('identityClass').textContent='Chưa xác minh';
+    $('apiStatus').textContent='Không thể đối chiếu lớp chủ nhiệm: '+e.message;
+  }
+}
+
 function initApp(){
   const me = dthtCurrentUser();
   const username = me.tenDangNhap || me.username || '';
@@ -411,9 +507,12 @@ function initApp(){
   $('identityTeam').textContent = me.toBoPhan || me.tenTo || 'Hòa Vang';
 
   let lop = parseHvaClassVal(me.lopChuNhiem);
-  if(!lop || lop === 'Không') lop = '10/8';
+  if(!lop || lop === 'Không') lop = ''; // Không tự gán lớp khi hồ sơ thiếu
   $('identityClass').textContent = lop;
-  $('assignedClass').value = lop;
+  $('assignedClass').value = '';
+  $('assignedClass').readOnly = true;
+  if (!lop) $('apiStatus').textContent = 'Đang tra cứu lớp chủ nhiệm theo cột W của dữ liệu nhân sự...';
+  loadCnProfile(username);
 
   try{ state.signatureData = localStorage.getItem('hvaCNSignature:' + username.toLowerCase()) || ''; }catch(e){}
   refreshSignatureUI();
@@ -427,45 +526,31 @@ function toggleSignerCccd(){
 function openSignerVerify(){ $('signerCccd').value = ''; $('signerVerifyMsg').textContent = ''; $('signerVerifyModal').classList.remove('hidden'); }
 function closeSignerVerify(){ $('signerVerifyModal').classList.add('hidden'); }
 
-/* XÁC THỰC CCCD QUÉT TOÀN DÒNG CHUẨN DTHT MASTER */
-function verifySignerIdentity(){
+/* Xác thực qua Backend nhân sự, không đọc công khai toàn bộ sheet */
+async function verifySignerIdentity(){
   const cccd = String($('signerCccd').value || '').replace(/\D/g, '');
   const msg = $('signerVerifyMsg'), btn = $('verifySignerBtn');
   if(cccd.length !== 12){ msg.textContent = 'CCCD phải gồm đúng 12 chữ số.'; return; }
-
   btn.disabled = true;
   msg.style.color = '#075cad';
-  msg.textContent = 'HVA đang đối chiếu thông tin...';
-
-  const user = String(state.user?.tenDangNhap || '').toLowerCase();
-  const cb = '__hvaVerify_' + Date.now();
-  const script = document.createElement('script');
-
-  window[cb] = payload => {
-    try{
-      const rows = payload?.table?.rows || [];
-      for(const row of rows){
-        const rowVals = (row?.c || []).map(c => String(c?.v ?? c?.f ?? '').trim());
-        if(rowVals.some(v => v.toLowerCase() === user)){
-          const isMatch = rowVals.some(v => v.replace(/\D/g, '').padStart(12, '0') === cccd);
-          if(isMatch){
-            state.signerVerified = true;
-            refreshSignatureUI();
-            closeSignerVerify();
-            showHvaNotice('success', 'Xác thực thành công', 'Thông tin CCCD đã khớp với hồ sơ nhân sự.');
-            return;
-          }
-        }
-      }
-    }catch(e){}
+  msg.textContent = 'Đang đối chiếu hồ sơ nhân sự...';
+  try {
+    const username = state.user?.tenDangNhap || state.user?.username || '';
+    const response = await fetch(DTHT_BACKEND_URL, {
+      method: 'POST', headers: {'Content-Type':'text/plain;charset=UTF-8'},
+      body: JSON.stringify({action:'verifyChuNhiemSigner',username,cccd})
+    });
+    const result = await response.json();
+    if(!result.ok) throw new Error(result.message || 'Không xác thực được CCCD.');
+    state.signerVerified = true;
+    state.signed = false;
+    refreshSignatureUI();
+    closeSignerVerify();
+    showHvaNotice('success','Xác thực thành công','CCCD đã khớp hồ sơ nhân sự.');
+  } catch(error) {
     msg.style.color = '#dc2626';
-    msg.textContent = 'Số CCCD không khớp hồ sơ nhân sự.';
-    btn.disabled = false;
-  };
-
-  script.src = 'https://docs.google.com/spreadsheets/d/19zyS6na6VaTiTImj9Bh11ot6f75TmBBpECAMxiObJcA/gviz/tq?sheet='
-    + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG') + '&tqx=responseHandler:' + cb + '&_=' + Date.now();
-  document.head.appendChild(script);
+    msg.textContent = error.message || 'Không kết nối được máy chủ.';
+  } finally { btn.disabled = false; }
 }
 
 function refreshSignatureUI(){
@@ -492,6 +577,7 @@ function handleSignatureUpload(ev){
   reader.onload = () => {
     state.signatureData = reader.result;
     state.signed = false;
+    state.signerVerified = false;
     try{ localStorage.setItem('hvaCNSignature:' + state.user?.tenDangNhap.toLowerCase(), state.signatureData); }catch(e){}
     refreshSignatureUI();
   };
@@ -501,6 +587,7 @@ function handleSignatureUpload(ev){
 function removeSignature(){
   state.signatureData = '';
   state.signed = false;
+  state.signerVerified = false;
   try{ localStorage.removeItem('hvaCNSignature:' + state.user?.tenDangNhap.toLowerCase()); }catch(e){}
   refreshSignatureUI();
 }
@@ -520,6 +607,7 @@ function previewSignerAction(){
 
 function previewReport(){
   if(!$('reportForm').reportValidity()) return;
+  if(!/^1[012]\/\d{1,2}$/.test($('assignedClass').value.trim())) {showHvaNotice('error','Chưa xác định lớp','Chưa xác minh được lớp chủ nhiệm từ hồ sơ nhân sự.');return;}
   const name = state.user?.hoTen || state.user?.fullName || '';
   $('pName').textContent = name;
   $('pSignName').textContent = name;
@@ -556,8 +644,11 @@ async function submitReport(ev){
   if(!state.signatureData){ showHvaNotice('error', 'Chưa có chữ ký', 'Vui lòng tải ảnh chữ ký trước khi gửi.'); return; }
   if(!state.signerVerified){ showHvaNotice('error', 'Chưa xác thực', 'Vui lòng xác thực người ký bằng CCCD.'); return; }
 
-  state.signed = true;
+  if(!state.signed){ showHvaNotice('error','Chưa ký xác nhận','Vui lòng bấm Ký xác nhận trước khi gửi.'); return; }
+  if(!$('reportForm').reportValidity()) return;
+  if(!/^1[012]\/\d{1,2}$/.test($('assignedClass').value.trim())) {showHvaNotice('error','Chưa xác định lớp','Chưa xác minh được lớp chủ nhiệm từ hồ sơ nhân sự.');return;}
   const btn = $('submitReportBtn');
+  if(btn.disabled) return;
   btn.disabled = true;
   btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Đang gửi dữ liệu...';
 
@@ -565,7 +656,7 @@ async function submitReport(ev){
   const token = String(localStorage.getItem('hvaSessionToken') || sessionStorage.getItem('hvaSessionToken') || userObj.sessionToken || '').trim();
 
   const payload = {
-    action: 'submitDTHT',
+    action: 'submitChuNhiem',
     username: userObj.tenDangNhap || userObj.username || '',
     sessionToken: token,
     teacherKey: userObj.tenDangNhap || userObj.username || '',
@@ -575,20 +666,14 @@ async function submitReport(ev){
     namHoc: '2026-2027',
     signerVerified: true,
     signed: true,
-    participates: true,
-    coThamGia: true,
-    cccd: String($('signerCccd') ?$('signerCccd').value : '').replace(/\D/g, ''),
-    nguoiNhan: 'Ban Giám hiệu Trường THPT Hòa Vang',
-
-    assignedSubject: 'Chủ nhiệm: ' + $('assignedClass').value,
-    monHocDayThem: 'CN Lớp ' + $('assignedClass').value + ' (Sĩ số: ' + $('classSize').value + ')',
-    ngayTrongTuan: 'Chuyên cần: ' + $('attendance').value,
-    khungGio: 'Kỳ: ' + $('reportPeriod').value,
-    thoiDiemBatDau: 'Năm học 2026-2027',
-    hinhThucDayThem: $('discipline').value,
-    diaDiemDayThem: $('cooperation').value || 'Không có',
-    dienThoaiCoSo: $('assignedClass').value,
-    moiQuanHeChuTheDKKD: $('suggestions').value || 'Không có'
+    kyBaoCao: $('reportPeriod').value,
+    lopChuNhiem: $('assignedClass').value.trim(),
+    siSo: $('classSize').value.trim(),
+    chuyenCan: $('attendance').value.trim(),
+    nenNep: $('discipline').value.trim(),
+    phoiHop: $('cooperation').value.trim(),
+    deXuat: $('suggestions').value.trim(),
+    chuKyBase64: state.signatureData
   };
 
   try{
