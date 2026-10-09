@@ -334,7 +334,38 @@ async function dthtStandaloneLogin(){
   }
 }
 
-/* TRA CỨU NHÂN SỰ TỪ GOOGLE SHEET VỚI CƠ CHẾ AN TOÀN */
+/* TRA CỨU NHÂN SỰ TỪ GOOGLE SHEET VỚI CƠ CHẾ AN TOÀN & GIẢI MÃ DATE -> LỚP HỌC */
+function parseHvaClass(cell){
+  if(!cell) return '';
+  // Ưu tiên 1: Lấy chuỗi định dạng hiển thị gốc trên Sheet (f)
+  if(cell.f && String(cell.f).trim()) {
+    const fStr = String(cell.f).trim();
+    if(/^(10|11|12)\/\d+$/i.test(fStr)) return fStr;
+  }
+  
+  // Ưu tiên 2: Xử lý nếu Google Sheet trả về đối tượng Date(...)
+  const raw = String(cell.v ?? cell.f ?? '').trim();
+  if(raw.startsWith('Date(')){
+    const m = raw.match(/Date\((\d+),(\d+),(\d+)/);
+    if(m){
+      // Trong JS Date: Tháng đếm từ 0 (7 nghĩa là Tháng 8)
+      const y = parseInt(m[1], 10);
+      const mon = parseInt(m[2], 10) + 1; // 7 + 1 = 8
+      const day = parseInt(m[3], 10);      // 10
+      
+      // Nếu ngày là khối 10, 11, 12 -> Khối/Lớp là day/mon (ví dụ 10/8)
+      if(day >= 10 && day <= 12) return day + '/' + mon;
+      // Trường hợp ngược lại nếu định dạng tháng/ngày
+      if(mon >= 10 && mon <= 12) return mon + '/' + day;
+      return day + '/' + mon;
+    }
+  }
+  
+  // Ưu tiên 3: Chuỗi văn bản thuần
+  if(/^(10|11|12)\/\d+$/i.test(raw)) return raw;
+  return raw;
+}
+
 function fetchProfileFromSheet(username){
   const user = String(username || '').trim().toLowerCase();
   if(!user) return Promise.resolve(null);
@@ -359,21 +390,38 @@ function fetchProfileFromSheet(username){
       try {
         const rows = res?.table?.rows || [];
         for(const r of rows){
-          const cells = (r?.c || []).map(c => String(c?.v ?? c?.f ?? '').trim());
-          // cells[14] = Cột O (Login)
-          const login = (cells[14] || '').toLowerCase();
-          if(login === user || cells.some(v => v.toLowerCase() === user)){
-            const toBoPhan = cells[12] || ''; // Cột M (Tổ)
-            let lopCN = cells[22] || '';       // Cột W (GVCN)
+          const rawCells = r?.c || [];
+          
+          // cellsText dùng để so sánh text tìm dòng tài khoản
+          const cellsText = rawCells.map(c => String(c?.v ?? c?.f ?? '').trim());
+          
+          // Cột O (Index 14) là Tên đăng nhập (login)
+          const login = (cellsText[14] || '').toLowerCase();
+          
+          if(login === user || cellsText.some(v => v.toLowerCase() === user)){
+            const toBoPhan = cellsText[12] || ''; // Cột M (Tổ)
+            
+            // Cột W (Index 22) là GVCN
+            let lopCN = parseHvaClass(rawCells[22]);
+            
+            // Quét tìm lớp dự phòng trên cùng dòng nếu ô cột W bị lệch
             if(!lopCN || !/^(10|11|12)\/\d+$/i.test(lopCN)){
-              const found = cells.find(v => /^(10|11|12)\/\d+$/i.test(v));
-              if(found) lopCN = found;
+              for(const cell of rawCells){
+                const parsed = parseHvaClass(cell);
+                if(/^(10|11|12)\/\d+$/i.test(parsed)){
+                  lopCN = parsed;
+                  break;
+                }
+              }
             }
+            
             finish({ toBoPhan, lopCN });
             return;
           }
         }
-      } catch(e){}
+      } catch(e){
+        console.warn('[HVA Profile Parse Error]', e);
+      }
       finish(null);
     };
 
@@ -400,20 +448,31 @@ async function initPortal(){
     return;
   }
 
-  // 1. Hiển thị ngay lập tức thông tin có sẵn (không để bị treo)
+  // 1. Hiển thị ngay lập tức thông tin cơ bản
   $('userNameLabel').textContent = user.hoTen || user.fullName || username;
   $('userTeamLabel').textContent = user.toBoPhan || user.tenTo || 'Ban Giám hiệu';
   $('userRoleLabel').textContent = user.chucVu || user.viTriViecLam || 'Giáo viên';
-  $('userClassLabel').textContent = user.lopChuNhiem || 'Đang tra cứu...';
+  
+  // Khử Date(...) nếu trong bộ nhớ cũ còn sót lại
+  let cachedLop = user.lopChuNhiem || '';
+  if(cachedLop.startsWith('Date(')){
+    cachedLop = parseHvaClass({ v: cachedLop });
+    user.lopChuNhiem = cachedLop;
+  }
+  $('userClassLabel').textContent = (cachedLop && cachedLop !== 'Không') ? cachedLop : 'Đang tra cứu...';
 
-  // 2. Tra cứu ngầm từ Google Sheet để cập nhật chính xác lớp 10/8
+  // 2. Tra cứu trực tiếp từ Google Sheet để chuẩn hóa 100%
   try {
     const profile = await fetchProfileFromSheet(username);
     if(profile){
       if(profile.toBoPhan) $('userTeamLabel').textContent = profile.toBoPhan;
-      const lop = profile.lopCN || 'Không';
+      
+      const lop = (profile.lopCN && profile.lopCN !== 'Không') ? profile.lopCN : 'Không';
       $('userClassLabel').textContent = lop;
+      
+      // Đồng bộ vào localStorage để BC_ChuNhiem.html dùng ngay
       user.lopChuNhiem = lop;
+      if(profile.toBoPhan) user.toBoPhan = profile.toBoPhan;
       localStorage.setItem('user', JSON.stringify(user));
     } else {
       $('userClassLabel').textContent = (user.lopChuNhiem && user.lopChuNhiem !== 'Đang tra cứu...') ? user.lopChuNhiem : 'Không';
