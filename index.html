@@ -624,7 +624,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 }
 
 /* ==============================================================================
-   2. KHUNG GIẤY VĂN BẢN VÀ ĐẦU TRANG (CHỐNG ĐÈ CHỮ TUYỆT ĐỐI)
+   2. KHUNG GIẤY VĂN BẢN VÀ ĐẦU TRANG (MÁY TÍNH & BẢN XEM TRƯỚC)
    ============================================================================== */
 .official-paper, #paper {
   position: relative !important;
@@ -632,6 +632,8 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   color: #000000 !important;
   background: #ffffff !important;
   box-sizing: border-box !important;
+  max-width: 800px !important;
+  margin: 0 auto !important;
   padding: 25mm 20mm 20mm 25mm !important;
   line-height: 1.3 !important;
 }
@@ -691,7 +693,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .school-mark .official-line.short {
   width: 75px !important;
   border-top: 0.5pt solid #000000 !important;
-  margin: 1px auto 0 !important; /* Đưa sát lên sát chữ */
+  margin: 1px auto 0 !important;
 }
 
 /* Khối phải: Quốc hiệu - Tiêu ngữ (54%) */
@@ -723,9 +725,9 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 /* Gạch dưới "Độc lập - Tự do - Hạnh phúc": dài bằng chữ và đưa sát mí chữ */
 .nation-line,
 .motto-mark .official-line {
-  width: 195px !important; /* Độ dài bằng trọn vẹn dòng chữ Độc lập - Tự do - Hạnh phúc */
+  width: 175px !important;
   border-top: 0.5pt solid #000000 !important;
-  margin: 1px auto 0 !important; /* Đưa sát lên sát chữ */
+  margin: 1px auto 0 !important;
 }
 
 /* ==============================================================================
@@ -759,7 +761,7 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .title-decor-line {
   width: 150px !important;
   border-top: 0.5pt solid #000000 !important;
-  margin: 1px auto 18px !important; /* Đưa sát lên mí dòng trích yếu */
+  margin: 1px auto 18px !important;
 }
 
 /* Thân nội dung văn bản: 14pt, căn đều hai bên */
@@ -861,24 +863,89 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 }
 
 /* ==============================================================================
-   5. HIỂN THỊ TRÊN MÀN HÌNH ĐIỆN THOẠI (CO TỈ LỆ VỪA MÀN HÌNH NHỎ)
+   5. HIỂN THỊ TRÊN MÀN HÌNH ĐIỆN THOẠI (CHỐNG TRÀN VÀ VỠ BỐ CỤC 100%)
    ============================================================================== */
 @media (max-width: 720px) {
-  .official-paper {
-    padding: 16px 12px 24px !important;
+  /* Ép khung giấy vừa khít màn hình điện thoại, loại bỏ padding mm */
+  .official-paper, #paper {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px 12px 22px 12px !important;
+    margin: 0 !important;
     border-radius: 8px !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
   }
-  .agency-parent { font-size: 7.5pt !important; }
-  .agency-unit { font-size: 8pt !important; }
-  .agency-line, .school-mark .official-line.short { width: 50px !important; margin: 1px auto 0 !important; }
-  
-  .nation-title { font-size: 7.5pt !important; }
-  .nation-motto { font-size: 8.5pt !important; }
-  .nation-line, .motto-mark .official-line { width: 110px !important; margin: 1px auto 0 !important; }
 
-  #paper .official-title { font-size: 12pt !important; margin: 14px 0 3px !important; }
-  #paper .official-subtitle { font-size: 11pt !important; margin-bottom: 2px !important; }
-  .title-decor-line { width: 110px !important; margin: 2px auto 14px !important; }
+  #paper .form-code {
+    font-size: 8pt !important;
+    margin-bottom: 6px !important;
+  }
+
+  /* Khóa tỉ lệ 2 cột đầu trang: co chữ vừa vặn, cho phép ngắt dòng nếu máy màn hình nhỏ */
+  #paper .official-head {
+    display: table !important;
+    width: 100% !important;
+    table-layout: fixed !important;
+    margin-bottom: 14px !important;
+  }
+
+  #paper .official-head .agency {
+    display: table-cell !important;
+    width: 48% !important;
+    padding-right: 2px !important;
+    box-sizing: border-box !important;
+  }
+  .agency-parent {
+    font-size: 7.2pt !important;
+    white-space: normal !important;
+    word-break: keep-all !important;
+    line-height: 1.2 !important;
+  }
+  .agency-unit {
+    font-size: 7.8pt !important;
+    white-space: normal !important;
+    line-height: 1.2 !important;
+  }
+  .agency-line, .school-mark .official-line.short {
+    width: 45px !important;
+    margin: 1px auto 0 !important;
+  }
+
+  #paper .official-head .nation {
+    display: table-cell !important;
+    width: 52% !important;
+    padding-left: 2px !important;
+    box-sizing: border-box !important;
+  }
+  .nation-title {
+    font-size: 7.2pt !important;
+    white-space: normal !important;
+    word-break: keep-all !important;
+    line-height: 1.2 !important;
+  }
+  .nation-motto {
+    font-size: 8pt !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+  }
+  .nation-line, .motto-mark .official-line {
+    width: 105px !important;
+    margin: 1px auto 0 !important;
+  }
+
+  #paper .official-title {
+    font-size: 11.5pt !important;
+    margin: 12px 0 2px !important;
+  }
+  #paper .official-subtitle {
+    font-size: 10.5pt !important;
+    margin-bottom: 2px !important;
+  }
+  .title-decor-line {
+    width: 105px !important;
+    margin: 2px auto 12px !important;
+  }
 
   #paper .report-body,
   #paper .report-body p,
@@ -888,11 +955,24 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     line-height: 1.45 !important;
   }
 
-  #paper .official-sign { width: 60% !important; }
-  .official-sign .sign-date, .official-sign > div:first-child, .sign-date { font-size: 9.5pt !important; }
-  .sign-role, .sign-name { font-size: 10.5pt !important; }
-  .signature-on-paper { min-height: 48px !important; }
-  .signature-on-paper img { max-height: 45px !important; }
+  #paper .official-sign {
+    width: 65% !important;
+    margin-top: 14px !important;
+  }
+  .official-sign .sign-date, .official-sign > div:first-child, .sign-date {
+    font-size: 9.5pt !important;
+    margin-bottom: 2px !important;
+  }
+  .sign-role, .sign-name {
+    font-size: 10.5pt !important;
+  }
+  .signature-on-paper {
+    min-height: 48px !important;
+  }
+  .signature-on-paper img {
+    max-height: 45px !important;
+    max-width: 130px !important;
+  }
 }
 
 /* ==============================================================================
@@ -926,17 +1006,19 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   .agency-unit { font-size: 13pt !important; }
   .agency-line { width: 90px !important; margin: 1px auto 0 !important; }
 
+  .nation-title { font-size: 12.5pt !important; }
   .nation-motto {
-  font-size: 13.5pt !important;
-  line-height: 1.25 !important;
-}
-.nation-line {
-  display: block !important;
-  width: 53mm !important;
-  border-top: 0.5pt solid #000000 !important;
-  margin: 1px auto 0 !important;
-}
-  .nation-line { display: none !important; }
+    font-size: 13.5pt !important;
+    line-height: 1.25 !important;
+  }
+  /* Khóa cố định đường kẻ tiêu ngữ 53mm chuẩn in ấn */
+  .nation-line {
+    display: block !important;
+    width: 53mm !important;
+    border-top: 0.5pt solid #000000 !important;
+    margin: 1px auto 0 !important;
+  }
+
   #paper .official-title { font-size: 14pt !important; }
   #paper .official-subtitle { font-size: 14pt !important; }
   .title-decor-line { width: 160px !important; margin: 2px auto 18px !important; }
