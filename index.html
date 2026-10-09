@@ -2,6 +2,28 @@
 <html lang="vi" class="bg-slate-50">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+    (function() {
+      const CURRENT_APP_VERSION = 'v3_11_20261009_1';
+      try {
+        const savedVersion = localStorage.getItem('hva_app_version');
+        if (savedVersion !== CURRENT_APP_VERSION) {
+          localStorage.setItem('hva_app_version', CURRENT_APP_VERSION);
+          if ('caches' in window) {
+            caches.keys().then(function(names) {
+              for (let name of names) caches.delete(name);
+            });
+          }
+          if (savedVersion) {
+            window.location.reload(true);
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HVA - Quản lý dạy thêm, học thêm </title>
 <!-- DTHT HVA UI V3_10 | Backend HVA + Personnel source + Sheet DTHT -->
