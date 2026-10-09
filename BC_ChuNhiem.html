@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="vi" class="bg-slate-50">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+  (function() {
+    // Khi có cập nhật mới, Thầy chỉ cần tăng số ở đây: V1, V2, V3,...
+    const CURRENT_APP_VERSION = 'V1_10_2026';
+
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const currentUrlVer = urlParams.get('hva_v');
+      const savedVer = localStorage.getItem('hva_app_version_cn');
+
+      if (savedVer !== CURRENT_APP_VERSION || currentUrlVer !== CURRENT_APP_VERSION) {
+        localStorage.setItem('hva_app_version_cn', CURRENT_APP_VERSION);
+
+        if ('caches' in window) {
+          caches.keys().then(function(keys) {
+            keys.forEach(function(k) { caches.delete(k); });
+          });
+        }
+
+        urlParams.set('hva_v', CURRENT_APP_VERSION);
+        urlParams.set('_t', Date.now());
+        window.location.replace(window.location.pathname + '?' + urlParams.toString() + window.location.hash);
+        return;
+      }
+    } catch (e) {}
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const verEl = document.querySelector('.hva-pro-version') || document.getElementById('hvaVersionLabel');
+      if (verEl) {
+        const match = CURRENT_APP_VERSION.match(/V\d+/i);
+        verEl.textContent = match ? match[0].toUpperCase() : CURRENT_APP_VERSION;
+      }
+    });
+  })();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HVA - Báo cáo công tác chủ nhiệm (BC-CN01)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+<style>
+:root{
+  --hva-h-navy:#073b78;--hva-h-blue:#075cad;--hva-h-cyan:#08abc5;--hva-h-white:#f8fdff;
+  --hva-h-line:rgba(190,238,255,.58);--ink:#183249;--line:#d8e5ef;--soft:#f4f9fd;
+}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f8fb;color:var(--ink)}
+.hva-pro-header{position:sticky;top:0;z-index:40;margin:12px 14px 0;min-height:126px;border-radius:16px;overflow:hidden;isolation:isolate;color:var(--hva-h-white);background:radial-gradient(circle at 82% 34%,rgba(41,245,255,.55),transparent 22%),radial-gradient(circle at 60% 118%,rgba(0,220,255,.55),transparent 34%),linear-gradient(108deg,#063b80 0%,#0758b5 27%,#057fd7 53%,#03aee2 77%,#08d1dc 100%);border:1px solid rgba(148,245,255,.52);box-shadow:0 14px 34px rgba(2,73,130,.24),inset 0 1px 0 rgba(255,255,255,.24)}
+.hva-pro-header::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;opacity:.92;background:radial-gradient(circle at 46% 24%,#a7fbff 0 1.5px,transparent 2.6px),radial-gradient(circle at 53% 72%,#79f5ff 0 1.6px,transparent 2.7px),radial-gradient(circle at 61% 20%,#b7fdff 0 1.5px,transparent 2.6px),radial-gradient(circle at 70% 67%,#75f4ff 0 1.6px,transparent 2.7px),radial-gradient(circle at 77% 28%,#c4feff 0 1.4px,transparent 2.5px),linear-gradient(60deg,transparent 49.3%,rgba(119,244,255,.52) 50%,transparent 50.7%) 42% 0/112px 80px,linear-gradient(120deg,transparent 49.3%,rgba(104,238,255,.46) 50%,transparent 50.7%) 47% 0/146px 94px}
+.hva-pro-header::after{content:"";position:absolute;z-index:-1;width:280px;height:280px;right:-30px;top:-74px;border-radius:50%;pointer-events:none;opacity:.52;border:1px solid rgba(173,252,255,.95);background:repeating-radial-gradient(circle,transparent 0 20px,rgba(155,248,255,.46) 21px 22px),repeating-linear-gradient(90deg,transparent 0 26px,rgba(151,246,255,.34) 27px 28px),repeating-linear-gradient(0deg,transparent 0 26px,rgba(151,246,255,.31) 27px 28px)}
+.hva-pro-header-inner{min-height:124px;max-width:1460px;margin:0 auto;padding:13px 24px;display:grid;grid-template-columns:58px minmax(570px,1fr) auto;align-items:center;gap:20px}
+.hva-pro-back{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#eaf8ff;background:linear-gradient(145deg,rgba(16,112,187,.95),rgba(7,73,141,.95));border:1.5px solid rgba(79,192,255,.50);box-shadow:0 6px 16px rgba(0,36,78,.20);cursor:pointer}.hva-pro-back i{font-size:27px}
+.hva-pro-brand{min-width:0;display:flex;align-items:center}.hva-pro-divider{width:1px;height:70px;flex:0 0 1px;background:linear-gradient(transparent,var(--hva-h-line) 16%,var(--hva-h-line) 84%,transparent)}
+.hva-pro-brandtext{min-width:0;width:min(620px,100%);text-align:center;line-height:1.06}.hva-pro-kicker{font-size:14px;font-weight:800;letter-spacing:.17em;color:rgba(226,244,255,.90);white-space:nowrap}.hva-pro-school{margin-top:7px;font-size:30px;font-weight:800;letter-spacing:-.025em;color:#fff;white-space:nowrap;text-shadow:0 2px 10px rgba(0,31,72,.28)}.hva-pro-slogan{margin-top:8px;font-size:15px;font-weight:600;color:rgba(235,248,255,.90);white-space:nowrap}.hva-pro-slogan b{font-weight:800;padding:0 5px;color:#d9f7ff}
+.hva-pro-tools{display:flex;align-items:center;justify-content:flex-end;gap:9px;white-space:nowrap}.hva-pro-online-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}.hva-pro-online{height:42px;padding:0 17px;display:flex;align-items:center;gap:10px;border-radius:22px;border:1.5px solid rgba(83,246,237,.88);background:rgba(2,77,119,.40);font-size:12px;font-weight:800}.hva-pro-online-dot{width:11px;height:11px;border-radius:50%;background:#19e98a;box-shadow:0 0 0 5px rgba(25,233,138,.12),0 0 13px rgba(25,233,138,.82)}.hva-pro-version{font-size:9px;font-weight:900;letter-spacing:.14em;color:rgba(235,251,255,.86);line-height:1}
+
+.shell{max-width:1220px;margin:20px auto 50px;padding:0 16px}.hero{background:#fff;border:1px solid #dce8f1;border-radius:18px;padding:20px 22px;box-shadow:0 7px 22px rgba(15,76,129,.07);display:flex;justify-content:space-between;gap:16px;align-items:center}.hero h1{margin:0;color:#003b6f;font-size:24px;font-weight:800!important}.hero p{margin:6px 0 0;color:#294d6b!important;font-size:13px;font-weight:600!important;opacity:1!important}.legal{font-size:12px;background:#e6f5ff;color:#003b6f!important;border:1px solid #9fd5f3;padding:8px 12px;border-radius:999px;font-weight:800!important;white-space:nowrap}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}.step{padding:12px;border:1px solid #dbe7f0;border-radius:14px;background:#fff;font-size:12px;font-weight:800;color:#607487}.step.on{border-color:#6ebbe8;background:#edf8ff;color:#075cad}.step span{display:inline-flex;width:24px;height:24px;border-radius:50%;align-items:center;justify-content:center;background:#e5eef5;margin-right:7px}.step.on span{background:#075cad;color:#fff}
+.card{background:#fff;border:1px solid #dce8f1;border-radius:18px;padding:22px;box-shadow:0 6px 20px rgba(15,76,129,.06);margin-top:14px}.card h2{font-size:18px;color:#123b60;margin:0 0 6px}.muted{color:#6b7f91;font-size:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}.field.full{grid-column:1/-1}.lbl,label{display:block;font-size:12px;font-weight:800;color:#36556e;margin:0 0 6px}
+.lbl b,label b,.required-star{color:#dc2626;font-weight:900}
+select,input,textarea{
+  width:100%;height:44px;border:1.8px solid #075cad;border-radius:10px;
+  padding:0 14px;background:#fff;font:600 13px Inter,Arial,sans-serif;color:#163a5f;outline:none;transition:border-color .18s ease,box-shadow .18s ease;
+}
+select{
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  padding-right:58px;cursor:pointer;
+  background-color:#fff;
+  background-image:linear-gradient(45deg,transparent 50%,#fff 50%),linear-gradient(135deg,#fff 50%,transparent 50%),linear-gradient(#1479c9,#1479c9);
+  background-position:calc(100% - 28px) calc(50% - 2px),calc(100% - 20px) calc(50% - 2px),100% 0;
+  background-size:8px 8px,8px 8px,52px 100%;
+  background-repeat:no-repeat;
+}
+select:hover,input:hover,textarea:hover{border-color:#064b91}
+select:focus,input:focus,textarea:focus{border-color:#064b91;box-shadow:0 0 0 3px rgba(7,92,173,.12)}
+textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.btn{border:0;border-radius:10px;padding:11px 16px;font:800 12px Inter;cursor:pointer}.primary{background:#075cad;color:#fff}.secondary{background:#eaf4fb;color:#075cad;border:1px solid #cce1ef}.btn:disabled{opacity:.5;cursor:not-allowed}
+.hidden{display:none!important}.status{margin-top:12px;padding:11px 14px;border:1.5px solid #075cad;border-radius:9px;background:#f4f9fe;color:#16466f;font-size:12.5px;font-weight:600;line-height:1.45}
+.history{width:100%;border-collapse:collapse;margin-top:14px;font-size:12px}.history th,.history td{border-bottom:1px solid #e4edf4;padding:10px 8px;text-align:left}.history th{background:#f4f9fd;color:#36556e}
+
+/* AUTH & IDENTITY CARD */
+.dtht-auth{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#073b78,#075cad 52%,#08abc5);display:flex;align-items:center;justify-content:center;padding:18px}
+.dtht-auth.hidden{display:none!important}
+.dtht-auth-box{width:min(430px,100%);background:#fff;border-radius:24px;padding:28px 30px;box-shadow:0 24px 70px rgba(0,31,72,.32)}
+.dtht-auth-title{font-size:22px;font-weight:900;color:#075cad;text-align:center;line-height:1.25}
+.dtht-auth-sub{font-size:13px;color:#607487;text-align:center;margin:8px 0 22px}
+.dtht-auth-field{margin-bottom:15px}
+.dtht-auth-field>label{display:block;margin:0 0 7px;color:#334155;font-size:12px;font-weight:800}
+.dtht-input-wrap{position:relative}
+.dtht-input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;pointer-events:none}
+.dtht-auth-box input{display:block;width:100%;height:50px;margin:0;border:1.5px solid #cbd5e1;border-radius:12px;background:#fff;color:#1e293b;font-size:16px;font-weight:600;outline:none;box-sizing:border-box}
+#dthtLoginUser{padding:0 14px 0 42px}
+#dthtLoginPass{padding:0 46px 0 90px}
+.dtht-pass-prefix{position:absolute;left:42px;top:50%;transform:translateY(-50%);color:#334155;font-size:14px;font-weight:900;pointer-events:none}
+.dtht-pass-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:transparent;color:#075cad;font-size:18px;cursor:pointer;border-radius:8px}
+.dtht-auth-btn{width:100%;height:48px;margin-top:3px;border:0;border-radius:12px;background:linear-gradient(100deg,#075296 0%,#0A68BD 58%,#0B8FD0 100%);color:#fff;font-size:14px;font-weight:900;cursor:pointer}
+.dtht-auth-msg{min-height:20px;margin-top:12px;text-align:center;font-size:12px;font-weight:700;color:#be123c}
+
+.identity-card{display:grid!important;grid-template-columns:minmax(0,1.35fr) minmax(250px,.9fr) minmax(250px,.85fr)!important;gap:0!important;padding:0!important;overflow:hidden!important;background:#e8f4ff!important;border:1px solid #79b9e8!important;border-radius:16px;box-shadow:0 10px 26px rgba(7,92,173,.10)!important}
+.identity-col{min-width:0;padding:20px 22px!important;position:relative}
+.identity-col+.identity-col{border-left:1px solid #9bc9ea!important}
+.identity-person{display:flex;align-items:center;gap:14px}
+.identity-avatar{width:48px;height:48px;flex:0 0 48px;border-radius:14px;display:grid;place-items:center;background:#c5e7fb;color:#0569b6;font-size:22px}
+.identity-label-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.identity-label{font-size:10px;font-weight:900;letter-spacing:.1em;color:#70859a}
+.identity-auth-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;background:#d9f5e4;color:#11703a;font-size:9px;font-weight:900}
+.identity-name{font-size:20px!important;font-weight:900!important;color:#06447f!important;margin:3px 0 7px}
+.identity-meta{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#365f7f}.identity-meta b{color:#123f67}
+.identity-section-title{font-size:11px!important;font-weight:900;letter-spacing:.08em;color:#376a91!important;margin-bottom:9px}
+.signature-preview{height:68px;display:flex;align-items:center;justify-content:center;border:1.8px dashed #38bdf8;border-radius:12px;background:#ffffff;overflow:hidden}
+.signature-preview img{max-width:170px;max-height:60px;object-fit:contain}
+.signature-empty{font-size:11.5px;color:#64748b;text-align:center;padding:8px;font-weight:600}
+.signature-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.signature-actions .btn{padding:8px 12px;font-size:11px;font-weight:700}
+.signer-status{font-size:12px;color:#475569;line-height:1.4;margin:4px 0 10px;font-weight:600}.signer-status.ok{color:#15803d;font-weight:800}
+.signer-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.signer-buttons .btn{padding:10px 14px!important;font-size:11.5px!important;font-weight:800!important;border-radius:10px!important}
+.signer-buttons .btn.secondary{background:#f0f9ff!important;color:#0369a1!important;border:1.5px solid #7dd3fc!important}
+.signer-buttons .sign-ready{background:linear-gradient(135deg,#0284c7 0%,#0369a1 100%)!important;color:#ffffff!important;border:1.5px solid #0284c7!important}
+.signer-buttons .sign-ready:disabled{background:#e2e8f0!important;color:#94a3b8!important;border:1px solid #cbd5e1!important}
+
+.hva-sign-modal{position:fixed;inset:0;z-index:100000;background:rgba(7,31,55,.62);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:18px}
+.hva-sign-modal.hidden{display:none!important}
+.hva-sign-box{width:min(470px,100%);background:#ffffff;border-radius:24px;padding:26px 28px;box-shadow:0 24px 70px rgba(0,30,60,.32);border:1px solid #e2e8f0}
+.hva-sign-box h3{margin:0 0 8px;color:#0369a1;font-size:20px;font-weight:800}
+.hva-sign-box p{margin:0 0 18px;color:#475569;font-size:12.5px;line-height:1.5}
+.cccd-input-wrap{position:relative!important;width:100%!important}
+.cccd-input-wrap input{width:100%!important;padding:14px 52px 14px 16px!important;border:1.8px solid #075cad;border-radius:10px;font-size:15px;font-weight:600}
+.cccd-eye{position:absolute!important;right:10px!important;top:50%!important;transform:translateY(-50%)!important;width:38px!important;height:38px!important;display:flex!important;align-items:center!important;justify-content:center!important;border:0;background:transparent;color:#0871bd;font-size:18px}
+.hva-sign-msg{min-height:18px;margin-top:10px;font-size:12px;font-weight:800;color:#dc2626}
+
+.field-help{margin:8px 2px 0!important;padding:9px 11px!important;border-radius:9px!important;background:#f3f8fc!important;color:#526d83!important;font-size:12px!important;line-height:1.45!important}
+.preview-shell{background:#eef3f8!important;padding:18px!important}.preview-toolbar{max-width:820px;margin:0 auto 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+
+/* ==============================================================================
+   QUY CHUẨN IN VĂN BẢN HÀNH CHÍNH A4 (BC-CN01)
+   ============================================================================== */
+.official-paper, #paper {
+  position: relative !important;
+  font-family: "Times New Roman", Times, serif !important;
+  color: #000000 !important;
+  background: #ffffff !important;
+  box-sizing: border-box !important;
+  max-width: 800px !important;
+  margin: 0 auto !important;
+  padding: 25mm 20mm 20mm 25mm !important;
+  line-height: 1.35 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+#paper .form-code {
+  position: static !important;
+  width: 100% !important;
+  text-align: right !important;
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 10pt !important;
+  font-style: italic !important;
+  margin: 0 0 8px 0 !important;
+}
+
+#paper .official-head {
+  display: table !important;
+  width: 100% !important;
+  table-layout: fixed !important;
+  margin-bottom: 20px !important;
+  border-collapse: collapse !important;
+}
+
+#paper .official-head .agency {
+  display: table-cell !important;
+  width: 46% !important;
+  vertical-align: top !important;
+  text-align: center !important;
+  padding-right: 6px !important;
+}
+.agency-parent {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 11pt !important;
+  text-transform: uppercase !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+.agency-unit {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 11.5pt !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  margin-top: 2px !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+.agency-line {
+  width: 75px !important;
+  border-top: 0.5pt solid #000000 !important;
+  margin: 1px auto 0 !important;
+}
+
+#paper .official-head .nation {
+  display: table-cell !important;
+  width: 54% !important;
+  vertical-align: top !important;
+  text-align: center !important;
+  padding-left: 6px !important;
+}
+.nation-title {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 11pt !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  white-space: nowrap !important;
+}
+.nation-motto {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 12pt !important;
+  font-weight: bold !important;
+  margin-top: 2px !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+.nation-line {
+  width: 175px !important;
+  border-top: 0.5pt solid #000000 !important;
+  margin: 1px auto 0 !important;
+}
+
+#paper .official-title {
+  font-size: 14pt !important;
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+  text-align: center !important;
+  margin: 22px 0 4px !important;
+}
+#paper .official-subtitle {
+  font-size: 14pt !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  margin: 0 !important;
+}
+.title-decor-line {
+  width: 150px !important;
+  border-top: 0.5pt solid #000000 !important;
+  margin: 2px auto 18px !important;
+}
+
+#paper .report-body, #paper .report-body p, #paper .report-body span {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 14pt !important;
+  line-height: 1.45 !important;
+  margin: 8px 0 !important;
+  text-align: justify !important;
+}
+#paper .report-body b, #paper .report-body strong {
+  font-size: 14pt !important;
+  font-weight: bold !important;
+}
+
+#paper .official-sign {
+  width: 50% !important;
+  margin-left: auto !important;
+  margin-top: 24px !important;
+  text-align: center !important;
+}
+.sign-date {
+  font-size: 13.5pt !important;
+  font-style: italic !important;
+  margin-bottom: 4px !important;
+}
+.sign-role, .sign-name {
+  font-size: 14pt !important;
+  font-weight: bold !important;
+}
+.sign-guide {
+  font-size: 11pt !important;
+  font-style: italic !important;
+  color: #333333 !important;
+  margin: 2px 0 6px !important;
+}
+.signature-on-paper {
+  min-height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 2px 0 !important;
+}
+.signature-on-paper img {
+  max-height: 60px !important;
+  max-width: 160px !important;
+  mix-blend-mode: multiply !important;
+}
+
+/* HIỂN THỊ ĐIỆN THOẠI DI ĐỘNG */
+@media (max-width: 720px) {
+  .identity-card{grid-template-columns:1fr!important}.identity-col+.identity-col{border-left:0!important;border-top:1px solid #86bfe6!important}
+  .official-paper, #paper {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px 12px 22px 12px !important;
+    margin: 0 !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  #paper .form-code { font-size: 8pt !important; margin-bottom: 6px !important; }
+  #paper .official-head { display: table !important; width: 100% !important; table-layout: fixed !important; margin-bottom: 14px !important; }
+  #paper .official-head .agency { display: table-cell !important; width: 45% !important; padding-right: 2px !important; }
+  .agency-parent { font-size: 6.8pt !important; white-space: nowrap !important; letter-spacing: -0.02em !important; line-height: 1.2 !important; }
+  .agency-unit { font-size: 7.5pt !important; white-space: nowrap !important; line-height: 1.2 !important; }
+  .agency-line { width: 45px !important; margin: 1px auto 0 !important; }
+  #paper .official-head .nation { display: table-cell !important; width: 55% !important; padding-left: 2px !important; }
+  .nation-title { font-size: 6.8pt !important; white-space: nowrap !important; letter-spacing: -0.02em !important; line-height: 1.2 !important; }
+  .nation-motto { font-size: 8pt !important; white-space: nowrap !important; line-height: 1.2 !important; }
+  .nation-line { width: 105px !important; margin: 1px auto 0 !important; }
+  #paper .official-title { font-size: 11.5pt !important; margin: 12px 0 2px !important; }
+  #paper .official-subtitle { font-size: 10.5pt !important; }
+  .title-decor-line { width: 105px !important; margin: 2px auto 12px !important; }
+  #paper .report-body, #paper .report-body p, #paper .report-body span, #paper .report-body b { font-size: 10.5pt !important; line-height: 1.45 !important; }
+  #paper .official-sign { width: 65% !important; margin-top: 14px !important; }
+  .sign-date { font-size: 9.5pt !important; }
+  .sign-role, .sign-name { font-size: 10.5pt !important; }
+  .signature-on-paper { min-height: 48px !important; }
+  .signature-on-paper img { max-height: 45px !important; }
+}
+
+/* QUY CHUẨN IN ẤN TRANG A4 (NGHỊ ĐỊNH 30) */
+@page { size: A4 portrait; margin: 20mm 15mm 20mm 25mm; }
+@media print {
+  body { background: #ffffff !important; margin: 0 !important; padding: 0 !important; font-size: 14pt !important; }
+  header, .hva-pro-header, .steps, .btn, .preview-toolbar, .no-print, button, #toast, .card-header, #declareCard, #historyCard { display: none !important; }
+  .official-paper, #paper { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
+  .agency-parent { font-size: 12.5pt !important; }
+  .agency-unit { font-size: 13pt !important; }
+  .agency-line { width: 90px !important; margin: 1px auto 0 !important; }
+  .nation-title { font-size: 12.5pt !important; }
+  .nation-motto { font-size: 13.5pt !important; line-height: 1.25 !important; }
+  .nation-line { display: block !important; width: 53mm !important; border-top: 0.5pt solid #000000 !important; margin: 1px auto 0 !important; }
+  #paper .official-title { font-size: 14pt !important; }
+  #paper .official-subtitle { font-size: 14pt !important; }
+  .title-decor-line { width: 160px !important; margin: 2px auto 18px !important; }
+  #paper .report-body, #paper .report-body p, #paper .report-body span, #paper .report-body b { font-size: 14pt !important; line-height: 1.5 !important; }
+  .sign-date { font-size: 13.5pt !important; }
+  .sign-role, .sign-name { font-size: 14pt !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- MODAL ĐĂNG NHẬP HVA -->
+<div id="dthtAuth" class="dtht-auth hidden">
+  <div class="dtht-auth-box">
+    <div class="dtht-auth-title">BÁO CÁO CÔNG TÁC CHỦ NHIỆM</div>
+    <div class="dtht-auth-sub">Trường THPT Hòa Vang · Đăng nhập tài khoản HVA</div>
+    <div class="dtht-auth-field">
+      <label for="dthtLoginUser">Tên đăng nhập</label>
+      <div class="dtht-input-wrap">
+        <span class="dtht-input-icon"><i class="bi bi-person"></i></span>
+        <input id="dthtLoginUser" autocomplete="username" placeholder="Nhập tên đăng nhập">
+      </div>
+    </div>
+    <div class="dtht-auth-field">
+      <label for="dthtLoginPass">Mật khẩu</label>
+      <div class="dtht-input-wrap">
+        <span class="dtht-input-icon"><i class="bi bi-key"></i></span>
+        <span class="dtht-pass-prefix">HVA@</span>
+        <input id="dthtLoginPass" type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric"
+               autocomplete="current-password" placeholder="4 số bí mật"
+               onkeydown="if(event.key==='Enter') dthtStandaloneLogin()">
+        <button type="button" class="dtht-pass-eye" onclick="dthtTogglePassword()" aria-label="Hiện/ẩn mật khẩu">
+          <i id="dthtPassEyeIcon" class="bi bi-eye"></i>
+        </button>
+      </div>
+    </div>
+    <button id="dthtLoginBtn" type="button" class="dtht-auth-btn" onclick="dthtStandaloneLogin()">
+      <i class="bi bi-box-arrow-in-right"></i> <span id="dthtLoginBtnText">ĐĂNG NHẬP</span>
+    </button>
+    <div id="dthtAuthMsg" class="dtht-auth-msg"></div>
+  </div>
+</div>
+
+<!-- MODAL XÁC THỰC CCCD KÝ SỐ -->
+<div id="signerVerifyModal" class="hva-sign-modal hidden" role="dialog" aria-modal="true">
+  <div class="hva-sign-box">
+    <h3><i class="bi bi-shield-check"></i> Xác thực người ký</h3>
+    <p>Nhập số CCCD của chính Thầy/Cô để đối chiếu với hồ sơ nhân sự HVA.</p>
+    <label for="signerCccd">Số CCCD <b>*</b></label>
+    <div class="cccd-input-wrap">
+      <input id="signerCccd" type="password" inputmode="numeric" maxlength="12" placeholder="Nhập 12 chữ số CCCD">
+      <button type="button" class="cccd-eye" onclick="toggleSignerCccd()" aria-label="Hiện/ẩn CCCD">
+        <i id="cccdEyeIcon" class="bi bi-eye"></i>
+      </button>
+    </div>
+    <div id="signerVerifyMsg" class="hva-sign-msg"></div>
+    <div class="actions" style="justify-content:flex-end;margin-top:20px;gap:10px;">
+      <button type="button" class="btn secondary" onclick="closeSignerVerify()">Hủy</button>
+      <button type="button" class="btn primary" id="verifySignerBtn" onclick="verifySignerIdentity()"><i class="bi bi-shield-check"></i> Xác thực</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER BANNER CHUẨN HVA -->
+<header class="hva-pro-header">
+  <div class="hva-pro-header-inner">
+    <button type="button" class="hva-pro-back" onclick="goBackHVA()" aria-label="Quay lại"><i class="bi bi-arrow-left"></i></button>
+    <div class="hva-pro-brand"><span class="hva-pro-divider"></span><div class="hva-pro-brandtext"><div class="hva-pro-kicker">TRUNG TÂM QUẢN TRỊ SỐ HVA</div><div class="hva-pro-school">Trường THPT Hòa Vang</div><div class="hva-pro-slogan">Quản trị thông minh <b>•</b> Giáo dục sáng tạo</div></div></div>
+    <div class="hva-pro-tools"><div class="hva-pro-online-wrap"><div class="hva-pro-online"><span class="hva-pro-online-dot"></span><span>TRỰC TUYẾN</span><span class="hva-pro-version" id="hvaVersionLabel">V1</span></div></div></div>
+  </div>
+</header>
+
+<main class="shell">
+  <section class="hero">
+    <div><h1>Báo cáo công tác chủ nhiệm</h1><p>Hệ thống tiếp nhận báo cáo định kỳ hàng tháng & giữa kỳ · Năm học 2026–2027</p></div>
+    <div class="legal"><i class="bi bi-shield-check"></i> Mẫu BC-CN01 · THPT Hòa Vang</div>
+  </section>
+
+  <div class="steps">
+    <div class="step on" id="s1"><span>1</span>Điền báo cáo</div>
+    <div class="step" id="s2"><span>2</span>Xem bản in A4</div>
+    <div class="step" id="s3"><span>3</span>Xác nhận & gửi</div>
+  </div>
+
+  <!-- BƯỚC 1: KHỐI THỰC HIỆN KÊ KHAI -->
+  <section class="card" id="declareCard">
+    <div style="font-size:11px;font-weight:900;letter-spacing:.08em;color:#0a66b7;margin-bottom:5px;">MẪU BC-CN01 · NGHIỆP VỤ SỐ HVA</div>
+    <h2 style="font-size:22px;color:#0b355d;margin:0 0 4px;">Kê khai nội dung công tác chủ nhiệm</h2>
+    <p class="muted">Thông tin GVCN và Lớp chủ nhiệm được nhận diện tự động từ tài khoản HVA đang đăng nhập.</p>
+
+    <!-- THẺ DANH TÍNH & CHỮ KÝ SỐ -->
+    <div class="identity-card" style="margin:18px 0 10px;">
+      <div class="identity-col">
+        <div class="identity-person">
+          <div class="identity-avatar"><i class="bi bi-person-badge-fill"></i></div>
+          <div class="identity-main">
+            <div class="identity-label-row">
+              <div class="identity-label">GIÁO VIÊN CHỦ NHIỆM</div>
+              <span class="identity-auth-chip"><i class="bi bi-patch-check-fill"></i> HVA AUTH</span>
+            </div>
+            <div class="identity-name" id="identityName">Đang xác định...</div>
+            <div class="identity-meta">
+              <span><i class="bi bi-mortarboard"></i> Lớp: <b id="identityClass">—</b></span>
+              <span><i class="bi bi-diagram-3"></i> Tổ: <b id="identityTeam">—</b></span>
+              <span><i class="bi bi-calendar3"></i> Năm học <b>2026–2027</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="identity-col">
+        <div class="identity-section-title">CHỮ KÝ CÁ NHÂN</div>
+        <div class="signature-preview" id="signaturePreview"><div class="signature-empty">Vui lòng tải ảnh chữ ký cá nhân.</div></div>
+        <input id="signatureFile" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="handleSignatureUpload(event)">
+        <div class="signature-actions">
+          <button type="button" class="btn secondary" onclick="document.getElementById('signatureFile').click()"><i class="bi bi-upload"></i> Tải chữ ký</button>
+          <button type="button" class="btn secondary" id="removeSignatureBtn" onclick="removeSignature()" disabled><i class="bi bi-trash3"></i> Xóa</button>
+        </div>
+      </div>
+      <div class="identity-col">
+        <div class="identity-section-title">XÁC THỰC CCCD & KÝ DUYỆT</div>
+        <div class="signer-status" id="signerStatus">Chưa xác thực người ký.</div>
+        <div class="signer-buttons">
+          <button type="button" class="btn secondary" onclick="openSignerVerify()"><i class="bi bi-shield-lock"></i> Xác thực CCCD</button>
+          <button type="button" class="btn sign-ready" id="signDocumentBtn" onclick="signDocument()" disabled><i class="bi bi-pen"></i> Ký xác nhận</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM NHẬP LIỆU BÁO CÁO CÔNG TÁC CHỦ NHIỆM -->
+    <form id="reportForm" style="margin-top:20px;padding-top:16px;border-top:1px solid #e6eef6;" onsubmit="event.preventDefault();previewReport()">
+      <div class="grid">
+        <div class="field">
+          <label>Kỳ báo cáo <b>*</b></label>
+          <select id="reportPeriod" required onchange="onPeriodChange()">
+            <option value="Tháng 10/2026">Định kỳ Tháng 10/2026</option>
+            <option value="Tháng 11/2026">Định kỳ Tháng 11/2026</option>
+            <option value="Giữa Học kỳ I">Giữa Học kỳ I (Năm học 2026-2027)</option>
+            <option value="Tháng 12/2026">Định kỳ Tháng 12/2026</option>
+            <option value="Sơ kết Học kỳ I">Sơ kết Học kỳ I</option>
+            <option value="Tháng 01/2027">Định kỳ Tháng 01/2027</option>
+            <option value="Tháng 02/2027">Định kỳ Tháng 02/2027</option>
+            <option value="Tháng 03/2027">Định kỳ Tháng 03/2027</option>
+            <option value="Giữa Học kỳ II">Giữa Học kỳ II (Năm học 2026-2027)</option>
+            <option value="Tháng 04/2027">Định kỳ Tháng 04/2027</option>
+            <option value="Tháng 05/2027">Định kỳ Tháng 05/2027</option>
+            <option value="Tổng kết Năm học">Tổng kết Năm học 2026–2027</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Lớp chủ nhiệm <b>*</b></label>
+          <input id="assignedClass" readonly placeholder="HVA tự động nhận diện từ phân công">
+        </div>
+
+        <div class="field">
+          <label>1. Tình hình Sĩ số học sinh <b>*</b></label>
+          <input id="classSize" required placeholder="Ví dụ: 42/42 (Nữ: 22). Biến động: 0">
+          <div class="field-help"><i class="bi bi-info-circle"></i> Ghi tổng sĩ số, số nữ và số lượng học sinh chuyển đến/chuyển đi nếu có.</div>
+        </div>
+
+        <div class="field">
+          <label>2. Tình hình chuyên cần, nghỉ học <b>*</b></label>
+          <input id="attendance" required placeholder="Ví dụ: Nghỉ có phép: 05 lượt; Không phép: 0">
+          <div class="field-help"><i class="bi bi-info-circle"></i> Tổng hợp số lượt nghỉ học trong kỳ báo cáo.</div>
+        </div>
+
+        <div class="field full">
+          <label>3. Nền nếp, kỷ luật & Học sinh cần lưu ý <b>*</b></label>
+          <textarea id="discipline" required placeholder="Nêu tóm tắt tình hình thực hiện nội quy, các vi phạm nổi bật hoặc học sinh cá biệt/cần hỗ trợ tâm lý đặc biệt..."></textarea>
+        </div>
+
+        <div class="field full">
+          <label>4. Phối hợp với Cha mẹ học sinh & Hoạt động phong trào</label>
+          <textarea id="cooperation" placeholder="Tình hình liên lạc PHHS, các hoạt động trải nghiệm, phong trào Đoàn - Hội đã tham gia trong tháng..."></textarea>
+        </div>
+
+        <div class="field full">
+          <label>5. Đề xuất, kiến nghị với Ban Giám hiệu (nếu có)</label>
+          <textarea id="suggestions" placeholder="Ý kiến đề xuất về điều kiện cơ sở vật chất, hỗ trợ học sinh hoặc công tác phối hợp chuyên môn..."></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" type="submit"><i class="bi bi-file-earmark-text"></i> Xem bản in báo cáo</button>
+        <button class="btn secondary" type="button" onclick="resetForm()"><i class="bi bi-arrow-counterclockwise"></i> Nhập lại</button>
+      </div>
+    </form>
+
+    <div id="apiStatus" class="status">HVA sẵn sàng kết nối.</div>
+  </section>
+
+  <!-- BƯỚC 2: BẢN XEM TRƯỚC / IN A4 CHUẨN NGHỊ ĐỊNH 30 -->
+  <section class="card hidden preview-shell" id="previewCard">
+    <div class="preview-toolbar">
+      <div><b>BẢN XEM TRƯỚC VĂN BẢN A4</b><span>Kiểm tra thể thức và nội dung trước khi ký gửi</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+        <button class="btn secondary" type="button" onclick="backEdit()"><i class="bi bi-pencil"></i> Chỉnh sửa</button>
+        <button class="btn primary" id="previewSignBtn" type="button" onclick="previewSignerAction()"><i class="bi bi-shield-check"></i> <span id="previewSignBtnText">Xác thực & ký duyệt</span></button>
+      </div>
+    </div>
+
+    <!-- TỜ GIẤY IN A4 -->
+    <article class="official-paper" id="paper">
+      <!-- 1. Mã mẫu -->
+      <div class="form-code">Mẫu BC-CN01-HVA</div>
+
+      <!-- 2. Đầu trang: Cơ quan & Quốc hiệu -->
+      <div class="official-head">
+        <div class="agency">
+          <div class="agency-parent">SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div>
+          <div class="agency-unit">TRƯỜNG THPT HÒA VANG</div>
+          <div class="agency-line"></div>
+        </div>
+        <div class="nation">
+          <div class="nation-title">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
+          <div class="nation-motto">Độc lập - Tự do - Hạnh phúc</div>
+          <div class="nation-line"></div>
+        </div>
+      </div>
+
+      <!-- 3. Tên văn bản & Trích yếu -->
+      <div class="official-title">BÁO CÁO</div>
+      <div class="official-subtitle" id="previewSubtitle">Công tác chủ nhiệm Tháng 10/2026</div>
+      <div class="title-decor-line"></div>
+
+      <!-- 4. Thân báo cáo chuẩn 14pt -->
+      <div class="report-body">
+        <p><b>Kính gửi:</b> Ban Giám hiệu Trường THPT Hòa Vang</p>
+        <p>Họ và tên giáo viên chủ nhiệm: <span id="pName" class="teacher-name-val"></span></p>
+        <p>Phụ trách lớp: <span id="pClass" style="font-weight:bold;"></span> — Năm học: <b>2026–2027</b></p>
+        <p>Trân trọng báo cáo với Ban Giám hiệu tình hình công tác chủ nhiệm lớp trong kỳ báo cáo như sau:</p>
+
+        <p><b>1. Tình hình sĩ số học sinh:</b> <span id="pSize"></span></p>
+        <p><b>2. Tình hình chuyên cần:</b> <span id="pAttendance"></span></p>
+        <p><b>3. Nền nếp, kỷ luật và các trường hợp lưu ý:</b></p>
+        <p style="text-indent:20px;" id="pDiscipline"></p>
+
+        <div id="previewCoopWrap">
+          <p><b>4. Phối hợp cha mẹ học sinh và hoạt động phong trào:</b></p>
+          <p style="text-indent:20px;" id="pCooperation"></p>
+        </div>
+
+        <div id="previewSugWrap">
+          <p><b>5. Đề xuất, kiến nghị với Ban Giám hiệu:</b></p>
+          <p style="text-indent:20px;" id="pSuggestions"></p>
+        </div>
+
+        <p style="margin-top:14px;">Tôi xin chịu trách nhiệm về tính trung thực, chính xác của những nội dung đã báo cáo trên.</p>
+      </div>
+
+      <!-- 5. Góc chữ ký -->
+      <div class="official-sign">
+        <div class="sign-date"><i>Cẩm Lệ, ngày <span id="pDay">.....</span> tháng <span id="pMonth">.....</span> năm <span id="pYear">2026</span></i></div>
+        <div class="sign-role">GIÁO VIÊN CHỦ NHIỆM</div>
+        <div id="signGuide" class="sign-guide">(Ký và ghi rõ họ tên)</div>
+        <div id="paperSignature" class="signature-on-paper"></div>
+        <div class="sign-name" id="pSignName"></div>
+      </div>
+    </article>
+
+    <div class="actions" style="justify-content:flex-end;margin-top:16px;">
+      <button class="btn secondary" onclick="backEdit()"><i class="bi bi-arrow-left"></i> Quay lại</button>
+      <button id="submitReportBtn" type="button" class="btn primary" onclick="submitReport(event)"><i class="bi bi-send-check"></i> Xác nhận & gửi BGH</button>
+      <button class="btn secondary" onclick="window.print()"><i class="bi bi-printer"></i> In / Xuất PDF</button>
+    </div>
+  </section>
+
+  <!-- LỊCH SỬ BÁO CÁO -->
+  <section class="card" id="historyCard">
+    <h2>Lịch sử báo cáo công tác chủ nhiệm</h2>
+    <p class="muted">Hệ thống lưu trữ toàn bộ các kỳ báo cáo của Thầy/Cô gửi về BGH.</p>
+    <div style="overflow:auto">
+      <table class="history">
+        <thead>
+          <tr>
+            <th>Kỳ báo cáo</th>
+            <th>Lớp</th>
+            <th>Trạng thái</th>
+            <th>Thời gian gửi</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="historyRows">
+          <tr><td colspan="5" style="text-align:center;padding:16px;color:#64748b;">Chưa có dữ liệu báo cáo.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ==============================================================================
+   LOGIC JAVASCRIPT HVA - BC-CN01 ENGINE
+   ============================================================================== */
+const HVA_BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz3RGGmU_75a_lbRn7vnyX4prrWiWZT9WO3SHI19GOwKpLkt6mJ0eJqsBjmcAl2z8wEUg/exec';
+
+let state = {
+  user: null,
+  assignedClass: '',
+  signatureData: '',
+  signerVerified: false,
+  signed: false,
+  history: []
+};
+
+const $ = id => document.getElementById(id);
+
+function goBackHVA(){ if(history.length>1) history.back(); else location.href='main.html'; }
+function setStep(n){ for(let i=1;i<=3;i++) $('s'+i)?.classList.toggle('on', i<=n); }
+
+function dthtCurrentUser(){
+  try{ return JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}') || {}; }
+  catch(e){ return {}; }
+}
+
+function dthtTogglePassword(){
+  const input = $('dthtLoginPass'), icon = $('dthtPassEyeIcon');
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  icon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+}
+
+function toggleSignerCccd(){
+  const input = $('signerCccd'), icon = $('cccdEyeIcon');
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  icon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+}
+
+/* ĐĂNG NHẬP STANDALONE HVA */
+async function dthtStandaloneLogin(){
+  const u = ($('dthtLoginUser').value || '').trim();
+  const p = ($('dthtLoginPass').value || '').trim();
+  const msg = $('dthtAuthMsg');
+  if(!u || !p || !/^\d{4}$/.test(p)){
+    msg.textContent = 'Vui lòng nhập tên đăng nhập và 4 số mật khẩu.';
+    return;
+  }
+  msg.textContent = 'Đang xác thực...';
+  try {
+    const res = await fetch(HVA_BACKEND_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'text/plain;charset=UTF-8'},
+      body: JSON.stringify({ action: 'login', tenDangNhap: u, matKhau: 'HVA@' + p })
+    });
+    const data = await res.json();
+    if(data && data.ok === true && data.nguoiDung){
+      localStorage.setItem('user', JSON.stringify(data.nguoiDung));
+      localStorage.setItem('hvaSessionToken', String(data.sessionToken));
+      $('dthtAuth').classList.add('hidden');
+      initApp();
+    } else {
+      throw new Error(data.thongBao || 'Đăng nhập không thành công.');
+    }
+  } catch(e) {
+    msg.textContent = e.message || 'Lỗi mạng khi đăng nhập.';
+  }
+}
+
+/* NHẬN DIỆN THÔNG TIN GVCN TỪ SHEET NHÂN SỰ */
+function loadClassAssignmentFromSheet(username){
+  const user = String(username||'').trim().toLowerCase();
+  return new Promise(resolve => {
+    const cb = '__hvaClass_' + Date.now();
+    const script = document.createElement('script');
+    let finished = false;
+    const finish = val => {
+      if(finished) return; finished = true;
+      try{ delete window[cb]; script.remove(); }catch(_){}
+      resolve(val);
+    };
+    setTimeout(() => finish(''), 6000);
+    window[cb] = payload => {
+      try {
+        const rows = payload?.table?.rows || [];
+        for(const r of rows){
+          const cells = r?.c || [];
+          const login = String(cells[1]?.v || cells[1]?.f || '').trim().toLowerCase();
+          const lop = String(cells[0]?.v || cells[0]?.f || '').trim();
+          if(login === user && lop){ finish(lop); return; }
+        }
+      } catch(e){}
+      finish('');
+    };
+    // Cột H: Lớp chủ nhiệm, Cột N: Tên đăng nhập
+    const tq = "select H,N where lower(N) = '" + user.replace(/'/g,"''") + "'";
+    script.src = 'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq?sheet='
+      + encodeURIComponent('Du_lieu_NhanSu_HVA') + '&headers=6&tqx=' + encodeURIComponent('responseHandler:' + cb)
+      + '&tq=' + encodeURIComponent(tq) + '&_=' + Date.now();
+    document.head.appendChild(script);
+  });
+}
+
+/* XÁC THỰC CCCD TRỰC TIẾP */
+function verifyCccdSheet(username, cccdInput){
+  const user = String(username||'').trim().toLowerCase();
+  const cccd = String(cccdInput||'').replace(/\D/g, '');
+  return new Promise(resolve => {
+    const cb = '__hvaCccd_' + Date.now();
+    const script = document.createElement('script');
+    let done = false;
+    const finish = res => {
+      if(done) return; done = true;
+      try{ delete window[cb]; script.remove(); }catch(_){}
+      resolve(res);
+    };
+    setTimeout(() => finish(false), 8000);
+    window[cb] = payload => {
+      try {
+        const rows = payload?.table?.rows || [];
+        for(const r of rows){
+          const vals = (r?.c || []).map(c => String(c?.v ?? c?.f ?? '').trim());
+          if(vals.some(v => v.toLowerCase() === user)){
+            const match = vals.some(v => v.replace(/\D/g,'').padStart(12,'0') === cccd);
+            finish(match);
+            return;
+          }
+        }
+      } catch(e){}
+      finish(false);
+    };
+    script.src = 'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq?sheet='
+      + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG') + '&tqx=' + encodeURIComponent('responseHandler:' + cb) + '&_=' + Date.now();
+    document.head.appendChild(script);
+  });
+}
+
+/* KHỞI TẠO DỮ LIỆU BAN ĐẦU */
+async function initApp(){
+  const me = dthtCurrentUser();
+  const username = me.tenDangNhap || me.username || '';
+  if(!username){
+    $('dthtAuth').classList.remove('hidden');
+    return;
+  }
+  state.user = me;
+  $('identityName').textContent = me.hoTen || me.fullName || username;
+  $('identityTeam').textContent = me.tenTo || me.toBoPhan || 'Chưa phân tổ';
+
+  // Lấy lớp chủ nhiệm
+  const lop = me.lopChuNhiem || await loadClassAssignmentFromSheet(username) || '10/1';
+  state.assignedClass = lop;
+  $('identityClass').textContent = lop;
+  $('assignedClass').value = lop;
+
+  loadSavedSignature();
+  $('apiStatus').textContent = 'Sẵn sàng lập báo cáo công tác chủ nhiệm.';
+}
+
+/* QUẢN LÝ CHỮ KÝ */
+function signatureKey(){ return 'hvaCNSignature:' + (state.user?.tenDangNhap || '').toLowerCase(); }
+
+function refreshSignatureUI(){
+  const box = $('signaturePreview'), signBtn = $('signDocumentBtn'), st = $('signerStatus');
+  if(box){
+    box.innerHTML = state.signatureData ? `<img src="${state.signatureData}" alt="Chữ ký">` : '<div class="signature-empty">Vui lòng tải ảnh chữ ký cá nhân.</div>';
+  }
+  $('removeSignatureBtn').disabled = !state.signatureData;
+  signBtn.disabled = !(state.signatureData && state.signerVerified);
+
+  if(st){
+    if(state.signed){ st.textContent = '✓ Đã xác thực CCCD · Đã ký duyệt'; st.classList.add('ok'); }
+    else if(state.signerVerified){ st.textContent = '✓ Đã xác thực CCCD. Mời Thầy/Cô bấm “Ký xác nhận”.'; st.classList.add('ok'); }
+    else { st.textContent = 'Chưa xác thực người ký.'; st.classList.remove('ok'); }
+  }
+
+  const pPaper = $('paperSignature'), pGuide =$('signGuide');
+  if(pPaper && pGuide){
+    if(state.signed && state.signatureData){
+      pPaper.innerHTML = `<img src="${state.signatureData}" alt="Chữ ký">`;
+      pGuide.style.display = 'none';
+    } else {
+      pPaper.innerHTML = '';
+      pGuide.style.display = 'block';
+    }
+  }
+
+  const pBtnText = $('previewSignBtnText');
+  if(pBtnText) pBtnText.textContent = state.signed ? '✓ Đã ký duyệt' : 'Xác thực & ký duyệt';
+}
+
+function loadSavedSignature(){
+  try{ state.signatureData = localStorage.getItem(signatureKey()) || ''; }catch(e){}
+  refreshSignatureUI();
+}
+
+function handleSignatureUpload(ev){
+  const f = ev.target.files && ev.target.files[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    state.signatureData = reader.result;
+    state.signed = false;
+    try{ localStorage.setItem(signatureKey(), state.signatureData); }catch(e){}
+    refreshSignatureUI();
+  };
+  reader.readAsDataURL(f);
+}
+
+function removeSignature(){
+  state.signatureData = '';
+  state.signed = false;
+  try{ localStorage.removeItem(signatureKey()); }catch(e){}
+  $('signatureFile').value = '';
+  refreshSignatureUI();
+}
+
+function openSignerVerify(){
+  $('signerCccd').value = ''; $('signerVerifyMsg').textContent = '';$('signerVerifyModal').classList.remove('hidden');
+}
+function closeSignerVerify(){ $('signerVerifyModal').classList.add('hidden'); }
+
+async function verifySignerIdentity(){
+  const cccd = $('signerCccd').value.trim();
+  const msg = $('signerVerifyMsg');
+  if(!/^\d{12}$/.test(cccd)){ msg.textContent = 'CCCD phải gồm đúng 12 chữ số.'; return; }
+  msg.style.color = '#075cad'; msg.textContent = 'HVA đang đối chiếu CCCD...';
+
+  const ok = await verifyCccdSheet(state.user?.tenDangNhap, cccd);
+  if(ok){
+    state.signerVerified = true;
+    msg.style.color = '#15803d'; msg.textContent = 'Xác thực thành công!';
+    refreshSignatureUI();
+    setTimeout(closeSignerVerify, 600);
+  } else {
+    msg.style.color = '#dc2626'; msg.textContent = 'Số CCCD không khớp hồ sơ nhân sự.';
+  }
+}
+
+function signDocument(){
+  if(!state.signatureData || !state.signerVerified) return;
+  state.signed = true;
+  refreshSignatureUI();
+}
+
+function previewSignerAction(){
+  if(state.signed) return;
+  if(!state.signerVerified){ openSignerVerify(); return; }
+  signDocument();
+}
+
+function onPeriodChange(){
+  const p = $('reportPeriod').value;
+  $('previewSubtitle').textContent = 'Công tác chủ nhiệm ' + p;
+}
+
+/* XEM TRƯỚC BẢN IN */
+function previewReport(){
+  if(!$('reportForm').reportValidity()) return;
+
+  const name = state.user?.hoTen || state.user?.fullName || '';
+  $('pName').textContent = name;
+  $('pSignName').textContent = name;
+  $('pClass').textContent =$('assignedClass').value;
+  $('previewSubtitle').textContent = 'Công tác chủ nhiệm ' + $('reportPeriod').value;
+
+  $('pSize').textContent =$('classSize').value;
+  $('pAttendance').textContent =$('attendance').value;
+  $('pDiscipline').textContent =$('discipline').value;
+
+  const coop = $('cooperation').value.trim();$('previewCoopWrap').style.display = coop ? 'block' : 'none';
+  $('pCooperation').textContent = coop;
+
+  const sug = $('suggestions').value.trim();$('previewSugWrap').style.display = sug ? 'block' : 'none';
+  $('pSuggestions').textContent = sug;
+
+  const d = new Date();
+  $('pDay').textContent = String(d.getDate()).padStart(2,'0');
+  $('pMonth').textContent = String(d.getMonth()+1).padStart(2,'0');$('pYear').textContent = String(d.getFullYear());
+
+  $('declareCard').classList.add('hidden');$('previewCard').classList.remove('hidden');
+  setStep(2);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function backEdit(){
+  $('previewCard').classList.add('hidden');$('declareCard').classList.remove('hidden');
+  setStep(1);
+}
+
+function resetForm(){
+  ['classSize','attendance','discipline','cooperation','suggestions'].forEach(id => $(id).value = '');
+}
+
+/* GỬI BÁO CÁO */
+async function submitReport(ev){
+  if(ev) ev.preventDefault();
+  if(!state.signatureData || !state.signerVerified){
+    alert('Thầy/Cô vui lòng tải chữ ký và xác thực CCCD trước khi gửi BGH.');
+    return;
+  }
+  state.signed = true;
+  refreshSignatureUI();
+
+  const btn = $('submitReportBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Đang gửi BGH...';
+
+  // Giả lập lưu hồ sơ vào hệ thống (hoặc gọi API Backend nếu đã cấu hình Sheet tiếp nhận)
+  setTimeout(() => {
+    btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Đã gửi thành công';
+    setStep(3);
+    alert('Báo cáo công tác chủ nhiệm đã được gửi thành công đến Ban Giám hiệu!');
+  }, 1000);
+}
+
+// Khởi chạy ứng dụng
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>
