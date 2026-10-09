@@ -334,22 +334,23 @@ async function dthtStandaloneLogin(){
   }
 }
 
-/* LẤY CHUẨN LỚP CHỦ NHIỆM TỪ SHEET NHÂN SỰ HVA (CỘT O: LOGIN -> CỘT W: GVCN) */
+/* LẤY CHUẨN LỚP CHỦ NHIỆM TỪ SHEET NHÂN SỰ MỚI CỦA THẦY:
+   CỘT O (LOGIN) -> CỘT W (GVCN) TRONG TAB Du_lieu_NhanSu_THPT_HOA_VANG */
 function fetchClassFromSheet(username){
   const user = String(username || '').trim().toLowerCase();
   if(!user) return Promise.resolve('');
   
   return new Promise(resolve => {
-    const cb = '__hvaClassQuery_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const cb = '__hvaClassQuery_' + Date.now();
     const script = document.createElement('script');
     let done = false;
     const finish = val => {
       if(done) return; done = true;
-      try{ delete window[cb]; }catch(_){ window[cb] = undefined; }
+      try{ delete window[cb]; }catch(_){}
       try{ script.remove(); }catch(_){}
       resolve(String(val || '').trim());
     };
-    const timer = setTimeout(() => finish(''), 7000);
+    const timer = setTimeout(() => finish(''), 6000);
 
     window[cb] = res => {
       clearTimeout(timer);
@@ -357,30 +358,25 @@ function fetchClassFromSheet(username){
         const rows = res?.table?.rows || [];
         for(const row of rows){
           const cells = row?.c || [];
-          // cells[0] ứng với W (Lớp chủ nhiệm), cells[1] ứng với O (Tên đăng nhập)
           const lop = String(cells[0]?.v ?? cells[0]?.f ?? '').trim();
-          const login = String(cells[1]?.v ?? cells[1]?.f ?? '').trim();
-          if(login.toLowerCase() === user){
+          const login = String(cells[1]?.v ?? cells[1]?.f ?? '').trim().toLowerCase();
+          if(login === user && lop){
             finish(lop);
             return;
           }
         }
-      } catch(e){
-        console.warn('[HVA Class Query]', e);
-      }
+      } catch(e){}
       finish('');
     };
 
-    // Đúng chuẩn: Cột W (Lớp) và Cột O (Tên đăng nhập)
+    // Đúng chuẩn bảng tính mới: Cột W (GVCN) và Cột O (Tên đăng nhập)
     const tq = "select W, O where lower(O) = '" + user.replace(/'/g, "''") + "'";
-     script.src = 'https://docs.google.com/spreadsheets/d/19zyS6na6VaTiTImj9Bh11ot6f75TmBBpECAMxiObJcA/gviz/tq'
+    script.src = 'https://docs.google.com/spreadsheets/d/19zyS6na6VaTiTImj9Bh11ot6f75TmBBpECAMxiObJcA/gviz/tq'
       + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
-      + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_HVA')
       + '&headers=6'
       + '&tqx=' + encodeURIComponent('responseHandler:' + cb)
       + '&tq=' + encodeURIComponent(tq)
       + '&_=' + Date.now();
-    script.async = true;
     script.onerror = () => { clearTimeout(timer); finish(''); };
     document.head.appendChild(script);
   });
