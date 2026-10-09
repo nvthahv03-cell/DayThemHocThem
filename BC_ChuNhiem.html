@@ -779,7 +779,7 @@ function loadClassAssignmentFromSheet(username){
         const rows = payload?.table?.rows || [];
         for(const r of rows){
           const c = r?.c || [];
-          // select M, N, O, W tương ứng với index 0, 1, 2, 3
+          // Index 0: M (Tổ), Index 1: N (Môn), Index 2: O (Login), Index 3: W (GVCN)
           const toBoPhan = String(c[0]?.v ?? c[0]?.f ?? '').trim();
           const monDay   = String(c[1]?.v ?? c[1]?.f ?? '').trim();
           const login    = String(c[2]?.v ?? c[2]?.f ?? '').trim().toLowerCase();
@@ -789,7 +789,7 @@ function loadClassAssignmentFromSheet(username){
             finish({
               toBoPhan: toBoPhan,
               monDay: monDay,
-              lopChuNhiem: lopCN || 'Không'
+              lopChuNhiem: lopCN // Nếu không chủ nhiệm thì ô W này rỗng
             });
             return;
           }
@@ -798,6 +798,7 @@ function loadClassAssignmentFromSheet(username){
       finish(null);
     };
 
+    // Truy vấn đúng 4 cột: M, N, O, W từ sheet nhân sự
     const tq = "select M, N, O, W where lower(O) = '" + user.replace(/'/g, "''") + "'";
     script.src = 'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq?sheet='
       + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
@@ -854,20 +855,20 @@ async function initApp(){
   state.user = me;
   $('identityName').textContent = me.hoTen || me.fullName || username;
 
-  // Lấy dữ liệu chuẩn xác từ Sheet theo tài khoản đăng nhập
+  // Lấy dữ liệu chuẩn xác từ Sheet
   const profile = await loadClassAssignmentFromSheet(username);
   
   const tenTo = profile?.toBoPhan || me.tenTo || me.toBoPhan || 'Ban Giám hiệu';
   const monDay = profile?.monDay || me.monDay || 'Toán';
-  const lop = (profile && profile.lopChuNhiem && profile.lopChuNhiem !== 'Không') 
-              ? profile.lopChuNhiem 
-              : (me.lopChuNhiem || 'Không chủ nhiệm');
+  
+  // Xử lý cột W: nếu có tên lớp thì lấy tên lớp, nếu trống thì ghi rõ 'Không chủ nhiệm'
+  const lop = (profile && profile.lopChuNhiem) ? profile.lopChuNhiem : 'Không chủ nhiệm';
 
   state.assignedClass = lop;
   state.assignedSubject = monDay;
 
   $('identityTeam').textContent = tenTo;
-  $('identitySubject').textContent = monDay;
+  if($('identitySubject')) $('identitySubject').textContent = monDay;
   $('identityClass').textContent = lop;
   $('assignedClass').value = lop;
 
