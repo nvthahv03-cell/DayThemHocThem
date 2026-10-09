@@ -7,7 +7,7 @@
   <meta http-equiv="Expires" content="0">
   <script>
     (function() {
-      const CURRENT_APP_VERSION = 'v5_10_2026';
+      const CURRENT_APP_VERSION = 'V6_10_2026';
       try {
         const savedVersion = localStorage.getItem('hva_app_version');
         if (savedVersion !== CURRENT_APP_VERSION) {
@@ -964,6 +964,28 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     font-size: 10.5pt !important;
   }
 }
+
+  /* Ép đồng bộ tuyệt đối cỡ chữ tên và môn học trên toàn bộ giao diện */
+#paper #pName,
+#paper #pAssigned,
+#paper .teacher-name-val {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 14pt !important;
+  font-weight: normal !important;
+  line-height: inherit !important;
+  display: inline !important;
+}
+
+/* Riêng trên màn hình điện thoại (<= 720px): đưa về đúng 10.5pt như toàn bộ thân văn bản */
+@media (max-width: 720px) {
+  #paper #pName,
+  #paper #pAssigned,
+  #paper .teacher-name-val {
+    font-size: 10.5pt !important;
+    font-weight: normal !important;
+    display: inline !important;
+  }
+}
 </style>
 </head>
 <!-- 🔴 CORE PASS — SHELL/HVA PAGE FRAME — LOCK -->
@@ -1302,8 +1324,8 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
       <div class="report-body">
         <p class="to-line"><b>Kính gửi:</b> Hiệu trưởng Trường THPT Hòa Vang</p>
         
-        <p>Họ và tên giáo viên: <span class="teacher-name-val" id="pName"></span></p>
-        <p>Môn học được phân công dạy học: <span id="pAssigned"></span></p>
+        <p>Họ và tên giáo viên: <span class="teacher-name-val" id="pName" style="font-size:inherit!important;font-weight:normal!important;font-family:inherit!important;"></span></p>
+        <p>Môn học được phân công dạy học: <span id="pAssigned" style="font-size:inherit!important;font-weight:normal!important;font-family:inherit!important;"></span></p>
 
         <!-- Khối có tham gia dạy thêm -->
         <div id="previewYesBody">
