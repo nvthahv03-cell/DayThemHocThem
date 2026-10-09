@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"> 
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <script>
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<script>
   (function() {
     const CURRENT_APP_VERSION = 'V2_10_2026';
-
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const currentUrlVer = urlParams.get('hva_v');
@@ -16,13 +15,11 @@
 
       if (savedVer !== CURRENT_APP_VERSION || currentUrlVer !== CURRENT_APP_VERSION) {
         localStorage.setItem('hva_app_version_cn', CURRENT_APP_VERSION);
-
         if ('caches' in window) {
           caches.keys().then(function(keys) {
             keys.forEach(function(k) { caches.delete(k); });
           });
         }
-
         urlParams.set('hva_v', CURRENT_APP_VERSION);
         urlParams.set('_t', Date.now());
         window.location.replace(window.location.pathname + '?' + urlParams.toString() + window.location.hash);
@@ -52,7 +49,7 @@
 }
 *{box-sizing:border-box} body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f8fb;color:var(--ink)}
 
-/* BANNER HEADER CHUẨN HVA */
+/* BANNER HEADER CHUẨN DTHT MASTER */
 .hva-pro-header{position:sticky;top:0;z-index:40;margin:12px 14px 0;min-height:126px;border-radius:16px;overflow:hidden;isolation:isolate;color:var(--hva-h-white);background:radial-gradient(circle at 82% 34%,rgba(41,245,255,.55),transparent 22%),radial-gradient(circle at 60% 118%,rgba(0,220,255,.55),transparent 34%),linear-gradient(108deg,#063b80 0%,#0758b5 27%,#057fd7 53%,#03aee2 77%,#08d1dc 100%);border:1px solid rgba(148,245,255,.52);box-shadow:0 14px 34px rgba(2,73,130,.24),inset 0 1px 0 rgba(255,255,255,.24)}
 .hva-pro-header::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;opacity:.92;background:radial-gradient(circle at 46% 24%,#a7fbff 0 1.5px,transparent 2.6px),radial-gradient(circle at 53% 72%,#79f5ff 0 1.6px,transparent 2.7px),radial-gradient(circle at 61% 20%,#b7fdff 0 1.5px,transparent 2.6px),radial-gradient(circle at 70% 67%,#75f4ff 0 1.6px,transparent 2.7px),radial-gradient(circle at 77% 28%,#c4feff 0 1.4px,transparent 2.5px),linear-gradient(60deg,transparent 49.3%,rgba(119,244,255,.52) 50%,transparent 50.7%) 42% 0/112px 80px,linear-gradient(120deg,transparent 49.3%,rgba(104,238,255,.46) 50%,transparent 50.7%) 47% 0/146px 94px}
 .hva-pro-header::after{content:"";position:absolute;z-index:-1;width:280px;height:280px;right:-30px;top:-74px;border-radius:50%;pointer-events:none;opacity:.52;border:1px solid rgba(173,252,255,.95);background:repeating-radial-gradient(circle,transparent 0 20px,rgba(155,248,255,.46) 21px 22px),repeating-linear-gradient(90deg,transparent 0 26px,rgba(151,246,255,.34) 27px 28px),repeating-linear-gradient(0deg,transparent 0 26px,rgba(151,246,255,.31) 27px 28px)}
@@ -61,7 +58,18 @@
 .hva-pro-brand{min-width:0;display:flex;align-items:center}.hva-pro-divider{width:1px;height:70px;flex:0 0 1px;background:linear-gradient(transparent,var(--hva-h-line) 16%,var(--hva-h-line) 84%,transparent)}
 .hva-pro-brandtext{min-width:0;width:min(620px,100%);text-align:center;line-height:1.06}.hva-pro-kicker{font-size:14px;font-weight:800;letter-spacing:.17em;color:rgba(226,244,255,.90);white-space:nowrap}.hva-pro-school{margin-top:7px;font-size:30px;font-weight:800;letter-spacing:-.025em;color:#fff;white-space:nowrap;text-shadow:0 2px 10px rgba(0,31,72,.28)}.hva-pro-slogan{margin-top:8px;font-size:15px;font-weight:600;color:rgba(235,248,255,.90);white-space:nowrap}.hva-pro-slogan b{font-weight:800;padding:0 5px;color:#d9f7ff}
 .hva-pro-tools{display:flex;align-items:center;justify-content:flex-end;gap:9px;white-space:nowrap}.hva-pro-online-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}.hva-pro-online{height:42px;padding:0 17px;display:flex;align-items:center;gap:10px;border-radius:22px;border:1.5px solid rgba(83,246,237,.88);background:rgba(2,77,119,.40);font-size:12px;font-weight:800}
-.hva-pro-online-dot{width:11px;height:11px;border-radius:50%;background:#19e98a;box-shadow:0 0 0 5px rgba(25,233,138,.12),0 0 13px rgba(25,233,138,.82)}.hva-pro-version{font-size:9px;font-weight:900;letter-spacing:.14em;color:rgba(235,251,255,.86);line-height:1}
+
+/* HIỆU ỨNG CHẤM XANH TRỰC TUYẾN NHẤP NHÁY CHUẨN DTHT */
+.hva-pro-online-dot{
+  width:11px;height:11px;border-radius:50%;background:#19e98a;
+  box-shadow:0 0 0 5px rgba(25,233,138,.15),0 0 13px rgba(25,233,138,.9);
+  animation:hvaDotPulse 1.8s infinite ease-in-out;
+}
+@keyframes hvaDotPulse{
+  0%,100%{transform:scale(1);opacity:1;box-shadow:0 0 0 4px rgba(25,233,138,.20),0 0 10px rgba(25,233,138,.85)}
+  50%{transform:scale(1.22);opacity:.75;box-shadow:0 0 0 8px rgba(25,233,138,.0),0 0 18px rgba(25,233,138,1)}
+}
+.hva-pro-version{font-size:9px;font-weight:900;letter-spacing:.14em;color:rgba(235,251,255,.86);line-height:1}
 
 .shell{max-width:1220px;margin:20px auto 50px;padding:0 16px}.hero{background:#fff;border:1px solid #dce8f1;border-radius:18px;padding:20px 22px;box-shadow:0 7px 22px rgba(15,76,129,.07);display:flex;justify-content:space-between;gap:16px;align-items:center}.hero h1{margin:0;color:#003b6f;font-size:24px;font-weight:800!important}.hero p{margin:6px 0 0;color:#294d6b!important;font-size:13px;font-weight:600!important;opacity:1!important}.legal{font-size:12px;background:#e6f5ff;color:#003b6f!important;border:1px solid #9fd5f3;padding:8px 12px;border-radius:999px;font-weight:800!important;white-space:nowrap}
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}.step{padding:12px;border:1px solid #dbe7f0;border-radius:14px;background:#fff;font-size:12px;font-weight:800;color:#607487}.step.on{border-color:#6ebbe8;background:#edf8ff;color:#075cad}.step span{display:inline-flex;width:24px;height:24px;border-radius:50%;align-items:center;justify-content:center;background:#e5eef5;margin-right:7px}.step.on span{background:#075cad;color:#fff}
@@ -122,21 +130,13 @@ textarea{
   resize:vertical!important;
 }
 
-select:hover, input:hover, textarea:hover{
-  border-color:#064b91!important;
-}
-
+select:hover, input:hover, textarea:hover{ border-color:#064b91!important; }
 select:focus, input:focus, textarea:focus{
   border-color:#064b91!important;
   box-shadow:0 0 0 3px rgba(7,92,173,0.12)!important;
   background:#fcfeff!important;
 }
-
-input::placeholder, textarea::placeholder{
-  color:#8a9bad!important;
-  opacity:1!important;
-  font-weight:500!important;
-}
+input::placeholder, textarea::placeholder{ color:#8a9bad!important; opacity:1!important; font-weight:500!important; }
 
 .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.btn{border:0;border-radius:10px;padding:11px 16px;font:800 12px Inter;cursor:pointer}.primary{background:#075cad;color:#fff}.secondary{background:#eaf4fb;color:#075cad;border:1px solid #cce1ef}.btn:disabled{opacity:.5;cursor:not-allowed}
 .hidden{display:none!important}.status{margin-top:12px;padding:11px 14px;border:1.5px solid #075cad;border-radius:9px;background:#f4f9fe;color:#16466f;font-size:12.5px;font-weight:600;line-height:1.45}
@@ -197,7 +197,7 @@ input::placeholder, textarea::placeholder{
 .preview-shell{background:#eef3f8!important;padding:18px!important}.preview-toolbar{max-width:820px;margin:0 auto 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
 
 /* ==============================================================================
-   QUY CHUẨN IN VĂN BẢN HÀNH CHÍNH A4 (BC-CN01)
+   QUY CHUẨN IN VĂN BẢN HÀNH CHÍNH A4 (KẾ THỪA TRỌN VẸN TỪ DTHT MASTER)
    ============================================================================== */
 .official-paper, #paper {
   position: relative !important;
@@ -213,78 +213,80 @@ input::placeholder, textarea::placeholder{
 }
 
 #paper .form-code {
-  position: static !important;
-  width: 100% !important;
-  text-align: right !important;
+  position: absolute !important;
+  top: 12mm !important;
+  right: 20mm !important;
+  width: 50% !important;
+  text-align: center !important;
   font-family: "Times New Roman", Times, serif !important;
   font-size: 10pt !important;
   font-style: italic !important;
-  margin: 0 0 8px 0 !important;
+  margin: 0 !important;
 }
 
 #paper .official-head {
-  display: table !important;
-  width: 100% !important;
-  table-layout: fixed !important;
-  margin-bottom: 20px !important;
-  border-collapse: collapse !important;
+  display: grid !important;
+  grid-template-columns: 44% 56% !important;
+  gap: 16px !important;
+  margin-bottom: 22px !important;
+  text-align: center !important;
 }
 
-#paper .official-head .agency {
-  display: table-cell !important;
-  width: 46% !important;
-  vertical-align: top !important;
-  text-align: center !important;
-  padding-right: 6px !important;
-}
-.agency-parent {
+.agency div {
   font-family: "Times New Roman", Times, serif !important;
   font-size: 11pt !important;
   text-transform: uppercase !important;
   line-height: 1.25 !important;
-  white-space: nowrap !important;
 }
-.agency-unit {
+
+.nation b {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 11pt !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  display: block !important;
+}
+
+/* KHỐI KẺ GẠCH THỂ THỨC CHUẨN DTHT (TỰ BÁM VỪA KHÍT 100% CHỮ) */
+.school-mark, .motto-mark {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  width: auto !important;
+}
+
+.school-mark b {
   font-family: "Times New Roman", Times, serif !important;
   font-size: 11.5pt !important;
   text-transform: uppercase !important;
   font-weight: bold !important;
   margin-top: 2px !important;
-  line-height: 1.25 !important;
-  white-space: nowrap !important;
-}
-.agency-line {
-  width: 75px !important;
-  border-top: 0.5pt solid #000000 !important;
-  margin: 1px auto 0 !important;
 }
 
-#paper .official-head .nation {
-  display: table-cell !important;
-  width: 54% !important;
-  vertical-align: top !important;
-  text-align: center !important;
-  padding-left: 6px !important;
-}
-.nation-title {
-  font-family: "Times New Roman", Times, serif !important;
-  font-size: 11pt !important;
-  text-transform: uppercase !important;
-  font-weight: bold !important;
-  white-space: nowrap !important;
-}
-.nation-motto {
+.motto-mark b {
   font-family: "Times New Roman", Times, serif !important;
   font-size: 12pt !important;
   font-weight: bold !important;
   margin-top: 2px !important;
-  line-height: 1.25 !important;
-  white-space: nowrap !important;
+  text-transform: none !important;
 }
-.nation-line {
-  width: 175px !important;
-  border-top: 0.5pt solid #000000 !important;
+
+.official-line {
+  display: block !important;
+  border-top: 1px solid #000000 !important;
   margin: 1px auto 0 !important;
+}
+
+/* Tiêu ngữ: Gạch bằng 100% dòng chữ */
+.motto-mark .official-line {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Tên trường: Gạch bằng 50% ở giữa */
+.school-mark .official-line.short {
+  width: 50% !important;
+  max-width: 50% !important;
 }
 
 #paper .official-title {
@@ -324,21 +326,9 @@ input::placeholder, textarea::placeholder{
   margin-top: 24px !important;
   text-align: center !important;
 }
-.sign-date {
-  font-size: 13.5pt !important;
-  font-style: italic !important;
-  margin-bottom: 4px !important;
-}
-.sign-role, .sign-name {
-  font-size: 14pt !important;
-  font-weight: bold !important;
-}
-.sign-guide {
-  font-size: 11pt !important;
-  font-style: italic !important;
-  color: #333333 !important;
-  margin: 2px 0 6px !important;
-}
+.sign-date { font-size: 13.5pt !important; font-style: italic !important; margin-bottom: 4px !important; }
+.sign-role, .sign-name { font-size: 14pt !important; font-weight: bold !important; }
+.sign-guide { font-size: 11pt !important; font-style: italic !important; color: #333333 !important; margin: 2px 0 6px !important; }
 .signature-on-paper {
   min-height: 60px !important;
   display: flex !important;
@@ -352,7 +342,7 @@ input::placeholder, textarea::placeholder{
   mix-blend-mode: multiply !important;
 }
 
-/* HIỂN THỊ ĐIỆN THOẠI DI ĐỘNG */
+/* HIỂN THỊ TRÊN DI ĐỘNG */
 @media (max-width: 720px) {
   .identity-card{grid-template-columns:1fr!important}.identity-col+.identity-col{border-left:0!important;border-top:1px solid #86bfe6!important}
   .official-paper, #paper {
@@ -360,49 +350,32 @@ input::placeholder, textarea::placeholder{
     max-width: 100% !important;
     padding: 16px 12px 22px 12px !important;
     margin: 0 !important;
-    border-radius: 8px !important;
-    box-sizing: border-box !important;
-    overflow-x: hidden !important;
   }
-  #paper .form-code { font-size: 8pt !important; margin-bottom: 6px !important; }
-  #paper .official-head { display: table !important; width: 100% !important; table-layout: fixed !important; margin-bottom: 14px !important; }
-  #paper .official-head .agency { display: table-cell !important; width: 45% !important; padding-right: 2px !important; }
-  .agency-parent { font-size: 6.8pt !important; white-space: nowrap !important; letter-spacing: -0.02em !important; line-height: 1.2 !important; }
-  .agency-unit { font-size: 7.5pt !important; white-space: nowrap !important; line-height: 1.2 !important; }
-  .agency-line { width: 45px !important; margin: 1px auto 0 !important; }
-  #paper .official-head .nation { display: table-cell !important; width: 55% !important; padding-left: 2px !important; }
-  .nation-title { font-size: 6.8pt !important; white-space: nowrap !important; letter-spacing: -0.02em !important; line-height: 1.2 !important; }
-  .nation-motto { font-size: 8pt !important; white-space: nowrap !important; line-height: 1.2 !important; }
-  .nation-line { width: 105px !important; margin: 1px auto 0 !important; }
-  #paper .official-title { font-size: 11.5pt !important; margin: 12px 0 2px !important; }
-  #paper .official-subtitle { font-size: 10.5pt !important; }
-  .title-decor-line { width: 105px !important; margin: 2px auto 12px !important; }
-  #paper .report-body, #paper .report-body p, #paper .report-body span, #paper .report-body b { font-size: 10.5pt !important; line-height: 1.45 !important; }
-  #paper .official-sign { width: 65% !important; margin-top: 14px !important; }
-  .sign-date { font-size: 9.5pt !important; }
-  .sign-role, .sign-name { font-size: 10.5pt !important; }
-  .signature-on-paper { min-height: 48px !important; }
-  .signature-on-paper img { max-height: 45px !important; }
+  #paper .form-code { position: static !important; width: 100% !important; text-align: right !important; font-size: 8pt !important; }
+  #paper .official-head { grid-template-columns: 1fr !important; gap: 8px !important; }
+  #paper .official-title { font-size: 12pt !important; }
+  #paper .official-subtitle { font-size: 11pt !important; }
+  #paper .report-body, #paper .report-body p, #paper .report-body span, #paper .report-body b { font-size: 11pt !important; }
+  #paper .official-sign { width: 70% !important; }
 }
 
-/* QUY CHUẨN IN ẤN TRANG A4 (NGHỊ ĐỊNH 30) */
+/* IN ẤN A4 THEO NGHỊ ĐỊNH 30 */
 @page { size: A4 portrait; margin: 20mm 15mm 20mm 25mm; }
 @media print {
-  body { background: #ffffff !important; margin: 0 !important; padding: 0 !important; font-size: 14pt !important; }
-  header, .hva-pro-header, .steps, .btn, .preview-toolbar, .no-print, button, #toast, .card-header, #declareCard, #historyCard { display: none !important; }
-  .official-paper, #paper { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
-  .agency-parent { font-size: 12.5pt !important; }
-  .agency-unit { font-size: 13pt !important; }
-  .agency-line { width: 90px !important; margin: 1px auto 0 !important; }
-  .nation-title { font-size: 12.5pt !important; }
-  .nation-motto { font-size: 13.5pt !important; line-height: 1.25 !important; }
-  .nation-line { display: block !important; width: 53mm !important; border-top: 0.5pt solid #000000 !important; margin: 1px auto 0 !important; }
-  #paper .official-title { font-size: 14pt !important; }
-  #paper .official-subtitle { font-size: 14pt !important; }
-  .title-decor-line { width: 160px !important; margin: 2px auto 18px !important; }
-  #paper .report-body, #paper .report-body p, #paper .report-body span, #paper .report-body b { font-size: 14pt !important; line-height: 1.5 !important; }
-  .sign-date { font-size: 13.5pt !important; }
-  .sign-role, .sign-name { font-size: 14pt !important; }
+  body { background: #ffffff !important; margin: 0 !important; padding: 0 !important; }
+  body * { visibility: hidden !important; }
+  #previewCard, #previewCard #paper, #previewCard #paper * { visibility: visible !important; }
+  #previewCard {
+    display: block !important; position: static !important; width: 100% !important;
+    margin: 0 !important; padding: 0 !important; border: 0 !important; box-shadow: none !important;
+  }
+  #previewCard .preview-toolbar, #previewCard .actions { display: none !important; }
+  #paper {
+    display: block !important; position: absolute !important; left: 0 !important; top: 0 !important;
+    width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important;
+  }
+  .motto-mark b { font-size: 13.5pt !important; }
+  .school-mark b { font-size: 13pt !important; }
 }
 </style>
 </head>
@@ -497,7 +470,7 @@ input::placeholder, textarea::placeholder{
               <div class="identity-label">GIÁO VIÊN CHỦ NHIỆM</div>
               <span class="identity-auth-chip"><i class="bi bi-patch-check-fill"></i> HVA AUTH</span>
             </div>
-            <div class="identity-name" id="identityName">Đang xác định...</div>
+            <div class="identity-name" id="identityName">Đang xác thực...</div>
             <div class="identity-meta">
               <span><i class="bi bi-mortarboard"></i> Lớp: <b id="identityClass">—</b></span>
               <span><i class="bi bi-diagram-3"></i> Tổ: <b id="identityTeam">—</b></span>
@@ -531,7 +504,6 @@ input::placeholder, textarea::placeholder{
         <div class="field">
           <label>Kỳ báo cáo <b>*</b></label>
           <select id="reportPeriod" required onchange="onPeriodChange()">
-             <option value="Tháng 9/2026">Định kỳ Tháng 10/2026</option>
             <option value="Tháng 10/2026">Định kỳ Tháng 10/2026</option>
             <option value="Tháng 11/2026">Định kỳ Tháng 11/2026</option>
             <option value="Giữa Học kỳ I">Giữa Học kỳ I (Năm học 2026-2027)</option>
@@ -607,14 +579,18 @@ input::placeholder, textarea::placeholder{
       <!-- 2. Đầu trang: Cơ quan & Quốc hiệu -->
       <div class="official-head">
         <div class="agency">
-          <div class="agency-parent">SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div>
-          <div class="agency-unit">TRƯỜNG THPT HÒA VANG</div>
-          <div class="agency-line"></div>
+          <div>SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div>
+          <div class="school-mark">
+            <b>TRƯỜNG THPT HÒA VANG</b>
+            <span class="official-line short"></span>
+          </div>
         </div>
         <div class="nation">
-          <div class="nation-title">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
-          <div class="nation-motto">Độc lập - Tự do - Hạnh phúc</div>
-          <div class="nation-line"></div>
+          <b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b>
+          <div class="motto-mark">
+            <b>Độc lập - Tự do - Hạnh phúc</b>
+            <span class="official-line"></span>
+          </div>
         </div>
       </div>
 
@@ -690,7 +666,7 @@ input::placeholder, textarea::placeholder{
 
 <script>
 /* ==============================================================================
-   LOGIC JAVASCRIPT HVA - BC-CN01 ENGINE (KẾ THỪA LÕI NHÂN SỰ HVA CHUẨN XÁC)
+   LOGIC JAVASCRIPT HVA - BC-CN01 ENGINE (KẾ THỪA TRỌN VẸN TỪ NỀN TẢNG DTHT)
    ============================================================================== */
 const HVA_BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz3RGGmU_75a_lbRn7vnyX4prrWiWZT9WO3SHI19GOwKpLkt6mJ0eJqsBjmcAl2z8wEUg/exec';
 
@@ -758,9 +734,7 @@ async function dthtStandaloneLogin(){
   }
 }
 
-/* ==============================================================================
-   KHỞI TẠO DANH TÍNH TỪ PHIÊN ĐĂNG NHẬP (KẾ THỪA TRỰC TIẾP TỪ TRANG NGOÀI INDEX)
-   ============================================================================== */
+/* CHUẨN HÓA ĐỊNH DẠNG LỚP HỌC (GIẢI MÃ DATE -> 10/8) */
 function parseHvaClassVal(raw){
   let s = String(raw || '').trim();
   if(!s) return '';
@@ -775,6 +749,32 @@ function parseHvaClassVal(raw){
     }
   }
   return s;
+}
+
+/* KHỞI TẠO TỨC THÌ TỪ LOCALSTORAGE (KHÔNG CẦN CHỜ GOOGLE SHEET) */
+function initApp(){
+  const me = dthtCurrentUser();
+  const username = me.tenDangNhap || me.username || '';
+
+  if(!username){
+    $('dthtAuth').classList.remove('hidden');
+    return;
+  }
+
+  state.user = me;
+  $('identityName').textContent = me.hoTen || me.fullName || username;
+  $('identityTeam').textContent = me.toBoPhan || me.tenTo || 'Ban Giám hiệu';
+  if($('identitySubject')) $('identitySubject').textContent = me.monDay || 'Chưa phân môn';
+
+  let lop = parseHvaClassVal(me.lopChuNhiem);
+  if(!lop || lop === 'Không') lop = 'Không chủ nhiệm';
+
+  state.assignedClass = lop;
+  $('identityClass').textContent = lop;
+  $('assignedClass').value = lop;
+
+  loadSavedSignature();
+  $('apiStatus').textContent = 'HVA sẵn sàng lập báo cáo công tác chủ nhiệm.';
 }
 
 /* XÁC THỰC CCCD TRỰC TIẾP TỪ SHEET NHÂN SỰ KHI KÝ DUYỆT */
@@ -802,8 +802,7 @@ function verifyCccdSheet(username, cccdInput){
           const cells = (r?.c || []).map(c => String(c?.v ?? c?.f ?? '').trim());
           const login = (cells[14] || '').toLowerCase(); // Cột O (Login)
           if(login === user){
-            // Cột H (Index 7) là CCCD trong bảng nhân sự
-            const sheetCccd = cells[7] || '';
+            const sheetCccd = cells[7] || ''; // Cột H (Index 7: CCCD)
             finish(sheetCccd.replace(/\D/g, '') === cccd.replace(/\D/g, ''));
             return;
           }
@@ -822,38 +821,11 @@ function verifyCccdSheet(username, cccdInput){
   });
 }
 
-/* HÀM INITAPP - HIỂN THỊ TỨC THÌ THÔNG TIN GIÁO VIÊN VÀ LỚP 10/8 */
-function initApp(){
-  const me = dthtCurrentUser();
-  const username = me.tenDangNhap || me.username || '';
-
-  if(!username){
-    $('dthtAuth').classList.remove('hidden');
-    return;
-  }
-
-  state.user = me;
-  $('identityName').textContent = me.hoTen || me.fullName || username;
-  $('identityTeam').textContent = me.toBoPhan || me.tenTo || 'Ban Giám hiệu';
-  if($('identitySubject'))$('identitySubject').textContent = me.monDay || 'Chưa phân môn';
-
-  // Lấy thẳng lớp chủ nhiệm đã được trang index.html giải mã chuẩn
-  let lop = parseHvaClassVal(me.lopChuNhiem);
-  if(!lop || lop === 'Không') lop = 'Không chủ nhiệm';
-
-  state.assignedClass = lop;
-  $('identityClass').textContent = lop;
-  $('assignedClass').value = lop;
-
-  loadSavedSignature();
-  $('apiStatus').textContent = 'HVA sẵn sàng lập báo cáo công tác chủ nhiệm.';
-}
-
 /* QUẢN LÝ CHỮ KÝ */
 function signatureKey(){ return 'hvaCNSignature:' + (state.user?.tenDangNhap || '').toLowerCase(); }
 
 function refreshSignatureUI(){
-  const box = $('signaturePreview'), signBtn = $('signDocumentBtn'), st =$('signerStatus');
+  const box = $('signaturePreview'), signBtn = $('signDocumentBtn'), st = $('signerStatus');
   if(box){
     box.innerHTML = state.signatureData ? `<img src="${state.signatureData}" alt="Chữ ký">` : '<div class="signature-empty">Vui lòng tải ảnh chữ ký cá nhân.</div>';
   }
