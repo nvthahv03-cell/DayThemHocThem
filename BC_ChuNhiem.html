@@ -758,62 +758,102 @@ async function dthtStandaloneLogin(){
   }
 }
 
-/* NHẬN DIỆN CHUẨN XÁC TỔ, MÔN VÀ LỚP CHỦ NHIỆM */
-function loadClassAssignmentFromSheet(username){
+/* ==============================================================================
+   KHỞI TẠO DANH TÍNH TỪ PHIÊN ĐĂNG NHẬP (KẾ THỪA TRỰC TIẾP TỪ TRANG NGOÀI INDEX)
+   ============================================================================== */
+function parseHvaClassVal(raw){
+  let s = String(raw || '').trim();
+  if(!s) return '';
+  if(s.startsWith('Date(')){
+    const m = s.match(/Date\((\d+),(\d+),(\d+)\)/);
+    if(m){
+      const mon = parseInt(m[2], 10) + 1;
+      const day = parseInt(m[3], 10);
+      if(day >= 10 && day <= 12) return day + '/' + mon;
+      if(mon >= 10 && mon <= 12) return mon + '/' + day;
+      return day + '/' + mon;
+    }
+  }
+  return s;
+}
+
+/* XÁC THỰC CCCD TRỰC TIẾP TỪ SHEET NHÂN SỰ KHI KÝ DUYỆT */
+function verifyCccdSheet(username, cccdInput){
   const user = String(username || '').trim().toLowerCase();
-  if(!user) return Promise.resolve(null);
-  
+  const cccd = String(cccdInput || '').trim();
+  if(!user || !cccd) return Promise.resolve(false);
+
   return new Promise(resolve => {
-    const cb = '__hvaProfile_' + Date.now();
+    const cb = '__hvaVerify_' + Date.now();
     const script = document.createElement('script');
     let finished = false;
     const finish = val => {
-      if(finished) return; 
+      if(finished) return;
       finished = true;
       try{ delete window[cb]; script.remove(); }catch(_){}
       resolve(val);
     };
-    setTimeout(() => finish(null), 8000);
+    setTimeout(() => finish(false), 6000);
 
-   window[cb] = payload => {
-  try {
-    const rows = payload?.table?.rows || [];
-    for(const r of rows){
-      const cells = r?.c || [];
-      const login = String(cells[14]?.v ?? cells[14]?.f ?? '').trim().toLowerCase();
-      
-      if(login === user){
-        const toBoPhan = String(cells[12]?.v ?? cells[12]?.f ?? '').trim();
-        const monDay   = String(cells[13]?.v ?? cells[13]?.f ?? '').trim();
-        const lopCN    = String(cells[22]?.v ?? cells[22]?.f ?? '').trim();
+    window[cb] = payload => {
+      try {
+        const rows = payload?.table?.rows || [];
+        for(const r of rows){
+          const cells = (r?.c || []).map(c => String(c?.v ?? c?.f ?? '').trim());
+          const login = (cells[14] || '').toLowerCase(); // Cột O (Login)
+          if(login === user){
+            // Cột H (Index 7) là CCCD trong bảng nhân sự
+            const sheetCccd = cells[7] || '';
+            finish(sheetCccd.replace(/\D/g, '') === cccd.replace(/\D/g, ''));
+            return;
+          }
+        }
+      } catch(e){}
+      finish(false);
+    };
 
-        finish({
-          toBoPhan: toBoPhan,
-          monDay: monDay,
-          lopChuNhiem: lopCN // Đọc trực tiếp ô cột W (chỉ số 22)
-        });
-        return;
-      }
-    }
-  } catch(e){ console.warn(e); }
-  finish(null);
-};
-
- // Tải dữ liệu chuẩn từ Google Sheet Nhân sự THPT Hòa Vang
     script.src = 'https://docs.google.com/spreadsheets/d/19zyS6na6VaTiTImj9Bh11ot6f75TmBBpECAMxiObJcA/gviz/tq'
       + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
       + '&headers=6'
       + '&tqx=' + encodeURIComponent('responseHandler:' + cb)
       + '&_=' + Date.now();
+    script.onerror = () => finish(false);
     document.head.appendChild(script);
   });
+}
+
+/* HÀM INITAPP - HIỂN THỊ TỨC THÌ THÔNG TIN GIÁO VIÊN VÀ LỚP 10/8 */
+function initApp(){
+  const me = dthtCurrentUser();
+  const username = me.tenDangNhap || me.username || '';
+
+  if(!username){
+    $('dthtAuth').classList.remove('hidden');
+    return;
+  }
+
+  state.user = me;
+  $('identityName').textContent = me.hoTen || me.fullName || username;
+  $('identityTeam').textContent = me.toBoPhan || me.tenTo || 'Ban Giám hiệu';
+  if($('identitySubject'))$('identitySubject').textContent = me.monDay || 'Chưa phân môn';
+
+  // Lấy thẳng lớp chủ nhiệm đã được trang index.html giải mã chuẩn
+  let lop = parseHvaClassVal(me.lopChuNhiem);
+  if(!lop || lop === 'Không') lop = 'Không chủ nhiệm';
+
+  state.assignedClass = lop;
+  $('identityClass').textContent = lop;
+  $('assignedClass').value = lop;
+
+  loadSavedSignature();
+  $('apiStatus').textContent = 'HVA sẵn sàng lập báo cáo công tác chủ nhiệm.';
 }
 
 /* QUẢN LÝ CHỮ KÝ */
 function signatureKey(){ return 'hvaCNSignature:' + (state.user?.tenDangNhap || '').toLowerCase(); }
 
 function refreshSignatureUI(){
-  const box = $('signaturePreview'), signBtn = $('signDocumentBtn'), st = $('signerStatus');
+  const box = $('signaturePreview'), signBtn = $('signDocumentBtn'), st =$('signerStatus');
   if(box){
     box.innerHTML = state.signatureData ? `<img src="${state.signatureData}" alt="Chữ ký">` : '<div class="signature-empty">Vui lòng tải ảnh chữ ký cá nhân.</div>';
   }
