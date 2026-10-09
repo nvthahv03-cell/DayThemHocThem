@@ -373,7 +373,7 @@ function fetchClassFromSheet(username){
 
     // Đúng chuẩn: Cột W (Lớp) và Cột O (Tên đăng nhập)
     const tq = "select W, O where lower(O) = '" + user.replace(/'/g, "''") + "'";
-    script.src = 'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq'
+    script.src = 'https://docs.google.com/spreadsheets/d/19zyS6na6VaTiTImj9Bh11ot6f75TmBBpECAMxiObJcA/edit?usp=sharing'
       + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_HVA')
       + '&headers=6'
       + '&tqx=' + encodeURIComponent('responseHandler:' + cb)
