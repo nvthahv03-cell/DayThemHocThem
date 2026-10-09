@@ -334,55 +334,94 @@ async function dthtStandaloneLogin(){
   }
 }
 
-/* LẤY CHUẨN LỚP CHỦ NHIỆM TỪ SHEET NHÂN SỰ MỚI CỦA THẦY:
-   CỘT O (LOGIN) -> CỘT W (GVCN) TRONG TAB Du_lieu_NhanSu_THPT_HOA_VANG */
-function fetchClassFromSheet(username){
+/* TRA CỨU NHÂN SỰ TỪ GOOGLE SHEET VỚI CƠ CHẾ AN TOÀN */
+function fetchProfileFromSheet(username){
   const user = String(username || '').trim().toLowerCase();
-  if(!user) return Promise.resolve('');
-  
+  if(!user) return Promise.resolve(null);
+
   return new Promise(resolve => {
-    const cb = '__hvaClassQuery_' + Date.now();
+    const cb = '__hvaMenu_' + Date.now();
     const script = document.createElement('script');
-    let done = false;
+    let finished = false;
+
     const finish = val => {
-      if(done) return; done = true;
+      if(finished) return;
+      finished = true;
       try{ delete window[cb]; }catch(_){}
       try{ script.remove(); }catch(_){}
-      resolve(String(val || '').trim());
+      resolve(val);
     };
-    const timer = setTimeout(() => finish(''), 6000);
+
+    // Tự ngắt sau 3.5 giây nếu mạng chậm, không để trang bị treo
+    setTimeout(() => finish(null), 3500);
 
     window[cb] = res => {
-      clearTimeout(timer);
       try {
         const rows = res?.table?.rows || [];
-        for(const row of rows){
-          const cells = row?.c || [];
-          const lop = String(cells[0]?.v ?? cells[0]?.f ?? '').trim();
-          const login = String(cells[1]?.v ?? cells[1]?.f ?? '').trim().toLowerCase();
-          if(login === user && lop){
-            finish(lop);
+        for(const r of rows){
+          const cells = (r?.c || []).map(c => String(c?.v ?? c?.f ?? '').trim());
+          // cells[14] = Cột O (Login)
+          const login = (cells[14] || '').toLowerCase();
+          if(login === user || cells.some(v => v.toLowerCase() === user)){
+            const toBoPhan = cells[12] || ''; // Cột M (Tổ)
+            let lopCN = cells[22] || '';       // Cột W (GVCN)
+            if(!lopCN || !/^(10|11|12)\/\d+$/i.test(lopCN)){
+              const found = cells.find(v => /^(10|11|12)\/\d+$/i.test(v));
+              if(found) lopCN = found;
+            }
+            finish({ toBoPhan, lopCN });
             return;
           }
         }
       } catch(e){}
-      finish('');
+      finish(null);
     };
 
-    // Đúng chuẩn bảng tính mới: Cột W (GVCN) và Cột O (Tên đăng nhập)
-    const tq = "select W, O where lower(O) = '" + user.replace(/'/g, "''") + "'";
     script.src = 'https://docs.google.com/spreadsheets/d/19zyS6na6VaTiTImj9Bh11ot6f75TmBBpECAMxiObJcA/gviz/tq'
       + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
       + '&headers=6'
       + '&tqx=' + encodeURIComponent('responseHandler:' + cb)
-      + '&tq=' + encodeURIComponent(tq)
       + '&_=' + Date.now();
-    script.onerror = () => { clearTimeout(timer); finish(''); };
+    script.onerror = () => finish(null);
     document.head.appendChild(script);
   });
 }
 
+/* KHỞI ĐỘNG CỔNG THÔNG TIN */
+async function initPortal(){
+  const token = authToken();
+  const user = currentUser();
+  const username = (user.tenDangNhap || user.username || '').trim().toLowerCase();
+
+  if(!token || !username){
+    $('dthtAuth').classList.remove('hidden');
+    const lastUser = localStorage.getItem('hvaLastUsername') || '';
+    if(lastUser) $('dthtLoginUser').value = lastUser;
+    return;
+  }
+
+  // 1. Hiển thị ngay lập tức thông tin có sẵn (không để bị treo)
+  $('userNameLabel').textContent = user.hoTen || user.fullName || username;
+  $('userTeamLabel').textContent = user.toBoPhan || user.tenTo || 'Ban Giám hiệu';
+  $('userRoleLabel').textContent = user.chucVu || user.viTriViecLam || 'Giáo viên';
+  $('userClassLabel').textContent = user.lopChuNhiem || 'Đang tra cứu...';
+
+  // 2. Tra cứu ngầm từ Google Sheet để cập nhật chính xác lớp 10/8
+  try {
+    const profile = await fetchProfileFromSheet(username);
+    if(profile){
+      if(profile.toBoPhan) $('userTeamLabel').textContent = profile.toBoPhan;
+      const lop = profile.lopCN || 'Không';
+      $('userClassLabel').textContent = lop;
+      user.lopChuNhiem = lop;
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      $('userClassLabel').textContent = (user.lopChuNhiem && user.lopChuNhiem !== 'Đang tra cứu...') ? user.lopChuNhiem : 'Không';
+    }
+  } catch(e) {
+    $('userClassLabel').textContent = 'Không';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', initPortal);
 </script>
-</body>
-</html>
