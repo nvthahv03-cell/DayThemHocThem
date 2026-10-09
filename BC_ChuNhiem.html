@@ -799,9 +799,10 @@ function loadClassAssignmentFromSheet(username){
   finish(null);
 };
 
-    // Tải toàn bộ dòng không dùng WHERE để tránh lỗi bộ lọc API
-    script.src = 'https://docs.google.com/spreadsheets/d/17IlljRPaCelw53lgM_71FSvLe_r19Uw5u_DA9LeV1PY/gviz/tq?sheet='
-      + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
+ // Tải dữ liệu chuẩn từ Google Sheet Nhân sự THPT Hòa Vang
+    script.src = 'https://docs.google.com/spreadsheets/d/19zyS6na6VaTiTImj9Bh11ot6f75TmBBpECAMxiObJcA/gviz/tq'
+      + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
+      + '&headers=6'
       + '&tqx=' + encodeURIComponent('responseHandler:' + cb)
       + '&_=' + Date.now();
     document.head.appendChild(script);
