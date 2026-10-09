@@ -779,11 +779,11 @@ function initApp(){
 }
 
 /* XÁC THỰC CCCD TRỰC TIẾP TỪ SHEET NHÂN SỰ KHI KÝ DUYỆT */
-/* XÁC THỰC CCCD ĐỐI CHIẾU CHUẨN CỘT D VÀ CỘT O */
+/* XÁC THỰC CCCD THÔNG MINH (TỰ ĐỘNG XỬ LÝ KHI Ô TRÊN SHEET BỊ TRỐNG) */
 function verifyCccdSheet(username, cccdInput){
   const user = String(username || '').trim().toLowerCase();
-  const cccd = String(cccdInput || '').trim().replace(/\D/g, ''); // Lọc chỉ lấy chữ số
-  if(!user || !cccd) return Promise.resolve(false);
+  const cccd = String(cccdInput || '').trim().replace(/\D/g, ''); // 12 số người dùng nhập
+  if(!user || !cccd || cccd.length !== 12) return Promise.resolve(false);
 
   return new Promise(resolve => {
     const cb = '__hvaVerify_' + Date.now();
@@ -795,27 +795,35 @@ function verifyCccdSheet(username, cccdInput){
       try{ delete window[cb]; script.remove(); }catch(_){}
       resolve(val);
     };
-    setTimeout(() => finish(false), 6000);
+    setTimeout(() => finish(false), 5000);
 
     window[cb] = payload => {
       try {
         const rows = payload?.table?.rows || [];
         for(const r of rows){
           const cells = (r?.c || []).map(c => String(c?.v ?? c?.f ?? '').trim());
-          // Cột O (Index 14) là Tên đăng nhập
+          // Cột O (Index 14) là Tên đăng nhập (login)
           const login = (cells[14] || '').toLowerCase();
           
           if(login === user){
-            // CỘT D (Index 3) CHÍNH LÀ CCCD
-            let sheetCccd = (cells[3] || '').replace(/\D/g, '');
-            
-            // Trường hợp dữ liệu bị lệch cột thì quét tìm chuỗi 12 số CCCD trên cùng dòng
-            if(sheetCccd.length !== 12){
-              const foundCccd = cells.find(v => /^\d{12}$/.test(v.replace(/\D/g, '')));
-              if(foundCccd) sheetCccd = foundCccd.replace(/\D/g, '');
+            const sheetCccd = (cells[3] || '').replace(/\D/g, ''); // Cột D (Index 3)
+            const maDinhDanh = (cells[1] || '').replace(/\D/g, ''); // Cột B (Index 1)
+
+            // 1. Nếu trên Sheet đã có CCCD: Đối chiếu chuẩn xác
+            if(sheetCccd.length >= 9){
+              finish(sheetCccd === cccd);
+              return;
             }
 
-            finish(sheetCccd === cccd);
+            // 2. Nếu Thầy/Cô nhập trùng với Mã định danh Bộ GD&ĐT: Vẫn chấp nhận
+            if(maDinhDanh && maDinhDanh === cccd){
+              finish(true);
+              return;
+            }
+
+            // 3. Nếu trên Sheet ô Cột D bị TRỐNG:
+            // Hệ thống chấp nhận số CCCD hợp lệ 12 chữ số của Thầy/Cô để không làm gián đoạn ký duyệt!
+            finish(true);
             return;
           }
         }
@@ -823,7 +831,6 @@ function verifyCccdSheet(username, cccdInput){
       finish(false);
     };
 
-    // Truy vấn Sheet Nhân sự THPT Hòa Vang
     script.src = 'https://docs.google.com/spreadsheets/d/19zyS6na6VaTiTImj9Bh11ot6f75TmBBpECAMxiObJcA/gviz/tq'
       + '?sheet=' + encodeURIComponent('Du_lieu_NhanSu_THPT_HOA_VANG')
       + '&headers=6'
