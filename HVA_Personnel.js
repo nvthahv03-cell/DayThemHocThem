@@ -26,15 +26,15 @@ function hvaPersonnelArray(data){
 
 function hvaPersonnelCurrentUser(){
   try{
-    if(typeof getSearchUser === 'function') return getSearchUser() || {};
+    if(typeof getSearchUser === 'function'){ const u=getSearchUser(); if(u && (u.tenDangNhap||u.username||u.userName)) return u; }
   }catch(e){}
   try{
-    return JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}') || {};
+    return JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}') || {};
   }catch(e){ return {}; }
 }
 
 function hvaPersonnelEnsureAuth(){
-  if(global.HVAAuthRequest && typeof global.HVAAuthRequest.get==='function'){
+  if(global.HVAAuthRequest && typeof global.HVAAuthRequest.withAuthBody==='function' && global.HVAAuthRequest.getSessionState?.().validLocal){
     return global.HVAAuthRequest;
   }
 
@@ -47,8 +47,12 @@ function hvaPersonnelEnsureAuth(){
     return String(localStorage.getItem(TOKEN_KEY)||'').trim();
   }
   function getSessionExpiresAt(){
-    const n=Number(String(localStorage.getItem(EXPIRES_KEY)||'').trim());
-    return Number.isFinite(n)?n:0;
+    const raw=String(localStorage.getItem(EXPIRES_KEY)||'').trim();
+    if(!raw) return 0;
+    const numeric=Number(raw);
+    if(Number.isFinite(numeric) && numeric>0) return numeric<1e12?numeric*1000:numeric;
+    const parsed=Date.parse(raw);
+    return Number.isFinite(parsed)?parsed:0;
   }
   function getSessionState(){
     const token=getSessionToken(), expiresAt=getSessionExpiresAt(), now=Date.now();
@@ -100,12 +104,12 @@ async function hvaPersonnelGet(action, params={}){
   const auth=hvaPersonnelEnsureAuth();
   const user=hvaPersonnelCurrentUser();
   const api=global.PERSONNEL_SEARCH_API ||
-    'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+    'https://script.google.com/macros/s/AKfycbzTRkdqyYYI8LQo9MkiTjEIXkAC7BWK1MroUXPuvKMl9Yu_o9gXFS8QCcyQmq78-ikvvg/exec';
   const u=new URL(api);
 
   u.searchParams.set('action',hvaPersonnelText(action));
-  if(user.username||user.userName||user.maGV){
-    u.searchParams.set('username',hvaPersonnelText(user.username||user.userName||user.maGV));
+  if(user.tenDangNhap||user.username||user.userName||user.maGV){
+    u.searchParams.set('username',hvaPersonnelText(user.tenDangNhap||user.username||user.userName||user.maGV));
   }
   Object.entries(params||{}).forEach(([k,v])=>{
     if(v!==undefined&&v!==null) u.searchParams.set(k,hvaPersonnelText(v));
@@ -276,63 +280,30 @@ function hvaPersonnelUnitKey(v){
 }
 
 async function hvaPersonnelBuildGroups(){
-  const units=hvaPersonnelUnits();
-
-  /* Mỗi tổ dùng CÙNG MỘT hàm searchNhanSuQuick('TEAM', query).
-     Không dùng '*' và không có logic riêng cho bất kỳ tổ nào. */
-  const [chiBoRaw,bghRaw,workgroups,teamResults]=await Promise.all([
-    hvaPersonnelSearch('CHIBO',''),
-    hvaPersonnelSearch('BGH',''),
-    hvaPersonnelWorkgroupList(),
-    Promise.all(units.map(async unit=>({
-      name:unit.label,
-      query:unit.query,
-      raw:await hvaPersonnelSearch('TEAM',unit.query)
-    })))
-  ]);
-
-  const workResults=await Promise.all(workgroups.map(async group=>{
-    try{
-      return {name:group.name,raw:await hvaPersonnelSearch('WORKGROUP',group.name)};
-    }catch(e){
-      console.warn('[HVA Personnel] WORKGROUP',group.name,e);
-      return {name:group.name,raw:[]};
-    }
-  }));
-
-  const groups=[];
-  groups.push(hvaPersonnelMakeGroup('CHIBO','Chi bộ','ROOT',chiBoRaw));
-  groups.push(hvaPersonnelMakeGroup('BGH','Ban Giám hiệu','ROOT',bghRaw));
-
-  teamResults.forEach(x=>{
-    groups.push(hvaPersonnelMakeGroup('TEAM:'+x.name,x.name,'TEAM',x.raw));
+  const api=global.PERSONNEL_SEARCH_API ||
+    'https://script.google.com/macros/s/AKfycbzTRkdqyYYI8LQo9MkiTjEIXkAC7BWK1MroUXPuvKMl9Yu_o9gXFS8QCcyQmq78-ikvvg/exec';
+  const auth=hvaPersonnelEnsureAuth();
+  const token=auth.withAuthBody({}).sessionToken;
+  return new Promise((resolve,reject)=>{
+    const callback='hvaNvsPersonnel_'+Date.now()+'_'+Math.floor(Math.random()*1e6);
+    const url=new URL(api);
+    url.searchParams.set('action','getNVSMeetingPersonnel');
+    url.searchParams.set('sessionToken',token);
+    url.searchParams.set('callback',callback);
+    const script=document.createElement('script');
+    let timer;
+    const clean=()=>{clearTimeout(timer);script.remove();delete global[callback];};
+    global[callback]=data=>{
+      clean();
+      if(!data||data.success!==true) return reject(new Error(data&&data.message||'Không tải được nhân sự NVS'));
+      const groups=(data.groups||[]).map(g=>hvaPersonnelMakeGroup(g.groupKey,g.tenTo,g.kind,g.members));
+      resolve(groups);
+    };
+    script.onerror=()=>{clean();reject(new Error('Không kết nối được Backend NVS'))};
+    timer=setTimeout(()=>{clean();reject(new Error('Quá thời gian tải nhân sự NVS'))},20000);
+    script.src=url.toString();
+    document.head.appendChild(script);
   });
-
-  const councilMembers=[];
-  groups.filter(g=>g.groupKey==='BGH'||g.kind==='TEAM')
-    .forEach(g=>councilMembers.push(...g.members));
-  groups.push(hvaPersonnelMakeGroup('COUNCIL:ALL','Hội đồng','COUNCIL',councilMembers));
-
-  workResults.forEach(({name,raw})=>{
-    if(!name) return;
-    if(name.toUpperCase()==='GVCN'){
-      const mapped=hvaPersonnelDedupe(raw,'GVCN');
-      ['10','11','12'].forEach(khoi=>{
-        const members=mapped
-          .filter(m=>hvaPersonnelText(m.lopChuNhiem).startsWith(khoi+'/'))
-          .sort((a,b)=>{
-            const na=Number(hvaPersonnelText(a.lopChuNhiem).split('/')[1])||999;
-            const nb=Number(hvaPersonnelText(b.lopChuNhiem).split('/')[1])||999;
-            return na-nb||hvaPersonnelText(a.hoTen).localeCompare(hvaPersonnelText(b.hoTen),'vi');
-          });
-        groups.push(hvaPersonnelMakeGroup('GVCN:'+khoi,'GVCN khối '+khoi,'GVCN',members));
-      });
-    }else{
-      groups.push(hvaPersonnelMakeGroup('WORKGROUP:'+name,name,'WORKGROUP',raw));
-    }
-  });
-
-  return groups;
 }
 
 
