@@ -1,0 +1,2818 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- HVA EARLY RECEIVER BOOT: chặn chớp giao diện điều phối ngay từ frame đầu -->
+    <style>
+        html.hva-boot-receiver body > *:not(#hva-receiver-boot) { visibility: hidden !important; }
+        #hva-receiver-boot { display: none; }
+        html.hva-boot-receiver #hva-receiver-boot {
+            display: flex; position: fixed; inset: 0; z-index: 2147483647;
+            align-items: center; justify-content: center; background: #f8fafc;
+            font-family: Inter, Arial, sans-serif;
+        }
+    </style>
+    <script>
+        (() => {
+            const params = new URLSearchParams(window.location.search);
+            if (String(params.get('publishId') || '').trim()) {
+                document.documentElement.classList.add('hva-boot-receiver');
+            }
+        })();
+    </script>
+
+    <title>Trung Tâm Điều Phối Phát Hành Số - TTĐHS_HVA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        .custom-accordion-content { max-height: 0; overflow: hidden; transition: max-height .22s ease; }
+        .custom-accordion-content.open { max-height: 520px; }
+    /* =========================================================
+   HVA RECEIVER MODE
+   Người nhận chỉ xem bản đã phát hành
+   ========================================================= */
+
+body.hva-receiver-mode > * {
+    visibility: hidden;
+}
+
+body.hva-receiver-mode #hva-publication-viewer,
+body.hva-receiver-mode #hva-publication-viewer *,
+body.hva-receiver-mode #hva-module-content-viewer,
+body.hva-receiver-mode #hva-module-content-viewer * {
+    visibility: visible;
+}
+
+body.hva-receiver-mode #hva-publication-viewer,
+body.hva-receiver-mode #hva-module-content-viewer {
+    position: fixed;
+    inset: 0;
+}
+
+body.hva-receiver-mode #hva-publication-viewer {
+    z-index: 99999;
+}
+
+body.hva-receiver-mode #hva-module-content-viewer {
+    z-index: 100000;
+}
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
+
+    <div id="hva-receiver-boot" aria-live="polite" aria-busy="true">
+        <div style="text-align:center; padding:24px;">
+            <div style="font-size:15px; font-weight:800; color:#0F4C81; letter-spacing:.02em;">HVA</div>
+            <div style="margin-top:7px; font-size:13px; font-weight:600; color:#64748b;">Đang mở nội dung…</div>
+        </div>
+    </div>
+
+    <!-- HEADER HỆ THỐNG -->
+    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-lg">
+                    <i class="bi bi-diagram-3-fill text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-extrabold tracking-wide uppercase text-slate-100">TRUNG TÂM ĐIỀU PHỐI PHÁT HÀNH SỐ <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono">v2.2 Engine</span></h1>
+                    <p class="text-[11px] text-slate-400">Hệ thống điều phối tài liệu & nhiệm vụ tập trung - TTĐHS_HVA</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span id="module-origin-badge" class="px-3 py-1 bg-slate-800 border border-slate-700 text-teal-300 text-xs font-semibold rounded-full flex items-center gap-1.5">
+                    <i class="bi bi-layers-fill"></i> Nguồn: <span id="source-module-name">Đang tải...</span>
+                </span>
+                <button onclick="Controller.resetDraft()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold border border-slate-700 transition flex items-center gap-1">
+                    <i class="bi bi-arrow-counterclockwise"></i> Tải lại State
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- METRICS DASHBOARD STATUS BAR -->
+    <section class="bg-white border-b border-slate-200 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
+                <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl">
+                    <div class="text-[11px] text-slate-500 font-bold uppercase">Tổng văn bản</div>
+                    <div id="stat-total-docs" class="text-lg font-extrabold text-slate-800">128</div>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl">
+                    <div class="text-[11px] text-emerald-700 font-bold uppercase">Đang phát hành</div>
+                    <div id="stat-active-docs" class="text-lg font-extrabold text-emerald-600">42</div>
+                </div>
+                <div class="bg-blue-50 border border-blue-200 p-2.5 rounded-xl">
+                    <div class="text-[11px] text-blue-700 font-bold uppercase">Đã hoàn thành</div>
+                    <div id="stat-completed-docs" class="text-lg font-extrabold text-blue-600">81</div>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 p-2.5 rounded-xl">
+                    <div class="text-[11px] text-amber-700 font-bold uppercase">Đang điều chỉnh</div>
+                    <div id="stat-editing-docs" class="text-lg font-extrabold text-amber-600">3</div>
+                </div>
+                <div class="bg-rose-50 border border-rose-200 p-2.5 rounded-xl col-span-2 md:col-span-1">
+                    <div class="text-[11px] text-rose-700 font-bold uppercase">Đã thu hồi</div>
+                    <div id="stat-revoked-docs" class="text-lg font-extrabold text-rose-600">2</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- THÔNG TIN TÀI LIỆU CẦN ĐIỀU PHỐI -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow space-y-6">
+        
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                    <span id="doc-type-badge" class="px-2.5 py-0.5 rounded text-[11px] font-extrabold bg-teal-100 text-teal-800 uppercase">Lịch Công Tác</span>
+                    <span id="doc-id-badge" class="text-xs font-mono text-slate-500 font-bold">Mã: LCT-2026-0806-001</span>
+                    <span id="doc-version-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-300">v1.0.0</span>
+                </div>
+                <h2 id="doc-title-display" class="text-lg font-bold text-slate-900">Lịch Công Tác Tuần 24 - Trường THPT Hòa Vang</h2>
+                <p id="doc-summary-display" class="text-xs text-slate-500">Người soạn: Ban BGH | Ngày tạo: 06/08/2026 | Dung lượng dữ liệu: 14.2 KB</p>
+            </div>
+            <div class="flex items-center gap-2 border-t md:border-t-0 pt-3 md:pt-0 border-slate-100">
+                <button onclick="Controller.openPreviewModal()" class="px-4 h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase transition flex items-center gap-2 border border-slate-300">
+                    <i class="bi bi-eye-fill"></i> Xem Nội Dung
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- CỘT TRÁI (2 COLS): ĐIỂM ĐẾN & WORKFLOW & TÀI LIỆU LIÊN QUAN -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <!-- CARD 1: ĐIỂM ĐẾN PHÁT HÀNH (DESTINATION MATRIX) -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-extrabold uppercase text-slate-800 tracking-wide flex items-center gap-2">
+                            <i class="bi bi-geo-alt-fill text-emerald-600"></i> 1. Chọn điểm đến phát hành (Destination Engine)
+                        </h3>
+                        <span class="text-[11px] text-slate-400">Có thể chọn nhiều điểm đến</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="destination-matrix-container">
+                        <!-- Dynamic content rendered by Controller & RenderEngine -->
+                    </div>
+                </div>
+
+                <!-- CARD 2: CẤU HÌNH WORKFLOW (CHỈ HIỆN KHI CHỌN 'VIỆC CỦA TÔI') -->
+                <div id="workflow-config-card" class="bg-indigo-50/70 border-2 border-indigo-200 rounded-2xl p-5 space-y-4 transition-all duration-300 hidden">
+                    <div class="flex items-center justify-between border-b border-indigo-100 pb-3">
+                        <h3 class="text-sm font-extrabold uppercase text-indigo-900 tracking-wide flex items-center gap-2">
+                            <i class="bi bi-diagram-2-fill text-indigo-600"></i> Cấu hình Workflow "Việc Của Tôi"
+                        </h3>
+                        <span class="px-2 py-0.5 bg-indigo-200 text-indigo-800 text-[10px] font-extrabold rounded-full">Bắt buộc theo dõi</span>
+                    </div>
+
+                    <p class="text-xs text-indigo-700">Hãy chọn các bước quy trình yêu cầu đối tượng tiếp nhận phải thực thi:</p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="workflow-steps-container">
+                        <!-- Dynamic Workflow checkboxes -->
+                    </div>
+                </div>
+
+                <!-- CARD 3: MÔ PHỎNG LUỒNG SAU PHÁT HÀNH (SIMULATION FLOW) -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-extrabold uppercase text-slate-800 tracking-wide flex items-center gap-2">
+                            <i class="bi bi-signpost-split-fill text-teal-600"></i> Luồng xử lý sau phát hành (Simulation Flow)
+                        </h3>
+                        <span class="text-[11px] text-slate-400">Tự động tạo bởi Workflow Engine</span>
+                    </div>
+
+                    <div class="overflow-x-auto pb-2 custom-scrollbar">
+                        <div class="flex items-center gap-2 min-w-[600px] text-xs" id="simulation-flow-container">
+                            <!-- Dynamic Simulation flow -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 4: TÀI LIỆU LIÊN QUAN (LINKED DOCUMENTS) -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-extrabold uppercase text-slate-800 tracking-wide flex items-center gap-2">
+                            <i class="bi bi-paperclip text-slate-600"></i> Tài liệu liên quan đính kèm
+                        </h3>
+                        <button onclick="Controller.addLinkedDocument()" class="text-xs text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1">
+                            <i class="bi bi-plus-circle-fill"></i> Thêm đính kèm
+                        </button>
+                    </div>
+
+                    <div class="space-y-2" id="linked-docs-container">
+                        <!-- Dynamic Linked Docs -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CỘT PHẢI (1 COL): KIỂM TRA ĐIỀU KIỆN & PHÂN QUYỀN & LƯU VÀ PHÁT HÀNH -->
+            <div class="space-y-6">
+
+                <!-- CHECKLIST TRƯỚC PHÁT HÀNH (PRE-PUBLISH CHECK MATRIX) -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-extrabold uppercase text-slate-800 tracking-wide flex items-center gap-2">
+                            <i class="bi bi-shield-check text-emerald-600"></i> Kiểm tra trước phát hành
+                        </h3>
+                        <span id="precheck-status-badge" class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-slate-100 text-slate-600">Đang quét...</span>
+                    </div>
+
+                    <div class="space-y-2 text-xs" id="precheck-items-container">
+                        <!-- Dynamic checklist -->
+                    </div>
+                </div>
+
+                <!-- ĐỐI TƯỢNG NHẬN (RECIPIENT ENGINE) -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-extrabold uppercase text-slate-800 tracking-wide flex items-center gap-2">
+                            <i class="bi bi-people-fill text-blue-600"></i> Đối tượng tiếp nhận
+                        </h3>
+                    </div>
+
+                    <div class="space-y-2" id="recipient-selector-container">
+                        <p class="text-xs text-slate-400 italic">Đang nhận danh sách đối tượng từ module nguồn...</p>
+                    </div>
+                </div>
+
+                <!-- KHỐI ĐIỀU PHỐI CHÍNH (ACTION EXECUTION) -->
+                <div class="bg-slate-900 text-white rounded-2xl p-5 shadow-lg space-y-4">
+                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Xác nhận điều phối</h3>
+                    <p class="text-xs text-slate-300">Văn bản sẽ được đẩy lên Publish Engine và kích hoạt phân phối đến các hệ thống đích.</p>
+
+                    <button id="btn-execute-publish" onclick="Controller.executePublishing()" class="w-full h-12 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold rounded-xl text-xs uppercase shadow-md transition flex items-center justify-center gap-2 border border-emerald-400/30">
+                        <i class="bi bi-rocket-takeoff-fill text-lg"></i>
+                        <span>Kích Hoạt Phát Hành Số</span>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ARCHITECTURE SCRIPT: TTĐHS_HVA ENTERPRISE ENGINE v2.2 -->
+    <script>
+    /**
+     * TTĐHS_HVA PUBLISHING ENGINE v2.2 (Enterprise Refactored Architecture)
+     * System Architecture Layers:
+     * 1. CONFIG (Central Constants)
+     * 2. EventBus (Decoupled System Events)
+     * 3. StorageEngine (Abstract Storage Layer)
+     * 4. ModuleAdapter (Standard Document Normalization)
+     * 5. Central State Store
+     * 6. Pure Business Engines (Zero DOM / Zero Direct UI Mutators)
+     * 7. RenderEngine (Pure UI Presentation Layer)
+     * 8. Controller (Central Orchestrator)
+     */
+
+    // =================================================================
+    // 1. SYSTEM CONFIGURATION (NO HARDCODING)
+    // =================================================================
+    const CONFIG = Object.freeze({
+        APP_NAME: "TRUNG TÂM ĐIỀU PHỐI PHÁT HÀNH SỐ",
+        VERSION: "v3.0 HVA Publishing Gateway",
+        SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzTRkdqyYYI8LQo9MkiTjEIXkAC7BWK1MroUXPuvKMl9Yu_o9gXFS8QCcyQmq78-ikvvg/exec",
+        PROJECT_CODE: "TTĐHS_HVA",
+        STORAGE_KEYS: {
+            CURRENT_DOC: "TTDHS_CURRENT_DOC",
+            LAST_PUBLISHED: "TTDHS_LAST_PUBLISHED",
+            LAST_RESULT: "TTDHS_LAST_PUBLISH_RESULT"
+        },
+
+        
+        DEFAULT_DESTINATIONS: [
+            { id: "LichCongTac", name: "Lịch công tác", icon: "bi-calendar-week-fill", selected: false },
+            { id: "TaiNguyenSo", name: "Tài nguyên số", icon: "bi-folder-symlink-fill", selected: false },
+            { id: "KhoVanBan", name: "Kho văn bản", icon: "bi-archive-fill", selected: false },
+            { id: "ThongBao", name: "Thông báo", icon: "bi-megaphone-fill", selected: false },
+            { id: "KhaoSatBinhChon", name: "Khảo sát – Bình chọn", icon: "bi-bar-chart-fill", selected: false },
+            { id: "ViecCuaToi", name: "Việc của tôi", icon: "bi-clipboard-check-fill", selected: false },
+            { id: "TienIchSo", name: "Tiện ích số", icon: "bi-cpu-fill", selected: false },
+            { id: "Website", name: "Website Trường", icon: "bi-globe", selected: false },
+            { id: "PDF", name: "Xuất File PDF", icon: "bi-file-earmark-pdf-fill", selected: false },
+            { id: "Email", name: "Gửi Email", icon: "bi-envelope-at-fill", selected: false }
+        ],
+        DEFAULT_WORKFLOW_STEPS: [
+            { id: "SHOW_ONLY", label: "Chỉ hiển thị", selected: true },
+            { id: "CONFIRM_READ", label: "Xác nhận đã đọc", selected: true },
+            { id: "ACCEPT_TASK", label: "Tiếp nhận nhiệm vụ", selected: false },
+            { id: "IN_PROGRESS", label: "Đang thực hiện", selected: false },
+            { id: "REPORT_RESULT", label: "Báo cáo kết quả", selected: false },
+            { id: "COMPLETE", label: "Hoàn thành", selected: false },
+            { id: "ATTACH_PROOF", label: "Đính kèm minh chứng", selected: false },
+            { id: "CONFIRM_ATTENDANCE", label: "Xác nhận tham dự / Xin vắng", selected: false, meetingOnly: true },
+            { id: "QR_ATTENDANCE", label: "Điểm danh QR", selected: false, meetingOnly: true }
+        ],
+        ROLES: {
+            ADMIN: "ADMIN",
+            USER: "USER",
+            MANAGER: "MANAGER"
+        },
+        ACTIONS: {
+            PUBLISH: "PUBLISH",
+            EDIT: "EDIT",
+            DELETE: "DELETE"
+        }
+    });
+   const publishChannel = new BroadcastChannel('TTDHS_PUBLISH_CHANNEL');     
+
+    // =================================================================
+    // 2. EVENT BUS (DECOUPLED EVENT-DRIVEN COMMUNICATION)
+    // =================================================================
+    class EventBus {
+        constructor() {
+            this.listeners = {};
+        }
+        on(event, callback) {
+            if (!this.listeners[event]) this.listeners[event] = [];
+            this.listeners[event].push(callback);
+        }
+        off(event, callback) {
+            if (!this.listeners[event]) return;
+            this.listeners[event] = this.listeners[event].filter(cb => cb !== callback);
+        }
+        emit(event, data) {
+            if (!this.listeners[event]) return;
+            this.listeners[event].forEach(callback => callback(data));
+        }
+    }
+    const eventBus = new EventBus();
+
+    // =================================================================
+// 3. STORAGE ENGINE (CHUYỂN SANG LOCALSTORAGE ĐỂ CHIA SẺ ĐA TAB)
+// =================================================================
+const StorageEngine = {
+    save: (key, value) => {
+        try {
+            const serialized = typeof value === 'string' ? value : JSON.stringify(value);
+            localStorage.setItem(key, serialized); // <-- Đổi từ sessionStorage thành localStorage
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    },
+    load: (key) => {
+        try {
+            const item = localStorage.getItem(key); // <-- Đổi từ sessionStorage thành localStorage
+            if (!item) return null;
+            try {
+                return JSON.parse(item);
+            } catch (e) {
+                return item;
+            }
+        } catch (error) {
+            return null;
+        }
+    },
+    remove: (key) => {
+        try {
+            localStorage.removeItem(key); // <-- Đổi từ sessionStorage thành localStorage
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    },
+    clear: () => {
+        try {
+            localStorage.clear();
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+};
+    // =================================================================
+    // 4. MODULE ADAPTER (DATA NORMALIZATION LAYER)
+    // =================================================================
+    const ModuleAdapter = {
+        toStandardDocument: (rawSource) => {
+            const raw = (rawSource && typeof rawSource === 'object') ? rawSource : {};
+            const data = raw.data || raw.payload || {};
+            const moduleSource = raw.moduleSource || raw.source || data.moduleSource || 'UnknownModule';
+            const docId = raw.docId || raw.id || data.idTask || data.taskId || `DOC-${Date.now()}`;
+            return {
+                docId,
+                moduleSource,
+                title: raw.title || raw.name || data.tieuDe || 'Tài liệu chưa đặt tên',
+                type: String(raw.type || data.loaiNhiemVu || moduleSource || 'VĂN BẢN').toUpperCase(),
+                version: raw.version || 'v1.0.0',
+                author: raw.author || raw.creator || data.nguoiGiao || 'HVA',
+                createdAt: raw.createdAt || raw.date || new Date().toISOString(),
+                data
+            };
+        },
+        getRecipients: (rawSource) => {
+            if (!rawSource || typeof rawSource !== 'object') return [];
+            const list = rawSource.recipients || rawSource.danhSachNguoiNhan ||
+                         (rawSource.data && rawSource.data.danhSachNguoiNhan) || [];
+            return Array.isArray(list) ? list : [];
+        },
+        getLinkedDocs: (rawSource) => {
+            if (!rawSource || typeof rawSource !== 'object') return [];
+            const list = rawSource.linkedDocs || rawSource.attachments || [];
+            return Array.isArray(list) ? list : [];
+        }
+    };
+
+// =================================================================
+// HVA CONTENT VIEWER ROUTER
+// Điều phối nội dung theo module nguồn.
+// TT Phát hành không tự giả định mọi nội dung đều là tệp.
+// =================================================================
+const ContentViewerRouter = {
+
+    adapters: {},
+
+    normalizeKey(value) {
+        return String(value || '')
+            .trim()
+            .toLowerCase()
+            .replace(/[\s_-]+/g, '');
+    },
+
+    register(keys, adapter) {
+        const list = Array.isArray(keys) ? keys : [keys];
+
+        list.forEach(key => {
+            const normalized = this.normalizeKey(key);
+
+            if (normalized) {
+                this.adapters[normalized] = adapter;
+            }
+        });
+    },
+
+    resolve(documentState, rawSource) {
+
+        const doc = documentState || {};
+        const raw = rawSource || {};
+        const data = doc.data || raw.data || {};
+
+        const candidates = [
+            doc.moduleSource,
+            raw.moduleSource,
+            raw.sourceModule,
+            raw.source,
+            doc.type,
+            raw.type,
+            data.moduleSource,
+            data.sourceModule,
+            data.type
+        ];
+
+        for (const candidate of candidates) {
+
+            const key = this.normalizeKey(candidate);
+
+            if (key && this.adapters[key]) {
+                return this.adapters[key];
+            }
+        }
+
+        return this.adapters.default;
+    },
+
+    open(documentState, rawSource) {
+
+        const adapter =
+            this.resolve(documentState, rawSource);
+
+        if (
+            !adapter ||
+            typeof adapter.open !== 'function'
+        ) {
+            console.warn(
+                '[HVA Viewer] Không tìm thấy Viewer phù hợp.',
+                {
+                    moduleSource:
+                        documentState?.moduleSource,
+                    type:
+                        documentState?.type
+                }
+            );
+
+            return;
+        }
+
+        adapter.open({
+            document:
+                documentState || {},
+            raw:
+                rawSource || {},
+            data:
+                documentState?.data ||
+                rawSource?.data ||
+                {}
+        });
+    }
+};
+
+
+// =================================================================
+// VIEWER: FALLBACK
+// Dùng cho module chưa đăng ký Viewer chuyên biệt.
+// =================================================================
+ContentViewerRouter.register(
+    'default',
+    {
+        open({ document, raw, data }) {
+
+            const fileUrl =
+                document.fileUrl ||
+                data.fileUrl ||
+                document.downloadUrl ||
+                data.downloadUrl ||
+                raw.fileUrl ||
+                raw.downloadUrl ||
+                '';
+
+            if (
+                fileUrl &&
+                /^https?:\/\//i.test(fileUrl)
+            ) {
+                window.open(
+                    fileUrl,
+                    '_blank',
+                    'noopener'
+                );
+
+                return;
+            }
+
+            alert(
+                'Nội dung này chưa có Viewer chuyên biệt.'
+            );
+        }
+    }
+);
+
+
+// =================================================================
+// HVA - XÁC NHẬN CUỘC HỌP (27/09/2026)
+// =================================================================
+window.HVAMeetingAction = {
+    username() {
+        try {
+            const u = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+            return String(u.username || u.userName || '').trim();
+        } catch (_) { return ''; }
+    },
+
+    publishId() {
+        return String(new URLSearchParams(location.search).get('publishId') || '').trim();
+    },
+
+    notify(message, kind='info', title='CUỘC HỌP HVA') {
+        const text = String(message || '');
+        if (typeof window.hvaNotify === 'function') {
+            window.hvaNotify(text, {kind, title});
+            return;
+        }
+        let box = document.getElementById('hva-meeting-action-notice');
+        if (!box) {
+            box = document.createElement('div');
+            box.id = 'hva-meeting-action-notice';
+            box.className = 'fixed inset-0 z-[2147483646] bg-slate-900/55 backdrop-blur-sm flex items-center justify-center p-4';
+            document.body.appendChild(box);
+        }
+        const icon = kind === 'success' ? 'bi-check-circle-fill text-emerald-600' : (kind === 'error' ? 'bi-exclamation-triangle-fill text-red-600' : 'bi-info-circle-fill text-[#0F4C81]');
+        box.innerHTML = `<div class="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="p-5 flex gap-3"><i class="bi ${icon} text-2xl"></i><div class="min-w-0"><div class="text-sm font-extrabold text-slate-800">${this.escape(title)}</div><div class="mt-1 text-sm text-slate-600 leading-relaxed">${this.escape(text)}</div></div></div>
+            <div class="px-5 py-3 bg-slate-50 border-t flex justify-end"><button type="button" onclick="document.getElementById('hva-meeting-action-notice')?.remove()" class="px-5 py-2 rounded-xl bg-[#0F4C81] text-white text-xs font-extrabold">ĐÓNG</button></div></div>`;
+    },
+
+    escape(value) {
+        return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+    },
+
+    async ask(message) {
+        return new Promise(resolve => {
+            document.getElementById('hva-meeting-action-confirm')?.remove();
+            const box = document.createElement('div');
+            box.id = 'hva-meeting-action-confirm';
+            box.className = 'fixed inset-0 z-[2147483646] bg-slate-900/55 backdrop-blur-sm flex items-center justify-center p-4';
+            box.innerHTML = `<div class="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
+                <div class="p-5"><div class="text-sm font-extrabold text-[#0F4C81]">XÁC NHẬN THAM DỰ</div><div class="mt-2 text-sm text-slate-600">${this.escape(message)}</div></div>
+                <div class="px-5 py-3 bg-slate-50 border-t flex justify-end gap-2"><button data-no type="button" class="px-4 py-2 rounded-xl border bg-white text-slate-700 text-xs font-bold">HỦY</button><button data-yes type="button" class="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-extrabold">XÁC NHẬN</button></div></div>`;
+            const finish = value => { box.remove(); resolve(value); };
+            box.querySelector('[data-no]').onclick = () => finish(false);
+            box.querySelector('[data-yes]').onclick = () => finish(true);
+            box.addEventListener('click', e => { if (e.target === box) finish(false); });
+            document.body.appendChild(box);
+        });
+    },
+
+    async post(payload) {
+        const token = String(localStorage.getItem('hvaSessionToken') || '').trim();
+        if (!token) throw new Error('Phiên đăng nhập không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.');
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 20000);
+        try {
+            const response = await fetch(CONFIG.SCRIPT_URL, {
+                method: 'POST',
+                headers: {'Content-Type':'text/plain;charset=utf-8'},
+                body: JSON.stringify({...payload, sessionToken: token}),
+                signal: controller.signal
+            });
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            const data = await response.json();
+            if (data && ['SESSION_EXPIRED','SESSION_INVALID','AUTH_REQUIRED'].includes(String(data.code || ''))) {
+                throw new Error(data.message || 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn.');
+            }
+            return data;
+        } catch (e) {
+            if (e && e.name === 'AbortError') throw new Error('Máy chủ chưa phản hồi sau 20 giây. Vui lòng thử lại.');
+            throw e;
+        } finally { clearTimeout(timer); }
+    },
+
+    setBusy(button, busy, busyText, normalHtml) {
+        if (!button) return;
+        button.disabled = !!busy;
+        button.classList.toggle('opacity-60', !!busy);
+        button.classList.toggle('cursor-wait', !!busy);
+        button.innerHTML = busy ? `<i class="bi bi-arrow-repeat animate-spin mr-2"></i>${busyText}` : normalHtml;
+    },
+
+    stateKey(meetingId) {
+        return 'HVA_MEETING_ATTENDANCE_STATE:' + String(meetingId || this.publishId() || '').trim();
+    },
+
+    getLocalState(meetingId) {
+        try { return String(sessionStorage.getItem(this.stateKey(meetingId)) || '').trim().toUpperCase(); }
+        catch (_) { return ''; }
+    },
+
+    setLocalState(meetingId, state) {
+        try { sessionStorage.setItem(this.stateKey(meetingId), String(state || '').trim().toUpperCase()); }
+        catch (_) {}
+    },
+
+    actorLabel() {
+        try {
+            const u = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+            const name = String(u.hoTen || u.fullName || u.name || '').trim();
+            const explicit = String(u.xungHo || u.salutation || '').trim();
+            if (explicit && name) return explicit + ' ' + name;
+            const gender = String(u.gioiTinh || u.gender || '').trim().toLowerCase();
+            const role = String(u.vaiTro || u.role || u.chucVu || u.viTriViecLam || '').trim().toLowerCase();
+            const isStaff = /nhân viên|nhan vien|\bnv\b/.test(role);
+            let prefix = 'Thầy/Cô';
+            if (gender.includes('nữ') || gender.includes('nu') || gender === 'female') prefix = isStaff ? 'Chị' : 'Cô';
+            else if (gender.includes('nam') || gender === 'male') prefix = isStaff ? 'Anh' : 'Thầy';
+            return name ? `${prefix} ${name}` : prefix;
+        } catch (_) { return 'Thầy/Cô'; }
+    },
+
+    renderConfirmed(meetingId) {
+        this.setLocalState(meetingId, 'CONFIRMED');
+        this.hideAbsence();
+        const area = document.getElementById('hva-meeting-attendance-actions');
+        if (!area) return;
+        area.innerHTML = `<div class="px-4 py-3 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800">
+            <div class="font-extrabold"><i class="bi bi-check-circle-fill mr-2"></i>ĐÃ XÁC NHẬN THAM DỰ</div>
+            <div class="mt-1 text-sm font-semibold">${this.escape(this.actorLabel())} đã hoàn thành xác nhận tham dự cuộc họp.</div>
+            <button type="button" onclick="HVAMeetingAction.confirmedAbsenceWarning()" class="mt-3 px-4 py-2 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-800 text-sm font-extrabold">
+                <i class="bi bi-person-x mr-2"></i>CẦN THAY ĐỔI / XIN VẮNG
+            </button>
+        </div>`;
+    },
+
+    renderAbsent(meetingId, message) {
+        this.setLocalState(meetingId, 'ABSENT_REQUESTED');
+        const area = document.getElementById('hva-meeting-attendance-actions');
+        if (!area) return;
+        area.innerHTML = `<div class="px-4 py-3 rounded-xl border border-amber-200 bg-amber-50 text-amber-800">
+            <div class="font-extrabold"><i class="bi bi-send-check-fill mr-2"></i>ĐÃ GỬI YÊU CẦU XIN VẮNG</div>
+            <div class="mt-1 text-sm font-semibold">${this.escape(message || 'Yêu cầu xin vắng đã được hệ thống ghi nhận.')}</div>
+        </div>`;
+    },
+
+    confirmedAbsenceWarning() {
+        document.getElementById('hva-meeting-business-warning')?.remove();
+        const box = document.createElement('div');
+        box.id = 'hva-meeting-business-warning';
+        box.className = 'fixed inset-0 z-[2147483647] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4';
+        box.innerHTML = `<div class="w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-amber-200 overflow-hidden">
+            <div class="p-5 flex gap-3">
+                <div class="w-11 h-11 shrink-0 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center"><i class="bi bi-exclamation-triangle-fill text-xl"></i></div>
+                <div class="min-w-0">
+                    <div class="text-sm font-extrabold text-amber-800">THAY ĐỔI TRẠNG THÁI THAM DỰ</div>
+                    <div class="mt-2 text-sm text-slate-700 leading-relaxed">${this.escape(this.actorLabel())} đã xác nhận tham dự cuộc họp này nên không thể gửi yêu cầu xin vắng tại đây. Trường hợp phát sinh cần thay đổi, đề nghị Thầy/Cô vào Kết nối số → Gửi yêu cầu để gửi thông tin đến BGH.</div>
+                </div>
+            </div>
+            <div class="px-5 py-3 bg-slate-50 border-t flex flex-wrap justify-end gap-2">
+                <button data-close type="button" class="px-4 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold">ĐÓNG</button>
+                <button data-connect type="button" class="px-4 py-2 rounded-xl bg-[#0F4C81] text-white text-xs font-extrabold"><i class="bi bi-globe2 mr-2"></i>ĐẾN KẾT NỐI SỐ</button>
+            </div>
+        </div>`;
+        const close = () => box.remove();
+        box.querySelector('[data-close]').onclick = close;
+        box.querySelector('[data-connect]').onclick = () => { sessionStorage.setItem('HVA_OPEN_CONNECT_REQUEST','1'); location.href = './index.html#ket-noi-so'; };
+        box.addEventListener('click', e => { if (e.target === box) close(); });
+        document.body.appendChild(box);
+    },
+
+    async confirm(meetingId, button) {
+        const username = this.username();
+        const publishId = this.publishId();
+        if (!meetingId && !publishId) return this.notify('Không xác định được mã cuộc họp.', 'error');
+        if (!username) return this.notify('Không xác định được tài khoản đang đăng nhập.', 'error');
+        const normal = '<i class="bi bi-check2-circle mr-2"></i>XÁC NHẬN THAM DỰ';
+        this.setBusy(button, true, 'ĐANG XÁC NHẬN...', normal);
+        try {
+            const r = await this.post({action:'confirmMeetingAttendance', meetingId:String(meetingId||''), publishId, username});
+            if (!r || r.success !== true) {
+                const msg = String(r?.message || 'Không thể xác nhận tham dự.');
+                if (/đã xác nhận/i.test(msg)) {
+                    this.renderConfirmed(meetingId);
+                    return this.notify(`${this.actorLabel()} đã hoàn thành xác nhận tham dự cuộc họp.`, 'success', 'ĐÃ XÁC NHẬN THAM DỰ');
+                }
+                throw new Error(msg);
+            }
+            this.renderConfirmed(meetingId);
+            this.notify(`${this.actorLabel()} đã hoàn thành xác nhận tham dự cuộc họp.`, 'success', 'XÁC NHẬN THÀNH CÔNG');
+        } catch (e) {
+            console.error('[HVA Meeting] confirm:', e);
+            this.setBusy(button, false, '', normal);
+            this.notify(e?.message || 'Có lỗi khi xác nhận tham dự.', 'error', 'CHƯA XÁC NHẬN ĐƯỢC');
+        }
+    },
+
+    showAbsence(meetingId='') {
+        if (this.getLocalState(meetingId) === 'CONFIRMED') return this.confirmedAbsenceWarning();
+        const box = document.getElementById('hva-meeting-absence-box');
+        box?.classList.remove('hidden');
+        setTimeout(() => { box?.scrollIntoView({behavior:'smooth', block:'nearest'}); document.getElementById('hva-meeting-absence-reason')?.focus(); }, 40);
+    },
+    hideAbsence() { document.getElementById('hva-meeting-absence-box')?.classList.add('hidden'); },
+
+    async absence(meetingId, button) {
+        const username = this.username();
+        const publishId = this.publishId();
+        const reason = String(document.getElementById('hva-meeting-absence-reason')?.value || '').trim();
+        if (!meetingId && !publishId) return this.notify('Không xác định được mã cuộc họp.', 'error');
+        if (!username) return this.notify('Không xác định được tài khoản đang đăng nhập.', 'error');
+        if (!reason) return this.notify('Vui lòng nhập lý do xin vắng.', 'error');
+        const normal = 'GỬI XIN VẮNG';
+        this.setBusy(button, true, 'ĐANG GỬI...', normal);
+        try {
+            const r = await this.post({action:'requestMeetingAbsence', meetingId:String(meetingId||''), publishId, username, reason});
+            if (!r || r.success !== true) {
+                const msg = String(r?.message || 'Không thể gửi yêu cầu xin vắng.');
+                if (/đã xác nhận.*(không thể|không th[eể]).*xin vắng|không thể đồng thời gửi đơn xin vắng/i.test(msg)) {
+                    this.setLocalState(meetingId, 'CONFIRMED');
+                    this.setBusy(button, false, '', normal);
+                    return this.confirmedAbsenceWarning();
+                }
+                throw new Error(msg);
+            }
+            this.renderAbsent(meetingId, r.message || 'Yêu cầu xin vắng đã được hệ thống ghi nhận.');
+            this.notify(r.message || 'Đã gửi yêu cầu xin vắng.', 'success', 'ĐÃ GỬI XIN VẮNG');
+        } catch (e) {
+            console.error('[HVA Meeting] absence:', e);
+            this.setBusy(button, false, '', normal);
+            const msg = String(e?.message || 'Có lỗi khi gửi yêu cầu xin vắng.');
+            if (/đã xác nhận.*(không thể|không th[eể]).*xin vắng|không thể đồng thời gửi đơn xin vắng/i.test(msg)) {
+                this.setLocalState(meetingId, 'CONFIRMED');
+                return this.confirmedAbsenceWarning();
+            }
+            this.notify(msg, 'error', 'CHƯA GỬI ĐƯỢC');
+        }
+    }
+};
+
+// =================================================================
+// VIEWER: KHẢO SÁT – BÌNH CHỌN
+// Phục hồi luồng người nhận trực tiếp từ bản phát hành.
+// Không thay đổi Viewer Cuộc họp, Backend/Auth hoặc luồng phát hành.
+// =================================================================
+window.HVAKSBCAction = {
+    escape(value) {
+        return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+    },
+
+    user() {
+        try { return JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}'); }
+        catch (_) { return {}; }
+    },
+
+    notify(message, kind='info', title='KHẢO SÁT – BÌNH CHỌN') {
+        document.getElementById('hva-ksbc-notice')?.remove();
+        const box = document.createElement('div');
+        box.id = 'hva-ksbc-notice';
+        box.className = 'fixed inset-0 z-[2147483647] bg-slate-900/55 backdrop-blur-sm flex items-center justify-center p-4';
+        const icon = kind === 'success' ? 'bi-check-circle-fill text-emerald-600' : (kind === 'error' ? 'bi-exclamation-triangle-fill text-red-600' : 'bi-info-circle-fill text-blue-600');
+        box.innerHTML = `<div class="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="p-5 flex gap-3"><i class="bi ${icon} text-2xl"></i><div class="min-w-0"><div class="text-sm font-extrabold text-slate-800">${this.escape(title)}</div><div class="mt-1 text-sm text-slate-600 leading-relaxed whitespace-pre-line">${this.escape(message)}</div></div></div>
+            <div class="px-5 py-3 bg-slate-50 border-t flex justify-end"><button type="button" data-close class="px-5 py-2 rounded-xl bg-[#0F4C81] text-white text-xs font-extrabold">ĐÓNG</button></div></div>`;
+        box.querySelector('[data-close]').onclick = () => box.remove();
+        box.addEventListener('click', e => { if (e.target === box) box.remove(); });
+        document.body.appendChild(box);
+    },
+
+    async submit(item, answers, button) {
+        const user = this.user();
+        const username = String(user.username || user.userName || user.maGV || '').trim();
+        if (!username) return this.notify('Không xác định được tài khoản đang đăng nhập.', 'error', 'CHƯA GỬI ĐƯỢC');
+        if (!item.surveyId) return this.notify('Không xác định được mã khảo sát/bình chọn.', 'error', 'CHƯA GỬI ĐƯỢC');
+
+        const normalHtml = button ? button.innerHTML : '';
+        if (button) {
+            button.disabled = true;
+            button.classList.add('opacity-60','cursor-wait');
+            button.innerHTML = '<i class="bi bi-arrow-repeat animate-spin mr-2"></i>ĐANG GỬI...';
+        }
+
+        try {
+            const response = await fetch(CONFIG.SCRIPT_URL, {
+                method: 'POST',
+                headers: {'Content-Type':'text/plain;charset=utf-8'},
+                body: JSON.stringify({
+                    action: 'submitSurveyPollResponse',
+                    surveyId: item.surveyId,
+                    username,
+                    fullName: user.hoTen || user.fullName || user.name || '',
+                    answers,
+                    sessionToken: String(localStorage.getItem('hvaSessionToken') || '').trim()
+                })
+            });
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            const text = await response.text();
+            if (/^\s*</.test(text)) throw new Error('Backend trả về dữ liệu không hợp lệ.');
+            const data = JSON.parse(text);
+            if (!data || data.success !== true) throw new Error(data?.message || 'Không gửi được dữ liệu.');
+
+            const area = document.getElementById('hva-ksbc-response-area');
+            if (area) area.innerHTML = `<div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-emerald-800">
+                <div class="font-extrabold"><i class="bi bi-check-circle-fill mr-2"></i>${item.objectType === 'POLL' ? 'ĐÃ GHI NHẬN BÌNH CHỌN' : 'ĐÃ GHI NHẬN KHẢO SÁT'}</div>
+                <div class="mt-1 text-sm font-semibold">Thầy/Cô đã hoàn thành nội dung này.</div>
+            </div>`;
+            this.notify(
+                item.objectType === 'POLL' ? 'Thầy/Cô đã hoàn thành bình chọn.' : 'Thầy/Cô đã hoàn thành khảo sát.',
+                'success',
+                item.objectType === 'POLL' ? 'ĐÃ GHI NHẬN BÌNH CHỌN' : 'ĐÃ GHI NHẬN KHẢO SÁT'
+            );
+        } catch (e) {
+            console.error('[HVA KSBC] submit:', e);
+            if (button) {
+                button.disabled = false;
+                button.classList.remove('opacity-60','cursor-wait');
+                button.innerHTML = normalHtml;
+            }
+            this.notify(e?.message || 'Không gửi được dữ liệu.', 'error', 'CHƯA GỬI ĐƯỢC');
+        }
+    },
+
+    collectAnswers(item) {
+        const form = document.getElementById('hva-ksbc-form');
+        if (!form) return null;
+        const questions = Array.isArray(item.questions) ? item.questions : [];
+        const answers = questions.map(q => {
+            const name = 'q-' + String(q.id || '');
+            const nodes = [...form.querySelectorAll(`[name="${CSS.escape(name)}"]`)];
+            const chosen = nodes
+                .filter(n => n.checked || !['radio','checkbox'].includes(n.type))
+                .map(n => String(n.value || '').trim())
+                .filter(Boolean);
+            return {questionId:q.id || '', question:q.text || '', answer:chosen};
+        });
+        if (answers.some(a => !a.answer.length)) {
+            this.notify('Vui lòng trả lời đầy đủ các câu hỏi trước khi gửi.', 'error', 'CHƯA HOÀN TẤT');
+            return null;
+        }
+        return answers;
+    },
+
+    submitForm(button) {
+        const item = window.HVA_KSBC_CURRENT;
+        if (!item) return;
+        const answers = this.collectAnswers(item);
+        if (!answers) return;
+        this.submit(item, answers, button);
+    },
+
+    submitPoll(button) {
+        const item = window.HVA_KSBC_CURRENT;
+        if (!item) return;
+        const form = document.getElementById('hva-ksbc-form');
+        const q = (item.questions || [])[0] || {};
+        const selected = [...(form?.querySelectorAll('input:checked') || [])].map(x => x.value);
+        if (!selected.length) return this.notify('Vui lòng chọn một phương án.', 'error', 'CHƯA HOÀN TẤT');
+        this.submit(item, [{questionId:q.id || 'Q1', question:q.text || item.title, answer:selected}], button);
+    },
+
+    completeExternal(button) {
+        const item = window.HVA_KSBC_CURRENT;
+        if (!item) return;
+        this.submit(item, [], button);
+    }
+};
+
+ContentViewerRouter.register(
+    ['KhaoSatBinhChon','POLL','SURVEY'],
+    {
+        open({ document: documentState, raw, data }) {
+            const esc = window.HVAKSBCAction.escape.bind(window.HVAKSBCAction);
+            const item = {
+                surveyId: String(data.surveyId || documentState.docId || raw.surveyId || '').trim(),
+                objectType: String(data.objectType || documentState.type || raw.documentType || 'SURVEY').toUpperCase(),
+                surveyType: String(data.surveyType || '').toLowerCase(),
+                title: String(data.title || documentState.title || 'Khảo sát – Bình chọn'),
+                description: String(data.description || documentState.summary || ''),
+                reference: String(data.reference || ''),
+                externalUrl: String(data.externalUrl || data.shareLink || ''),
+                deadlineDate: String(data.deadlineDate || ''),
+                deadlineTime: String(data.deadlineTime || ''),
+                multiPoll: data.multiPoll === true || String(data.multiPoll).toLowerCase() === 'true',
+                questions: Array.isArray(data.questions) ? data.questions : []
+            };
+            window.HVA_KSBC_CURRENT = item;
+
+            const isPoll = item.objectType === 'POLL';
+            const isExternal = item.surveyType === 'external' && /^https?:\/\//i.test(item.externalUrl);
+            const questionHtml = isExternal ? `
+                <div class="rounded-2xl border border-blue-200 bg-blue-50 p-5">
+                    <div class="text-sm font-bold text-slate-800">Khảo sát trên liên kết ngoài</div>
+                    <div class="mt-1 text-xs text-slate-600">Mở liên kết để thực hiện khảo sát. Sau khi hoàn thành, quay lại đây và bấm “ĐÃ HOÀN THÀNH”.</div>
+                    <a href="${esc(item.externalUrl)}" target="_blank" rel="noopener" class="mt-4 inline-flex items-center justify-center w-full px-5 py-3 rounded-xl bg-blue-600 text-white font-extrabold text-sm"><i class="bi bi-box-arrow-up-right mr-2"></i>MỞ KHẢO SÁT</a>
+                </div>` : `
+                <form id="hva-ksbc-form" class="space-y-4">
+                    ${item.questions.map((q,i) => {
+                        const kind = String(q.kind || (isPoll ? 'poll' : 'single')).toLowerCase();
+                        const options = Array.isArray(q.options) ? q.options.filter(x => String(x).trim()) : [];
+                        let field = '';
+                        if (['single','multi','poll'].includes(kind)) {
+                            const inputType = (kind === 'multi' || (isPoll && item.multiPoll)) ? 'checkbox' : 'radio';
+                            field = `<div class="mt-3 space-y-2">${options.map(o => `<label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-blue-50 cursor-pointer"><input type="${inputType}" name="q-${esc(q.id || '')}" value="${esc(o)}"><span class="text-sm font-semibold text-slate-700">${esc(o)}</span></label>`).join('')}</div>`;
+                        } else if (kind === 'scale') {
+                            field = `<select name="q-${esc(q.id || '')}" class="mt-3 w-full border border-slate-300 rounded-xl p-3 bg-white"><option value="">Chọn mức</option>${[1,2,3,4,5].map(n=>`<option value="${n}">${n}</option>`).join('')}</select>`;
+                        } else {
+                            field = `<textarea name="q-${esc(q.id || '')}" rows="3" class="mt-3 w-full border border-slate-300 rounded-xl p-3" placeholder="Nhập câu trả lời..."></textarea>`;
+                        }
+                        return `<div class="rounded-2xl border border-slate-200 bg-white p-4"><div class="text-sm font-extrabold text-slate-800">${i+1}. ${esc(q.text || '')}</div>${field}</div>`;
+                    }).join('')}
+                </form>`;
+
+            let modal = document.getElementById('hva-module-content-viewer');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'hva-module-content-viewer';
+                modal.className = 'fixed inset-0 z-[100000] bg-slate-900/55 backdrop-blur-sm flex items-center justify-center p-4';
+                document.body.appendChild(modal);
+            }
+
+            const deadline = [item.deadlineDate, item.deadlineTime].filter(Boolean).join(' • ');
+            modal.innerHTML = `<div class="bg-white w-full max-w-2xl max-h-[90vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+                <header class="px-6 py-5 border-b border-slate-200 flex items-start justify-between gap-4 bg-gradient-to-r from-emerald-50 to-cyan-50">
+                    <div><div class="text-xs font-extrabold uppercase tracking-wide ${isPoll?'text-emerald-700':'text-blue-700'}">${isPoll?'BÌNH CHỌN':'KHẢO SÁT'}</div><h2 class="mt-1 text-xl font-extrabold text-slate-900">${esc(item.title)}</h2>${item.description?`<div class="mt-1 text-sm text-slate-600">${esc(item.description)}</div>`:''}</div>
+                    <button type="button" onclick="document.getElementById('hva-module-content-viewer')?.remove()" class="w-10 h-10 shrink-0 rounded-full bg-white/80 hover:bg-white text-slate-600"><i class="bi bi-x-lg"></i></button>
+                </header>
+                <div class="px-6 py-5 overflow-y-auto space-y-4">
+                    ${item.reference?`<div class="text-xs text-slate-600"><b>Căn cứ:</b> ${esc(item.reference)}</div>`:''}
+                    ${deadline?`<div class="text-xs text-slate-600"><b>Hạn:</b> ${esc(deadline)}</div>`:''}
+                    <div id="hva-ksbc-response-area">${questionHtml}</div>
+                </div>
+                <footer class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex flex-wrap justify-end gap-3">
+                    ${isExternal?`<button type="button" onclick="HVAKSBCAction.completeExternal(this)" class="px-6 py-3 rounded-xl bg-emerald-600 text-white font-extrabold">ĐÃ HOÀN THÀNH</button>`:`<button type="button" onclick="${isPoll?'HVAKSBCAction.submitPoll(this)':'HVAKSBCAction.submitForm(this)'}" class="px-6 py-3 rounded-xl ${isPoll?'bg-emerald-600':'bg-blue-600'} text-white font-extrabold">${isPoll?'GỬI BÌNH CHỌN':'GỬI KHẢO SÁT'}</button>`}
+                    <button type="button" onclick="document.getElementById('hva-module-content-viewer')?.remove()" class="px-6 py-3 rounded-xl border border-slate-300 bg-white font-bold text-slate-700">ĐÓNG</button>
+                </footer>
+            </div>`;
+            modal.classList.remove('hidden');
+        }
+    }
+);
+
+// =================================================================
+// VIEWER: CUỘC HỌP
+// Adapter đầu tiên của hệ thống Viewer Router.
+// =================================================================
+ContentViewerRouter.register(
+    [
+        'CuocHop',
+        'MEETING'
+    ],
+    {
+        open({ document: documentState, raw, data }) {
+
+            const esc = value =>
+                String(value ?? '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+
+            const title =
+                data.title ||
+                documentState.title ||
+                'Cuộc họp';
+
+            const meetingType =
+                data.meetingType || '';
+
+            const date =
+                data.date || '';
+
+            const startTime =
+                data.startTime || '';
+
+            const endTime =
+                data.endTime || '';
+
+            const place =
+                data.place || '';
+
+            const chairperson =
+                data.chairperson || '';
+
+            const secretary =
+                data.secretary || '';
+
+            const content =
+                data.content || '';
+
+            const recipients =
+                Array.isArray(raw.recipients)
+                    ? raw.recipients
+                    : (
+                        Array.isArray(data.recipients)
+                            ? data.recipients
+                            : []
+                    );
+
+            const documentUrl =
+                data.documentUrl || '';
+
+            // Mã cuộc họp nằm trong data của tài liệu CuocHop.
+            // Có fallback để tương thích dữ liệu cũ.
+            const meetingId = String(
+                data.meetingId ||
+                data.id ||
+                data.maCuocHop ||
+                documentState.meetingId ||
+                documentState.docId ||
+                raw.meetingId ||
+                ''
+            ).trim();
+
+            const requireConfirmation = (
+                data.requireConfirmation === true ||
+                ['true','1','có','co','yes','y'].includes(
+                    String(data.requireConfirmation || '').trim().toLowerCase()
+                )
+            );
+
+            const attendanceResponse = String(
+                data.attendanceResponse ||
+                raw.attendanceResponse ||
+                documentState.attendanceResponse ||
+                ''
+            ).trim().toUpperCase();
+
+            const absenceStatus = String(
+                data.absenceStatus ||
+                raw.absenceStatus ||
+                documentState.absenceStatus ||
+                ''
+            ).trim().toUpperCase();
+
+            const localAttendanceState = window.HVAMeetingAction?.getLocalState(meetingId) || '';
+
+            const alreadyConfirmed = localAttendanceState === 'CONFIRMED' || [
+                'ĐÃ XÁC NHẬN THAM GIA',
+                'ĐÃ XÁC NHẬN',
+                'THAM DỰ'
+            ].includes(attendanceResponse);
+
+            const alreadyAbsent = localAttendanceState === 'ABSENT_REQUESTED' || (
+                attendanceResponse === 'XIN VẮNG' ||
+                ['CHỜ DUYỆT','ĐÃ DUYỆT','TỪ CHỐI','ĐÃ GỬI ĐƠN'].includes(absenceStatus)
+            );
+
+            let modal =
+                window.document.getElementById(
+                    'hva-module-content-viewer'
+                );
+
+            if (!modal) {
+
+                modal =
+                    window.document.createElement(
+                        'div'
+                    );
+
+                modal.id =
+                    'hva-module-content-viewer';
+
+                modal.className =
+                    'fixed inset-0 z-[100000] ' +
+                    'bg-slate-900/55 backdrop-blur-sm ' +
+                    'flex items-center justify-center p-3 sm:p-4 overflow-hidden';
+
+                window.document.body.appendChild(
+                    modal
+                );
+            }
+
+            modal.innerHTML = `
+                <div class="
+                    bg-white
+                    w-full max-w-3xl
+                    max-h-[90vh]
+                    rounded-3xl
+                    shadow-2xl
+                    overflow-hidden
+                    flex flex-col
+                ">
+
+                    <div class="
+                        px-7 py-5
+                        border-b border-slate-200
+                        flex items-start
+                        justify-between gap-4
+                    ">
+
+                        <div>
+
+                            <div class="
+                                text-xs
+                                font-extrabold
+                                uppercase
+                                tracking-wide
+                                text-[#0F4C81]
+                                mb-1
+                            ">
+                                CHI TIẾT CUỘC HỌP
+                            </div>
+
+                            <h2 class="
+                                text-xl md:text-2xl
+                                font-extrabold
+                                text-slate-900
+                            ">
+                                ${esc(title)}
+                            </h2>
+
+                            ${
+                                meetingType
+                                    ? `
+                                        <div class="
+                                            text-sm
+                                            text-slate-500
+                                            mt-1
+                                        ">
+                                            ${esc(meetingType)}
+                                        </div>
+                                    `
+                                    : ''
+                            }
+
+                        </div>
+
+                        <button
+                            type="button"
+                            onclick="
+                                document
+                                    .getElementById(
+                                        'hva-module-content-viewer'
+                                    )
+                                    ?.classList.add('hidden')
+                            "
+                            class="
+                                w-10 h-10
+                                shrink-0
+                                rounded-full
+                                bg-slate-100
+                                hover:bg-slate-200
+                                text-slate-600
+                            "
+                        >
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="
+                        px-7 py-6
+                        overflow-y-auto
+                        flex-1 min-h-0
+                        space-y-5
+                    ">
+
+                        <div class="
+                            grid
+                            grid-cols-1
+                            md:grid-cols-2
+                            gap-4
+                            rounded-2xl
+                            bg-slate-50
+                            border
+                            border-slate-200
+                            p-5
+                        ">
+
+                            <div>
+                                <div class="
+                                    text-xs
+                                    font-bold
+                                    text-slate-500
+                                ">
+                                    THỜI GIAN
+                                </div>
+
+                                <div class="
+                                    mt-1
+                                    font-semibold
+                                    text-slate-800
+                                ">
+                                    ${esc(date)}
+                                    ${
+                                        startTime
+                                            ? ' • ' +
+                                              esc(startTime)
+                                            : ''
+                                    }
+                                    ${
+                                        endTime
+                                            ? ' - ' +
+                                              esc(endTime)
+                                            : ''
+                                    }
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="
+                                    text-xs
+                                    font-bold
+                                    text-slate-500
+                                ">
+                                    ĐỊA ĐIỂM
+                                </div>
+
+                                <div class="
+                                    mt-1
+                                    font-semibold
+                                    text-slate-800
+                                ">
+                                    ${esc(place || '—')}
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="
+                                    text-xs
+                                    font-bold
+                                    text-slate-500
+                                ">
+                                    CHỦ TRÌ
+                                </div>
+
+                                <div class="
+                                    mt-1
+                                    font-semibold
+                                    text-slate-800
+                                ">
+                                    ${esc(chairperson || '—')}
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="
+                                    text-xs
+                                    font-bold
+                                    text-slate-500
+                                ">
+                                    THƯ KÝ
+                                </div>
+
+                                <div class="
+                                    mt-1
+                                    font-semibold
+                                    text-slate-800
+                                ">
+                                    ${esc(secretary || '—')}
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <div class="
+                                text-sm
+                                font-extrabold
+                                text-slate-600
+                                mb-2
+                            ">
+                                NỘI DUNG / CHƯƠNG TRÌNH
+                            </div>
+
+                            <div class="
+                                rounded-2xl
+                                border
+                                border-slate-200
+                                p-5
+                                text-[15px]
+                                leading-7
+                                text-slate-800
+                                whitespace-pre-wrap
+                            ">${esc(content || '—')}</div>
+
+                        </div>
+
+
+                        <div class="
+                            flex flex-wrap
+                            gap-3
+                            text-sm
+                        ">
+
+                            <div class="
+                                px-4 py-2
+                                rounded-xl
+                                bg-blue-50
+                                text-blue-800
+                                font-semibold
+                            ">
+                                <i class="
+                                    bi bi-people-fill
+                                    mr-2
+                                "></i>
+                                ${recipients.length}
+                                người tham dự
+                            </div>
+
+                            ${
+                                requireConfirmation
+                                    ? `
+                                        <div class="
+                                            px-4 py-2
+                                            rounded-xl
+                                            bg-emerald-50
+                                            text-emerald-800
+                                            font-semibold
+                                        ">
+                                            <i class="
+                                                bi bi-check2-circle
+                                                mr-2
+                                            "></i>
+                                            Yêu cầu xác nhận
+                                            tham dự
+                                        </div>
+                                    `
+                                    : ''
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    ${
+                        requireConfirmation
+                            ? `
+                                <div id="hva-meeting-attendance-actions" class="px-7 py-4 border-t border-slate-200 bg-white shrink-0 max-h-[42vh] overflow-y-auto overscroll-contain">
+                                    ${
+                                        alreadyConfirmed
+                                            ? `
+                                                <div class="px-4 py-3 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800">
+                                                    <div class="font-extrabold"><i class="bi bi-check-circle-fill mr-2"></i>ĐÃ XÁC NHẬN THAM DỰ</div>
+                                                    <div class="mt-1 text-sm font-semibold">${esc(window.HVAMeetingAction?.actorLabel?.() || 'Thầy/Cô')} đã hoàn thành xác nhận tham dự cuộc họp.</div>
+                                                    <button type="button" onclick="HVAMeetingAction.confirmedAbsenceWarning()" class="mt-3 px-4 py-2 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-800 text-sm font-extrabold"><i class="bi bi-person-x mr-2"></i>CẦN THAY ĐỔI / XIN VẮNG</button>
+                                                </div>
+                                            `
+                                            : alreadyAbsent
+                                                ? `
+                                                    <div class="px-4 py-3 rounded-xl bg-amber-50 text-amber-800 font-bold">
+                                                        <i class="bi bi-info-circle-fill mr-2"></i>
+                                                        ${esc(data.absenceStatus || 'Đã gửi xin vắng')}
+                                                    </div>
+                                                `
+                                                : `
+                                                    <div class="flex flex-wrap gap-3">
+                                                        <button
+                                                            type="button"
+                                                            onclick="HVAMeetingAction.confirm('${esc(meetingId)}', this)"
+                                                            class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold"
+                                                        >
+                                                            <i class="bi bi-check2-circle mr-2"></i>
+                                                            XÁC NHẬN THAM DỰ
+                                                        </button>
+
+                                                        <button
+                                                            type="button"
+                                                            onclick="HVAMeetingAction.showAbsence('${esc(meetingId)}')"
+                                                            class="px-5 py-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 font-extrabold"
+                                                        >
+                                                            <i class="bi bi-person-x mr-2"></i>
+                                                            XIN VẮNG
+                                                        </button>
+                                                    </div>
+
+                                                    <div id="hva-meeting-absence-box"
+                                                         class="hidden mt-3 p-4 rounded-xl border border-amber-200 bg-amber-50">
+                                                        <div class="text-sm font-extrabold text-amber-800 mb-2">
+                                                            LÝ DO XIN VẮNG <span class="text-red-600">*</span>
+                                                        </div>
+
+                                                        <textarea
+                                                            id="hva-meeting-absence-reason"
+                                                            rows="3"
+                                                            class="w-full px-3 py-2 rounded-xl border border-amber-200 bg-white text-sm outline-none"
+                                                            placeholder="Nhập lý do xin vắng..."
+                                                        ></textarea>
+
+                                                        <div class="mt-3 flex justify-end gap-2">
+                                                            <button
+                                                                type="button"
+                                                                onclick="HVAMeetingAction.hideAbsence()"
+                                                                class="px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 font-bold"
+                                                            >
+                                                                HỦY
+                                                            </button>
+
+                                                            <button
+                                                                type="button"
+                                                                onclick="HVAMeetingAction.absence('${esc(meetingId)}', this)"
+                                                                class="px-4 py-2 rounded-lg bg-amber-600 text-white font-extrabold"
+                                                            >
+                                                                GỬI XIN VẮNG
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                `
+                                    }
+                                </div>
+                            `
+                            : ''
+                    }
+
+                    <div class="
+                        px-7 py-5
+                        bg-slate-50
+                        border-t border-slate-200
+                        flex
+                        justify-end
+                        gap-3
+                    ">
+
+                        ${
+                            documentUrl &&
+                            /^https?:\/\//i.test(
+                                documentUrl
+                            )
+                                ? `
+                                    <button
+                                        type="button"
+                                        onclick="
+                                            window.open(
+                                                '${esc(documentUrl)}',
+                                                '_blank',
+                                                'noopener'
+                                            )
+                                        "
+                                        class="
+                                            px-5 py-3
+                                            rounded-xl
+                                            bg-[#0F4C81]
+                                            text-white
+                                            font-bold
+                                        "
+                                    >
+                                        <i class="
+                                            bi
+                                            bi-paperclip
+                                            mr-2
+                                        "></i>
+                                        TÀI LIỆU ĐÍNH KÈM
+                                    </button>
+                                `
+                                : ''
+                        }
+
+                        <button
+                            type="button"
+                            onclick="
+                                document
+                                    .getElementById(
+                                        'hva-module-content-viewer'
+                                    )
+                                    ?.classList.add('hidden')
+                            "
+                            class="
+                                px-6 py-3
+                                rounded-xl
+                                border
+                                border-slate-300
+                                bg-white
+                                font-bold
+                                text-slate-700
+                            "
+                        >
+                            ĐÓNG
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+        }
+    }
+);
+
+        
+    const TTDHS_State = {
+        rawSource: null,
+        document: ModuleAdapter.toStandardDocument(null),
+        documents: [],
+        destinations: JSON.parse(JSON.stringify(CONFIG.DEFAULT_DESTINATIONS)),
+        workflowSteps: JSON.parse(JSON.stringify(CONFIG.DEFAULT_WORKFLOW_STEPS)),
+        linkedDocs: [],
+        recipients: [],
+        khoTeams: [],
+        khoAllMembers: [],
+        khoTeamMembers: [],
+        khoCurrentTeam: '',
+        khoSearch: '',
+        userPermissions: { canPublish: true, role: CONFIG.ROLES.ADMIN },
+        isPublishing: false
+    };
+    // =================================================================
+    // 6. SPECIALIZED PURE BUSINESS ENGINES
+    // =================================================================
+
+    const PermissionEngine = {
+        checkPermission: (userPermissions, requiredAction) => {
+            if (!userPermissions) return false;
+            if (requiredAction === CONFIG.ACTIONS.PUBLISH) {
+                return Boolean(userPermissions.canPublish && userPermissions.role === CONFIG.ROLES.ADMIN);
+            }
+            return Boolean(userPermissions.canPublish);
+        }
+    };
+
+    const VersionEngine = {
+        checkConflict: (currentDocVersion) => {
+            return {
+                conflict: false,
+                latestVersion: currentDocVersion || "v1.0.0",
+                canRollback: true
+            };
+        },
+        verifyVersionFormat: (versionStr) => {
+            return /^v?\d+\.\d+\.\d+$/.test(versionStr);
+        }
+    };
+
+    const RecipientEngine = {
+        getResolvedRecipients: (recipientList) => Array.isArray(recipientList) ? [...recipientList] : [],
+        displayName: (r) => {
+            if (typeof r === 'string') return r;
+            return r.hoTen || r.fullName || r.name || r.username || 'Người nhận';
+        },
+        displayMeta: (r) => {
+            if (typeof r === 'string') return '';
+            return [r.chucVu || r.vaiTro || '', r.toBoPhan || r.to || ''].filter(Boolean).join(' · ');
+        }
+    };
+
+    const DispatchEngine = {
+        toggleDestination: (currentDestinations, targetId) => {
+            return currentDestinations.map(d => {
+                if (d.id === targetId) {
+                    return { ...d, selected: !d.selected };
+                }
+                return d;
+            });
+        }
+    };
+
+    const WorkflowEngine = {
+        toggleStep: (currentSteps, stepId) => {
+            return currentSteps.map(s => {
+                if (s.id === stepId) {
+                    return { ...s, selected: !s.selected };
+                }
+                return s;
+            });
+        },
+        generatePipeline: (documentState, destinations, workflowSteps) => {
+            const pipeline = [
+                { title: documentState.moduleSource, icon: "bi-file-earmark-text-fill" },
+                { title: "TTPhatHanh", icon: "bi-diagram-3-fill" }
+            ];
+
+            const activeDests = destinations.filter(d => d.selected);
+            activeDests.forEach(d => pipeline.push({ title: d.name, icon: d.icon }));
+
+            const isViecCuaToi = activeDests.some(d => d.id === "ViecCuaToi");
+            if (isViecCuaToi) {
+                const activeSteps = workflowSteps.filter(s => s.selected);
+                activeSteps.forEach(s => pipeline.push({ title: s.label, icon: "bi-arrow-right-circle" }));
+            }
+
+            pipeline.push({ title: "Dashboard / Giáo viên", icon: "bi-check-circle-fill" });
+            return pipeline;
+        }
+    };
+
+    const PreCheckEngine = {
+        runChecks: (state) => {
+            const isPermitted = PermissionEngine.checkPermission(state.userPermissions, CONFIG.ACTIONS.PUBLISH);
+            const versionStatus = VersionEngine.checkConflict(state.document.version);
+            const hasSource = state.document.moduleSource !== 'UnknownModule';
+            const documentCount = Array.isArray(state.documents) && state.documents.length ? state.documents.length : 1;
+            const hasRecipients = state.recipients.length > 0;
+            const hasDestinations = state.destinations.some(d => d.selected);
+
+            const checks = [
+                { label: "Kiểm tra module nguồn", pass: hasSource, msg: hasSource ? `${state.document.moduleSource} • ${documentCount} văn bản` : "Chưa có dữ liệu nguồn" },
+                { label: "Kiểm tra quyền phát hành", pass: isPermitted, msg: isPermitted ? "Đủ thẩm quyền" : "Thiếu thẩm quyền" },
+                { label: "Kiểm tra phiên bản mới hơn", pass: !versionStatus.conflict, msg: "Phiên bản mới nhất" },
+                { label: "Kiểm tra đối tượng nhận", pass: hasRecipients, msg: hasRecipients ? `${state.recipients.length} nhóm nhận` : "Chưa chọn người nhận" },
+                { label: "Kiểm tra điểm đến phát hành", pass: hasDestinations, msg: hasDestinations ? "Đã chọn điểm đến" : "Chưa chọn điểm đến" },
+                { label: "Kiểm tra cấu hình Workflow", pass: true, msg: "Đã tối ưu luồng" }
+            ];
+
+            return {
+                allPassed: checks.every(c => c.pass),
+                items: checks
+            };
+        }
+    };
+
+    const NotificationEngine = {
+        dispatch: (payload) => {
+            const dispatchResult = {
+                status: "DISPATCHED",
+                channels: ["NOTIFICATION_CENTER", "DASHBOARD"],
+                timestamp: new Date().toISOString(),
+                payloadSummary: {
+                    docId: payload.document.docId,
+                    destinationCount: payload.destinations.length
+                }
+            };
+            eventBus.emit("NOTIFICATION_DISPATCHED", dispatchResult);
+            return dispatchResult;
+        }
+    };
+
+    const PublishEngine = {
+        createPublishId: () => {
+            const d = new Date();
+            const p = n => String(n).padStart(2, '0');
+            return `PH-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}-${Math.floor(1000 + Math.random()*9000)}`;
+        },
+        preparePayload: (state) => {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const isKho = String(state.document && state.document.moduleSource || '').toLowerCase() === 'khovanban';
+            const docs = isKho && Array.isArray(state.documents) && state.documents.length
+                ? state.documents
+                : [state.document];
+            const batchId = PublishEngine.createPublishId();
+
+            return {
+                action: isKho ? 'publishDocuments' : 'publishDocument',
+                publishId: batchId,
+                batchPublishId: batchId,
+                projectCode: CONFIG.PROJECT_CODE,
+                moduleSource: state.document.moduleSource,
+                documentType: state.document.type,
+                document: state.document,
+                documents: docs,
+                sender: {
+                    username: user.username || '',
+                    fullName: user.fullName || state.document.author || '',
+                    workPosition: user.workPosition || '',
+                    department: user.department || ''
+                },
+                recipients: RecipientEngine.getResolvedRecipients(state.recipients),
+                destinations: state.destinations.filter(d => d.selected),
+                workflow: state.workflowSteps.filter(s => s.selected),
+                attachments: state.linkedDocs,
+                issuedAt: new Date().toISOString(),
+                status: 'PUBLISHING',
+                signature: { mode: 'ACCOUNT', signer: user.fullName || state.document.author || '' },
+                sessionToken: String(localStorage.getItem('hvaSessionToken') || '').trim()
+            };
+        },
+        postToBackend: async (payload) => {
+            const response = await fetch(CONFIG.SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const result = await response.json();
+            if (!result || result.success !== true) {
+                throw new Error((result && result.message) || 'Backend không xác nhận phát hành.');
+            }
+            return result;
+        }
+    };
+    // =================================================================
+    // 7. RENDER ENGINE (PURE UI PRESENTATION LAYER)
+    // =================================================================
+    const RenderEngine = {
+        renderHeaderInfo: (documentState, state) => {
+            const docs = Array.isArray(state && state.documents) ? state.documents : [];
+            const isBatch = docs.length > 1;
+
+            document.getElementById('source-module-name').innerText = documentState.moduleSource;
+            document.getElementById('doc-type-badge').innerText = isBatch ? 'PHÁT HÀNH THEO LÔ' : documentState.type;
+            document.getElementById('doc-id-badge').innerText = isBatch ? `${docs.length} văn bản` : `Mã: ${documentState.docId}`;
+            document.getElementById('doc-version-badge').innerText = documentState.version || 'v1.0.0';
+
+            const titleEl = document.getElementById('doc-title-display');
+            const summaryEl = document.getElementById('doc-summary-display');
+
+            if (!isBatch) {
+                titleEl.innerText = documentState.title;
+                summaryEl.innerText = `Người soạn: ${documentState.author} | Ngày tạo: ${documentState.createdAt}`;
+                const old = document.getElementById('batch-documents-list');
+                if (old) old.remove();
+                return;
+            }
+
+            titleEl.innerText = `ĐÃ CHỌN ${docs.length} VĂN BẢN ĐỂ PHÁT HÀNH`;
+            summaryEl.innerText = 'Các văn bản dùng chung một danh sách người nhận và cùng một lần phát hành.';
+
+            let box = document.getElementById('batch-documents-list');
+            if (!box) {
+                box = document.createElement('div');
+                box.id = 'batch-documents-list';
+                box.className = 'mt-3 grid grid-cols-1 md:grid-cols-2 gap-2';
+                summaryEl.parentElement.appendChild(box);
+            }
+            const esc = v => String(v == null ? '' : v)
+              .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+              .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+            box.innerHTML = docs.map((d,i) => {
+                const data = d.data || d;
+                const name = data.soVanBan || d.title || data.fileName || `Văn bản ${i+1}`;
+                const summary = data.trichYeu || d.trichYeu || '';
+                const url = data.fileUrl || d.fileUrl || '';
+                const down = data.downloadUrl || d.downloadUrl || '';
+                return `<div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    <div class="flex items-start gap-2">
+                      <span class="shrink-0 w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-extrabold">${i+1}</span>
+                      <div class="min-w-0 flex-1">
+                        <div class="text-xs font-extrabold text-slate-800">${esc(name)}</div>
+                        <div class="text-[10px] text-slate-500 mt-1 line-clamp-2">${esc(summary)}</div>
+                        <div class="mt-2 flex gap-2">
+                          ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="text-[10px] font-bold text-blue-700">👁 Xem</a>` : ''}
+                          ${down ? `<a href="${esc(down)}" target="_blank" rel="noopener" class="text-[10px] font-bold text-emerald-700">⬇ Tải PDF</a>` : ''}
+                        </div>
+                      </div>
+                    </div>
+                </div>`;
+            }).join('');
+        },
+
+        renderRecipients: (recipients, state) => {
+            const container = document.getElementById('recipient-selector-container');
+            if (!container) return;
+
+            const isKho = String(state && state.document && state.document.moduleSource || '').toLowerCase() === 'khovanban';
+            if (isKho) {
+                const esc = (v) => String(v == null ? '' : v)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+                const allToData = Array.isArray(state.khoTeams) ? state.khoTeams : [];
+                const selectedUsernames = new Set((recipients || []).map(r => String((r && r.username) || '')));
+                const kw = String(state.khoSearch || '').trim().toLowerCase();
+
+                const blocks = allToData.map((toObj, index) => {
+                    const members = Array.isArray(toObj.members) ? toObj.members : [];
+                    const matchToName = String(toObj.tenTo || '').toLowerCase().includes(kw);
+                    const matchedMembers = members.filter(m =>
+                        String(m.hoTen || '').toLowerCase().includes(kw) ||
+                        String(m.username || '').toLowerCase().includes(kw) ||
+                        String(m.chucVu || '').toLowerCase().includes(kw)
+                    );
+                    if (kw && !matchToName && matchedMembers.length === 0) return '';
+                    const membersToDisplay = (kw && !matchToName) ? matchedMembers : members;
+                    const allSelected = members.length > 0 && members.every(m => selectedUsernames.has(String(m.username || '')));
+                    const isOpen = kw !== '';
+                    return `
+                        <div class="border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-sm transition">
+                            <div class="p-3 bg-slate-50/80 flex items-center justify-between gap-2 hover:bg-slate-100/80 transition select-none">
+                                <button type="button" onclick="Controller.toggleKhoAccordion('khoAccBody_${index}','khoAccIcon_${index}')" class="flex-1 flex items-center gap-2.5 text-left font-bold text-xs text-[#0F4C81]">
+                                    <i id="khoAccIcon_${index}" class="bi bi-chevron-right text-slate-400 text-xs transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}"></i>
+                                    <i class="bi bi-folder2-open text-blue-600 text-base"></i>
+                                    <span>${esc(toObj.tenTo)}</span>
+                                    <span class="text-[11px] font-normal text-slate-500">(${members.length} thành viên)</span>
+                                </button>
+                                <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition">
+                                    <input type="checkbox" ${allSelected ? 'checked' : ''} onchange="Controller.toggleKhoTeamAll(${index}, this.checked)" class="w-3.5 h-3.5 text-[#0F4C81] rounded focus:ring-0">
+                                    <span>Chọn toàn bộ tổ</span>
+                                </label>
+                            </div>
+                            <div id="khoAccBody_${index}" class="custom-accordion-content ${isOpen ? 'open' : ''} bg-blue-50/20 border-t border-slate-100">
+                                <div class="p-3 grid grid-cols-1 gap-2">
+                                    ${membersToDisplay.map(m => {
+                                        const checked = selectedUsernames.has(String(m.username || ''));
+                                        return `
+                                            <label class="flex items-center justify-between p-2 rounded-xl bg-white border ${checked ? 'border-blue-400 bg-blue-50/40' : 'border-slate-200/80'} hover:border-blue-300 hover:bg-blue-50/30 cursor-pointer transition">
+                                                <div class="flex items-center gap-2.5 min-w-0">
+                                                    <input type="checkbox" ${checked ? 'checked' : ''} onchange="Controller.toggleKhoUser('${esc(m.username)}', this.checked)" class="w-4 h-4 text-[#0F4C81] rounded focus:ring-0">
+                                                    <div class="truncate">
+                                                        <div class="text-xs font-bold text-slate-800 truncate">${esc(m.hoTen)}</div>
+                                                        <div class="text-[10px] text-slate-500 truncate">${esc(m.chucVu || 'Giáo viên')}</div>
+                                                    </div>
+                                                </div>
+                                                <i class="bi ${checked ? 'bi-check-circle-fill text-blue-600' : 'bi-circle text-slate-300'} text-sm"></i>
+                                            </label>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        </div>`;
+                }).filter(Boolean).join('');
+
+                const fullTeams = allToData.filter(t => Array.isArray(t.members) && t.members.length && t.members.every(m => selectedUsernames.has(String(m.username || ''))));
+                const chips = [];
+                fullTeams.forEach(t => chips.push(`<span class="px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-800 text-[11px] font-bold">Tổ ${esc(t.tenTo)} (${t.members.length})</span>`));
+                allToData.forEach(t => {
+                    const isFull = Array.isArray(t.members) && t.members.length && t.members.every(m => selectedUsernames.has(String(m.username || '')));
+                    if (!isFull) (t.members || []).forEach(m => {
+                        if (selectedUsernames.has(String(m.username || ''))) chips.push(`<span class="px-2.5 py-1 rounded-lg bg-white border border-blue-200 text-[#0F4C81] text-[11px] font-semibold">${esc(m.hoTen)}</span>`);
+                    });
+                });
+
+                container.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="text-[11px] font-bold uppercase tracking-wider text-[#0F4C81]">Chọn đối tượng tiếp nhận</div>
+                            <div class="flex gap-1.5">
+                                <span class="px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-bold">${fullTeams.length} tổ</span>
+                                <span class="px-2 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">${selectedUsernames.size} cá nhân</span>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <input id="khoSearchRecipient" type="text" value="${esc(state.khoSearch || '')}" oninput="Controller.filterKhoRecipients(this.value)" placeholder="Tìm tổ hoặc giáo viên..." class="w-full rounded-xl border border-slate-300 bg-slate-50/50 pl-9 pr-3 py-2.5 text-xs font-medium outline-none focus:border-[#0F4C81] focus:bg-white focus:ring-2 focus:ring-blue-100">
+                            <i class="bi bi-search absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                        </div>
+                        <div class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1 custom-scrollbar">
+                            ${blocks || '<div class="p-5 text-center text-xs text-slate-400 italic">Không tìm thấy tổ hoặc giáo viên phù hợp.</div>'}
+                        </div>
+                        <div class="pt-2 border-t border-slate-100">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase">Đã chọn</span>
+                                <button type="button" onclick="Controller.clearKhoRecipients()" class="text-[10px] font-semibold text-red-600 hover:underline">Xóa toàn bộ chọn</button>
+                            </div>
+                            <div class="min-h-[38px] flex flex-wrap gap-1.5 items-center">${chips.length ? chips.join('') : '<span class="text-[11px] text-slate-400 italic">Chưa chọn đối tượng nào...</span>'}</div>
+                        </div>
+                    </div>`;
+                return;
+            }
+
+            if (!recipients || recipients.length === 0) {
+                container.innerHTML = '<p class="text-xs text-rose-600 font-semibold">Chưa có đối tượng nhận từ module nguồn.</p>';
+                return;
+            }
+            container.innerHTML = recipients.map((r) => `
+                <div class="flex items-start gap-2 p-2.5 rounded-xl border border-blue-100 bg-blue-50/60">
+                    <i class="bi bi-person-check-fill text-blue-600 mt-0.5"></i>
+                    <div class="min-w-0">
+                        <div class="text-xs font-bold text-slate-800">${RecipientEngine.displayName(r)}</div>
+                        <div class="text-[10px] text-slate-500">${RecipientEngine.displayMeta(r)}</div>
+                    </div>
+                </div>
+            `).join('');
+        },
+
+        renderDestinations: (destinations) => {
+            const container = document.getElementById('destination-matrix-container');
+            container.innerHTML = destinations.map(d => `
+                <div onclick="Controller.toggleDestination('${d.id}')" 
+                     class="cursor-pointer p-3 rounded-xl border text-center transition flex flex-col items-center justify-center gap-1.5 ${d.selected ? 'bg-emerald-50 border-emerald-500 text-emerald-900 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}">
+                    <i class="bi ${d.icon} text-lg ${d.selected ? 'text-emerald-600' : 'text-slate-400'}"></i>
+                    <span class="text-xs font-bold">${d.name}</span>
+                </div>
+            `).join('');
+        },
+
+        toggleWorkflowCard: (destinations) => {
+            const isViecCuaToi = destinations.some(d => d.id === 'ViecCuaToi' && d.selected);
+            const card = document.getElementById('workflow-config-card');
+            if (isViecCuaToi) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        },
+
+        renderWorkflowSteps: (workflowSteps, documentState) => {
+            const container = document.getElementById('workflow-steps-container');
+            const srcName = String(documentState?.moduleSource || '').toLowerCase();
+            const isMeeting = srcName.includes('cuochop') || documentState?.type === 'MEETING';
+
+            const visibleSteps = isMeeting
+                ? workflowSteps.filter(s => ['CONFIRM_READ', 'CONFIRM_ATTENDANCE', 'QR_ATTENDANCE'].includes(s.id))
+                : workflowSteps.filter(s => !s.meetingOnly);
+
+            container.innerHTML = visibleSteps.map(s => `
+                <label class="flex items-center gap-2 text-xs font-semibold text-indigo-900 bg-white p-2 rounded-lg border border-indigo-100 cursor-pointer">
+                    <input type="checkbox" ${s.selected ? 'checked' : ''} onchange="Controller.toggleWorkflowStep('${s.id}')" class="rounded border-indigo-300 text-indigo-600 focus:ring-indigo-500">
+                    <span>${s.label}</span>
+                </label>
+            `).join('');
+        },
+
+        renderSimulationFlow: (pipeline) => {
+            const container = document.getElementById('simulation-flow-container');
+            container.innerHTML = pipeline.map((item, index) => `
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 border border-slate-200 rounded-lg font-semibold text-slate-700">
+                        <i class="bi ${item.icon} text-teal-600"></i>
+                        <span>${item.title}</span>
+                    </div>
+                    ${index < pipeline.length - 1 ? '<i class="bi bi-chevron-right text-slate-400"></i>' : ''}
+                </div>
+            `).join('');
+        },
+
+        renderLinkedDocs: (linkedDocs) => {
+            const container = document.getElementById('linked-docs-container');
+            if (!linkedDocs || linkedDocs.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-400 italic">Chưa có tài liệu liên quan nào được đính kèm.</p>';
+                return;
+            }
+            container.innerHTML = linkedDocs.map(doc => `
+                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 bg-slate-200 text-slate-700 font-bold text-[10px] rounded">${doc.type}</span>
+                        <span class="font-medium text-slate-800">${doc.title}</span>
+                    </div>
+                    <button onclick="Controller.removeLinkedDoc('${doc.id}')" class="text-rose-500 hover:text-rose-700">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        },
+
+        renderPreCheck: (checkResult) => {
+            const container = document.getElementById('precheck-items-container');
+            const badge = document.getElementById('precheck-status-badge');
+            
+            badge.className = `px-2 py-0.5 rounded text-[10px] font-extrabold ${checkResult.allPassed ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`;
+            badge.innerText = checkResult.allPassed ? 'ĐẠT TIÊU CHUẨN' : 'CÓ LỖI CẦN XỬ LÝ';
+
+            container.innerHTML = checkResult.items.map(c => `
+                <div class="flex items-center justify-between p-2 rounded-lg ${c.pass ? 'bg-slate-50' : 'bg-rose-50 border border-rose-200'}">
+                    <span class="font-medium text-slate-700">${c.label}</span>
+                    <span class="font-bold flex items-center gap-1 ${c.pass ? 'text-emerald-600' : 'text-rose-600'}">
+                        <i class="bi ${c.pass ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'}"></i> ${c.msg}
+                    </span>
+                </div>
+            `).join('');
+        },
+
+        renderAll: (state, checkResult, pipeline) => {
+            RenderEngine.renderHeaderInfo(state.document, state);
+            RenderEngine.renderRecipients(state.recipients, state);
+            RenderEngine.renderDestinations(state.destinations);
+            RenderEngine.toggleWorkflowCard(state.destinations);
+            RenderEngine.renderWorkflowSteps(state.workflowSteps, state.document);
+            RenderEngine.renderSimulationFlow(pipeline);
+            RenderEngine.renderLinkedDocs(state.linkedDocs);
+            RenderEngine.renderPreCheck(checkResult);
+        }
+    };
+
+    // =================================================================
+// 8. CONTROLLER (SOLE SYSTEM ORCHESTRATOR)
+// =================================================================
+const Controller = {
+    decodeHandoff: (encoded) => {
+        if (!encoded) return null;
+        try {
+            let b64 = String(encoded).replace(/-/g, '+').replace(/_/g, '/');
+            while (b64.length % 4) b64 += '=';
+            const binary = atob(b64);
+            const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+            return JSON.parse(new TextDecoder('utf-8').decode(bytes));
+        } catch (err) {
+            console.warn('Không giải mã được handoff:', err);
+            return null;
+        }
+    },
+
+    init: async () => {
+        Controller.setupEventBusListeners();
+
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const source = String(urlParams.get('source') || '').trim();
+            const fileIdsParam = String(urlParams.get('fileIds') || '').trim();
+            const fileIdLegacy = String(urlParams.get('fileId') || '').trim();
+            const publishId = String(urlParams.get('publishId') || '').trim();
+
+if (publishId) {
+
+    const user = JSON.parse(
+        localStorage.getItem('user') ||
+        sessionStorage.getItem('user') ||
+        '{}'
+    );
+
+    const detail = await Controller.fetchJson(
+        'getPublicationDetailV3',
+        {
+            publishId: publishId,
+            username: user.username || ''
+        },
+        12000
+    );
+
+    if (!detail || detail.success !== true) {
+        throw new Error(
+            (detail && detail.message) ||
+            'Không tải được bản phát hành.'
+        );
+    }
+
+    const payload =
+        detail.payload &&
+        typeof detail.payload === 'object'
+            ? detail.payload
+            : {};
+
+    const sourceDocument =
+        detail.document &&
+        typeof detail.document === 'object'
+            ? detail.document
+            : (
+                payload.document &&
+                typeof payload.document === 'object'
+                    ? payload.document
+                    : {}
+            );
+
+    const sourceDocuments =
+        Array.isArray(payload.documents) &&
+        payload.documents.length
+            ? payload.documents
+            : [sourceDocument];
+
+    const standardDocs =
+        sourceDocuments
+            .filter(d => d && typeof d === 'object')
+            .map(d => ModuleAdapter.toStandardDocument({
+                ...d,
+
+                moduleSource:
+                    d.moduleSource ||
+                    payload.moduleSource ||
+                    'TTPhatHanh',
+
+                title:
+                    d.title ||
+                    d.tieuDe ||
+                    detail.title ||
+                    'Bản phát hành HVA',
+
+                author:
+                    d.author ||
+                    payload.sender?.fullName ||
+                    detail.sender?.fullName ||
+                    'HVA',
+
+                recipients:
+                    Array.isArray(payload.recipients)
+                        ? payload.recipients
+                        : [],
+
+                linkedDocs:
+                    Array.isArray(payload.attachments)
+                        ? payload.attachments
+                        : []
+            }));
+
+    if (!standardDocs.length) {
+        throw new Error(
+            'Bản phát hành không có dữ liệu tài liệu.'
+        );
+    }
+
+    TTDHS_State.rawSource = {
+        ...payload,
+        publishId: detail.publishId || publishId,
+        document: sourceDocument,
+        sender: detail.sender || payload.sender || {}
+    };
+
+    TTDHS_State.documents = standardDocs;
+    TTDHS_State.document = standardDocs[0];
+
+    TTDHS_State.recipients =
+        Array.isArray(payload.recipients)
+            ? payload.recipients
+            : [];
+
+    TTDHS_State.linkedDocs =
+        Array.isArray(payload.attachments)
+            ? payload.attachments
+            : [];
+
+    // Khôi phục đúng điểm đến của bản phát hành
+    if (Array.isArray(payload.destinations)) {
+        const selectedIds = new Set(
+            payload.destinations.map(d =>
+                String(
+                    typeof d === 'string'
+                        ? d
+                        : (d.id || '')
+                )
+            )
+        );
+
+        TTDHS_State.destinations.forEach(d => {
+            d.selected = selectedIds.has(String(d.id));
+        });
+    }
+
+    // Khôi phục đúng workflow của bản phát hành
+    if (Array.isArray(payload.workflow)) {
+        const workflowIds = new Set(
+            payload.workflow.map(w =>
+                String(
+                    typeof w === 'string'
+                        ? w
+                        : (w.id || '')
+                )
+            )
+        );
+
+        TTDHS_State.workflowSteps.forEach(w => {
+            w.selected = workflowIds.has(String(w.id));
+        });
+    }
+
+    Controller.refreshUI();
+
+// ========================================================
+// RECEIVER MODE
+// Người nhận chỉ xem nội dung đã phát hành.
+// Không hiển thị giao diện điều phối/phát hành.
+// ========================================================
+document.body.classList.add('hva-receiver-mode');
+
+// Vô hiệu hóa chức năng phát hành nếu phần tử còn tồn tại.
+const publishButton =
+    document.getElementById('btn-execute-publish');
+
+if (publishButton) {
+    publishButton.disabled = true;
+    publishButton.innerHTML =
+        '<i class="bi bi-check-circle-fill"></i> BẢN ĐÃ PHÁT HÀNH';
+}
+
+// Mở Viewer sau khi dữ liệu đã dựng xong.
+requestAnimationFrame(() => {
+    Controller.openPreviewModal();
+
+    requestAnimationFrame(() => {
+        document.documentElement.classList.remove('hva-boot-receiver');
+    });
+});
+
+return;
+}
+            if (source.toLowerCase() === 'khovanban' && (fileIdsParam || fileIdLegacy)) {
+                const fileIds = (fileIdsParam || fileIdLegacy)
+                    .split(',').map(x => x.trim()).filter(Boolean);
+
+                // Một request duy nhất lấy metadata cho toàn bộ lô.
+                const lookup = await Controller.fetchJson(
+                    'getKhoVanBanFiles',
+                    { fileIds: fileIds.join(',') },
+                    12000
+                );
+                if (!lookup || (!lookup.success && !lookup.partial) || !Array.isArray(lookup.documents) || !lookup.documents.length) {
+                    throw new Error((lookup && lookup.message) || 'Không lấy được danh sách văn bản từ Kho.');
+                }
+
+                const standardDocs = lookup.documents.map((khoDoc, index) => {
+                    const raw = {
+                        moduleSource: 'KhoVanBan',
+                        source: 'KhoVanBan',
+                        sourceRow: khoDoc.sourceRow || '',
+                        docId: khoDoc.fileId,
+                        id: khoDoc.fileId,
+                        fileId: khoDoc.fileId,
+                        title: khoDoc.trichYeu || khoDoc.tenVanBan || khoDoc.fileName || `Văn bản ${index+1}`,
+                        name: khoDoc.fileName || khoDoc.tenVanBan || `Văn bản ${index+1}`,
+                        type: khoDoc.loaiKho || 'VĂN BẢN',
+                        version: 'v1.0.0',
+                        author: khoDoc.nguoiDuaVao || 'Trường THPT Hòa Vang',
+                        createdAt: khoDoc.ngayTaoDrive || '',
+                        fileUrl: khoDoc.fileUrl || '',
+                        downloadUrl: khoDoc.downloadUrl || '',
+                        trichYeu: khoDoc.trichYeu || '',
+                        preserveOriginalFile: true,
+                        publishingMode: 'DOCUMENT_ONLY',
+                        allowTaskWorkflow: false,
+                        data: {
+                            fileId: khoDoc.fileId,
+                            fileName: khoDoc.fileName || '',
+                            tenVanBan: khoDoc.tenVanBan || '',
+                            loaiKho: khoDoc.loaiKho || '',
+                            folderKey: khoDoc.folderKey || '',
+                            folderId: khoDoc.folderId || '',
+                            fileUrl: khoDoc.fileUrl || '',
+                            downloadUrl: khoDoc.downloadUrl || '',
+                            trichYeu: khoDoc.trichYeu || '',
+                            tuKhoa: khoDoc.tuKhoa || '',
+                            sourceRow: khoDoc.sourceRow || ''
+                        },
+                        recipients: []
+                    };
+                    return ModuleAdapter.toStandardDocument(raw);
+                });
+
+                TTDHS_State.documents = standardDocs;
+                TTDHS_State.document = standardDocs[0];
+                TTDHS_State.rawSource = {
+                    moduleSource:'KhoVanBan',
+                    documents: lookup.documents,
+                    recipients:[]
+                };
+                TTDHS_State.recipients = [];
+                TTDHS_State.linkedDocs = [];
+                Controller.applySourceDefaults('KhoVanBan');
+                Controller.refreshUI();
+
+                // Dùng đúng loader Giao việc đã chạy ổn.
+                Controller.loadKhoPersonnelAll();
+                return;
+            }
+
+            const storedDoc = StorageEngine.load(CONFIG.STORAGE_KEYS.CURRENT_DOC);
+            if (storedDoc) {
+                TTDHS_State.rawSource = storedDoc;
+                TTDHS_State.document = ModuleAdapter.toStandardDocument(storedDoc);
+                TTDHS_State.documents = [TTDHS_State.document];
+                TTDHS_State.recipients = ModuleAdapter.getRecipients(storedDoc);
+                TTDHS_State.linkedDocs = ModuleAdapter.getLinkedDocs(storedDoc);
+                Controller.applySourceDefaults(TTDHS_State.document.moduleSource);
+            }
+            Controller.refreshUI();
+        } catch (err) {
+            document.documentElement.classList.remove('hva-boot-receiver');
+            console.error('KhoVanBan batch handoff error:', err);
+            Controller.refreshUI();
+            alert('KHÔNG TẢI ĐƯỢC VĂN BẢN TỪ KHO\\n' + (err.message || err));
+        }
+    },
+
+    applySourceDefaults: (moduleSource) => {
+        const srcName = String(moduleSource || '').toLowerCase();
+        const raw = TTDHS_State.rawSource || {};
+        const rawData = raw.data || raw.payload || {};
+        const sourceWorkflow = Array.isArray(raw.workflow)
+            ? raw.workflow
+            : (Array.isArray(rawData.workflow) ? rawData.workflow : []);
+
+        TTDHS_State.destinations.forEach(d => d.selected = false);
+        TTDHS_State.workflowSteps.forEach(s => s.selected = false);
+
+        const selectDestination = (id) => {
+            const d = TTDHS_State.destinations.find(x => x.id === id);
+            if (d) d.selected = true;
+        };
+        const selectWorkflow = (id) => {
+            const s = TTDHS_State.workflowSteps.find(x => x.id === id);
+            if (s) s.selected = true;
+        };
+
+        const isMeeting = srcName.includes('cuochop') ||
+                          String(TTDHS_State.document?.type || '').toUpperCase() === 'MEETING';
+        const documentType = String(TTDHS_State.document?.type || '').toUpperCase();
+        const isSurveyPoll = srcName.includes('khaosatbinhchon') ||
+                             srcName.includes('khaosat') ||
+                             srcName.includes('binhchon') ||
+                             documentType === 'POLL' ||
+                             documentType === 'SURVEY';
+
+        if (isSurveyPoll) {
+            // Khảo sát/Bình chọn chỉ đến đúng hộp tiếp nhận chuyên biệt trên Home.
+            selectDestination('KhaoSatBinhChon');
+        } else if (isMeeting) {
+            const requested = new Set(sourceWorkflow.map(x => typeof x === 'string' ? x : (x && x.id)).filter(Boolean));
+            requested.add('CONFIRM_READ');
+            selectDestination('ThongBao');
+            const interactiveIds = ['CONFIRM_READ', 'CONFIRM_ATTENDANCE', 'QR_ATTENDANCE'];
+            if (interactiveIds.some(id => requested.has(id))) selectDestination('ViecCuaToi');
+            interactiveIds.forEach(id => { if (requested.has(id)) selectWorkflow(id); });
+        } else if (srcName.includes('giao') || srcName.includes('nhiemvu') || srcName.includes('nhiệm vụ')) {
+            selectDestination('ViecCuaToi');
+            selectDestination('ThongBao');
+            ['CONFIRM_READ','ACCEPT_TASK','IN_PROGRESS','REPORT_RESULT','COMPLETE','ATTACH_PROOF'].forEach(selectWorkflow);
+        } else if (srcName.includes('lichcongtac')) {
+            selectDestination('LichCongTac');
+            selectWorkflow('SHOW_ONLY');
+        } else if (srcName.includes('khovanban')) {
+            selectDestination('KhoVanBan');
+            selectDestination('ThongBao');
+            selectWorkflow('CONFIRM_READ');
+        } else {
+            selectDestination('ThongBao');
+            selectWorkflow('CONFIRM_READ');
+        }
+    },
+
+    setupEventBusListeners: () => {},
+    refreshUI: () => {
+        const preCheckResult = PreCheckEngine.runChecks(TTDHS_State);
+        const pipeline = WorkflowEngine.generatePipeline(TTDHS_State.document, TTDHS_State.destinations, TTDHS_State.workflowSteps);
+        RenderEngine.renderAll(TTDHS_State, preCheckResult, pipeline);
+    },
+    toggleDestination: (destId) => {
+        TTDHS_State.destinations = DispatchEngine.toggleDestination(TTDHS_State.destinations, destId);
+        Controller.refreshUI();
+    },
+    toggleWorkflowStep: (stepId) => {
+        TTDHS_State.workflowSteps = WorkflowEngine.toggleStep(TTDHS_State.workflowSteps, stepId);
+        Controller.refreshUI();
+    },
+
+    fetchJson: async (action, params = {}, timeoutMs = 8000) => {
+        const apiUrl = new URL(CONFIG.SCRIPT_URL);
+        apiUrl.searchParams.set('action', action);
+        Object.entries(params).forEach(([k, v]) => apiUrl.searchParams.set(k, String(v == null ? '' : v)));
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+        try {
+            const response = await fetch(apiUrl.toString(), {
+                method: 'GET', cache: 'no-store', redirect: 'follow', signal: ctrl.signal
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return await response.json();
+        } catch (err) {
+            if (err && err.name === 'AbortError') throw new Error('Backend phản hồi quá chậm.');
+            throw err;
+        } finally {
+            clearTimeout(timer);
+        }
+    },
+
+    loadKhoPersonnelAll: async () => {
+        const container = document.getElementById('recipient-selector-container');
+        if (container) {
+            container.innerHTML = `
+                <div class="space-y-2">
+                    <div class="h-10 bg-slate-100 rounded-xl animate-pulse"></div>
+                    <div class="h-10 bg-slate-100 rounded-xl animate-pulse"></div>
+                    <div class="h-10 bg-slate-100 rounded-xl animate-pulse"></div>
+                </div>`;
+        }
+        try {
+            // DÙNG ĐÚNG LUỒNG ĐANG CHẠY NHANH Ở GIAO VIỆC:
+            // 1) lấy danh sách tổ; 2) lấy nhân sự từng tổ SONG SONG bằng Promise.all.
+            const urlTo = new URL(CONFIG.SCRIPT_URL);
+            urlTo.searchParams.set('action', 'getDanhSachTo');
+            const res = await fetch(urlTo.toString(), { cache: 'no-store' });
+            if (!res.ok) throw new Error('Không tải được danh sách tổ');
+            const listTo = await res.json();
+            if (!Array.isArray(listTo)) throw new Error('Dữ liệu danh sách tổ không hợp lệ');
+
+            const allToData = await Promise.all(listTo.map(async (toItem) => {
+                const tenTo = String((toItem && toItem.tenTo) || toItem || '').trim();
+                if (!tenTo) return null;
+                try {
+                    const u = new URL(CONFIG.SCRIPT_URL);
+                    u.searchParams.set('action', 'getNhanSuTheoTo');
+                    u.searchParams.set('to', tenTo);
+                    const resNS = await fetch(u.toString(), { cache: 'no-store' });
+                    if (!resNS.ok) throw new Error(`HTTP ${resNS.status}`);
+                    const membersRaw = await resNS.json();
+                    const members = Array.isArray(membersRaw) ? membersRaw : [];
+                    return {
+                        tenTo,
+                        soLuong: members.length || Number((toItem && toItem.soLuong) || 0),
+                        members: members.map(m => ({
+                            username: m.username || m.maGV || m.hoTen || '',
+                            hoTen: m.hoTen || m.fullName || '',
+                            chucVu: m.chucVu || m.vaiTro || 'Giáo viên',
+                            vaiTro: m.vaiTro || m.chucVu || '',
+                            to: m.to || tenTo,
+                            tenTo
+                        })).filter(m => m.username)
+                    };
+                } catch (err) {
+                    console.error('Lỗi tải nhân sự tổ:', tenTo, err);
+                    return { tenTo, soLuong: 0, members: [] };
+                }
+            }));
+
+            TTDHS_State.khoTeams = allToData.filter(Boolean);
+            TTDHS_State.khoSearch = '';
+            Controller.refreshUI();
+        } catch (err) {
+            console.error('Lỗi tải danh sách nhân sự:', err);
+            if (container) {
+                container.innerHTML = `
+                    <div class="p-4 text-center">
+                        <div class="text-xs text-rose-600 font-bold">Không tải được danh sách nhân sự</div>
+                        <button type="button" onclick="Controller.loadKhoPersonnelAll()" class="mt-2 text-[11px] font-bold text-[#0F4C81] hover:underline">Thử lại</button>
+                    </div>`;
+            }
+        }
+    },
+
+    toggleKhoAccordion: (bodyId, iconId) => {
+        const body = document.getElementById(bodyId);
+        const icon = document.getElementById(iconId);
+        if (!body) return;
+        const open = body.classList.toggle('open');
+        if (icon) icon.classList.toggle('rotate-90', open);
+    },
+
+    filterKhoRecipients: (value) => {
+        TTDHS_State.khoSearch = String(value || '');
+        Controller.refreshUI();
+        const input = document.getElementById('khoSearchRecipient');
+        if (input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
+    },
+
+    toggleKhoUser: (username, checked) => {
+        const u = String(username || '');
+        let member = null;
+        for (const t of (TTDHS_State.khoTeams || [])) {
+            member = (t.members || []).find(m => String(m.username || '') === u);
+            if (member) break;
+        }
+        if (!member) return;
+        TTDHS_State.recipients = (TTDHS_State.recipients || []).filter(r => String((r && r.username) || '') !== u);
+        if (checked) TTDHS_State.recipients.push({
+            username: member.username || '', hoTen: member.hoTen || '', vaiTro: member.vaiTro || '',
+            chucVu: member.chucVu || member.vaiTro || '', to: member.to || member.tenTo || ''
+        });
+        Controller.refreshUI();
+    },
+
+    toggleKhoTeamAll: (teamIndex, checked) => {
+        const team = (TTDHS_State.khoTeams || [])[Number(teamIndex)];
+        if (!team) return;
+        const names = new Set((team.members || []).map(m => String(m.username || '')));
+        TTDHS_State.recipients = (TTDHS_State.recipients || []).filter(r => !names.has(String((r && r.username) || '')));
+        if (checked) (team.members || []).forEach(m => TTDHS_State.recipients.push({
+            username: m.username || '', hoTen: m.hoTen || '', vaiTro: m.vaiTro || '',
+            chucVu: m.chucVu || m.vaiTro || '', to: m.to || team.tenTo || ''
+        }));
+        Controller.refreshUI();
+    },
+
+    clearKhoRecipients: () => {
+        TTDHS_State.recipients = [];
+        Controller.refreshUI();
+    },
+
+    addLinkedDocument: () => {
+        const title = prompt('Nhập tên tài liệu liên quan:');
+        if (title && title.trim()) {
+            TTDHS_State.linkedDocs.push({ id: `DOC-${Date.now()}`, title: title.trim(), type: 'Đính kèm' });
+            RenderEngine.renderLinkedDocs(TTDHS_State.linkedDocs);
+        }
+    },
+    removeLinkedDoc: (docId) => {
+        TTDHS_State.linkedDocs = TTDHS_State.linkedDocs.filter(d => d.id !== docId);
+        RenderEngine.renderLinkedDocs(TTDHS_State.linkedDocs);
+    },
+
+    executePublishing: async () => {
+        if (TTDHS_State.isPublishing) return;
+        const check = PreCheckEngine.runChecks(TTDHS_State);
+        if (!check.allPassed) {
+            alert('Không thể phát hành. Vui lòng kiểm tra các điều kiện chưa đạt.');
+            return;
+        }
+        const btn = document.getElementById('btn-execute-publish');
+        TTDHS_State.isPublishing = true;
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="bi bi-hourglass-split"></i> ĐANG PHÁT HÀNH...'; }
+        try {
+            const payload = PublishEngine.preparePayload(TTDHS_State);
+            const result = await PublishEngine.postToBackend(payload);
+            StorageEngine.save(CONFIG.STORAGE_KEYS.LAST_RESULT, result);
+            alert(result.documentCount ? ('PHÁT HÀNH THÀNH CÔNG ' + result.documentCount + ' VĂN BẢN') : 'PHÁT HÀNH THÀNH CÔNG');
+        } catch (err) {
+            console.error(err);
+            alert('PHÁT HÀNH KHÔNG THÀNH CÔNG\n' + (err.message || err));
+        } finally {
+            TTDHS_State.isPublishing = false;
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-rocket-takeoff-fill text-lg"></i> KÍCH HOẠT PHÁT HÀNH SỐ'; }
+        }
+    },
+
+   openPreviewModal: () => {
+
+        const raw = TTDHS_State.rawSource || {};
+        const doc = TTDHS_State.document || {};
+        const data = doc.data || raw.data || {};
+
+        const firstValue = (...values) => {
+            for (const value of values) {
+                if (
+                    value !== undefined &&
+                    value !== null &&
+                    String(value).trim() !== ''
+                ) {
+                    return String(value).trim();
+                }
+            }
+            return '';
+        };
+
+        const escapeHtml = (value) =>
+            String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+
+        const moduleSource = firstValue(
+            doc.moduleSource,
+            raw.moduleSource,
+            raw.sourceModule,
+            raw.source
+        ).toLowerCase();
+
+        const type = firstValue(
+            doc.type,
+            raw.documentType,
+            data.type,
+            data.loai,
+            data.loaiNhiemVu
+        ).toUpperCase();
+
+        const isMeeting =
+            type === 'MEETING' ||
+            moduleSource.includes('cuochop');
+
+        const title = firstValue(
+            doc.title,
+            raw.title,
+            data.title,
+            data.tieuDe,
+            'Nội dung phát hành'
+        );
+
+        const sender = firstValue(
+            raw.sender?.fullName,
+            raw.sender?.hoTen,
+            doc.author,
+            data.nguoiTao,
+            data.nguoiGiao
+        );
+
+        const date = firstValue(
+            data.date,
+            data.ngayHop,
+            data.ngay
+        );
+
+        const startTime = firstValue(
+            data.startTime,
+            data.thoiGianHop,
+            data.thoiGian,
+            data.ngayGio,
+            data.start
+        );
+
+        const endTime = firstValue(
+            data.endTime,
+            data.gioKetThuc
+        );
+
+        const time = [date, startTime].filter(Boolean).join(' • ') +
+            (endTime ? ` - ${endTime}` : '');
+
+        const location = firstValue(
+            data.place,
+            data.diaDiem,
+            data.diaDiemHop,
+            data.location
+        );
+
+        let modal =
+            window.document.getElementById('hva-publication-viewer');
+
+        if (!modal) {
+            modal = window.document.createElement('div');
+            modal.id = 'hva-publication-viewer';
+            modal.className =
+                'fixed inset-0 z-[99999] bg-slate-900/50 ' +
+                'backdrop-blur-sm flex items-center justify-center p-4';
+
+            window.document.body.appendChild(modal);
+        }
+
+        const rows = [];
+
+        if (sender) {
+            rows.push(`
+                <div class="flex gap-3">
+                    <div class="w-28 shrink-0 text-slate-500 font-semibold">
+                        Người gửi
+                    </div>
+                    <div class="text-slate-800 font-medium">
+                        ${escapeHtml(sender)}
+                    </div>
+                </div>
+            `);
+        }
+
+        if (isMeeting && time) {
+            rows.push(`
+                <div class="flex gap-3">
+                    <div class="w-28 shrink-0 text-slate-500 font-semibold">
+                        Thời gian
+                    </div>
+                    <div class="text-slate-800 font-medium">
+                        ${escapeHtml(time)}
+                    </div>
+                </div>
+            `);
+        }
+
+        if (isMeeting && location) {
+            rows.push(`
+                <div class="flex gap-3">
+                    <div class="w-28 shrink-0 text-slate-500 font-semibold">
+                        Địa điểm
+                    </div>
+                    <div class="text-slate-800 font-medium">
+                        ${escapeHtml(location)}
+                    </div>
+                </div>
+            `);
+        }
+
+        const closeAction = `
+            if (document.body.classList.contains('hva-receiver-mode')) {
+                if (history.length > 1) {
+                    history.back();
+                } else {
+                    window.location.href = 'main.html';
+                }
+            } else {
+                document
+                    .getElementById('hva-publication-viewer')
+                    ?.classList.add('hidden');
+            }
+        `;
+
+        modal.innerHTML = `
+            <div class="
+                bg-white
+                w-full max-w-3xl
+                max-h-[88vh]
+                rounded-3xl
+                shadow-2xl
+                overflow-hidden
+            ">
+
+                <div class="
+                    px-7 py-5
+                    border-b border-slate-200
+                    flex items-start justify-between gap-4
+                ">
+                    <div>
+                        <div class="
+                            text-xs font-bold uppercase
+                            tracking-wide text-[#0F4C81]
+                            mb-1
+                        ">
+                            ${isMeeting ? 'THÔNG TIN CUỘC HỌP' : 'THÔNG TIN ĐÃ PHÁT HÀNH'}
+                        </div>
+
+                        <h2 class="
+                            text-xl md:text-2xl
+                            font-bold text-slate-900
+                        ">
+                            ${escapeHtml(title)}
+                        </h2>
+                    </div>
+
+                    <button
+                        type="button"
+                        onclick="${closeAction}"
+                        class="
+                            w-10 h-10 shrink-0
+                            rounded-full
+                            bg-slate-100 hover:bg-slate-200
+                            text-slate-600
+                        "
+                    >
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <div class="
+                    px-7 py-6
+                    overflow-y-auto
+                    max-h-[62vh]
+                    space-y-5
+                ">
+                    ${
+                        rows.length
+                            ? `
+                                <div class="
+                                    rounded-2xl
+                                    bg-slate-50
+                                    border border-slate-200
+                                    p-5 space-y-3
+                                ">
+                                    ${rows.join('')}
+                                </div>
+                            `
+                            : ''
+                    }
+
+                    <div class="
+                        rounded-2xl
+                        border border-blue-100
+                        bg-blue-50/50
+                        p-5
+                    ">
+                        <div class="text-sm font-bold text-slate-700">
+                            Bản phát hành đã sẵn sàng.
+                        </div>
+                        <div class="text-xs text-slate-500 mt-1">
+                            Bấm “Xem nội dung” để mở nội dung chi tiết từ module nguồn.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="
+                    px-7 py-5
+                    bg-slate-50
+                    border-t border-slate-200
+                    flex flex-wrap justify-end gap-3
+                ">
+                    <button
+                        type="button"
+                        onclick="ContentViewerRouter.open(
+                            TTDHS_State.document,
+                            TTDHS_State.rawSource
+                        )"
+                        class="
+                            px-6 py-3 rounded-xl
+                            bg-[#0F4C81]
+                            hover:bg-[#0b3e69]
+                            text-white font-bold
+                            shadow-sm
+                        "
+                    >
+                        <i class="bi bi-eye-fill mr-2"></i>
+                        XEM NỘI DUNG
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="${closeAction}"
+                        class="
+                            px-6 py-3 rounded-xl
+                            border border-slate-300
+                            bg-white
+                            font-bold text-slate-700
+                        "
+                    >
+                        ĐÓNG
+                    </button>
+                </div>
+            </div>
+        `;
+
+        modal.classList.remove('hidden');
+    },
+
+    resetDraft: () => {
+        if (confirm('Tải lại trạng thái ban đầu?')) location.reload();
+    }
+};
+
+    document.addEventListener('DOMContentLoaded', Controller.init);
+    </script>
+</body>
+</html>
