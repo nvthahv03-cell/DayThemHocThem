@@ -159,7 +159,27 @@
 @media(max-width:600px){.nvs-four{display:flex;flex-wrap:wrap;gap:5px}.nvs-column{box-sizing:border-box;width:calc(25% - 4px);flex:0 0 calc(25% - 4px)}.nvs-column.nvs-active{box-sizing:border-box;width:100%;flex:0 0 100%;order:5}.nvs-column:not(.nvs-active) .nvs-column-content{display:none}.nvs-column.nvs-active .nvs-column-content{display:block}.nvs-column.nvs-active .nvs-column-title{min-height:36px}.nvs-column.nvs-active .nvs-group summary{font-size:12px}.nvs-column.nvs-active .nvs-item{font-size:11.5px}.nvs-column.nvs-active .nvs-soon-tag{display:inline}}
 .nvs-group[hidden],.nvs-item[hidden],.nvs-column[hidden]{display:none!important}
 </style>
-</head>
+<style id="nvs-v4-ui">
+/* V4: 5 cột và tab di động luôn hiện, kể cả tab đang chọn */
+.nvs-four{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+.nvs-management{background:#edf3ff!important;border-color:#cbdcfa!important}
+.nvs-management .nvs-column-title{color:#2857a4!important}
+.nvs-permission-note{font-size:11px;line-height:1.55;color:#5d7189;margin:10px 3px}
+.nvs-mobile-tabs{display:none}
+.nvs-column.nvs-active{box-shadow:inset 0 0 0 2px #4b83db}
+@media(max-width:600px){
+.nvs-mobile-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:0 0 9px;position:relative;z-index:1}
+.nvs-mobile-tabs button{border:1px solid #d3e2f2;border-radius:10px;background:#f2f7ff;color:#24547c;min-width:0;min-height:66px;padding:7px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font:700 10px Arial,sans-serif;cursor:pointer}
+.nvs-mobile-tabs button:nth-child(2){background:#eefaf5}.nvs-mobile-tabs button:nth-child(3){background:#f4f0ff}.nvs-mobile-tabs button:nth-child(4){background:#fff7ed}.nvs-mobile-tabs button:nth-child(5){background:#eef3ff}
+.nvs-mobile-tabs button i{font-size:19px}
+.nvs-mobile-tabs button[aria-current="true"]{background:#1c5fb5!important;color:#fff;border-color:#1c5fb5;box-shadow:0 3px 10px #1c5fb533}
+.nvs-four{display:block!important}
+.nvs-column,.nvs-column.nvs-active{display:none!important;width:100%!important;order:unset!important;margin:0!important;padding:9px!important;box-shadow:none}
+.nvs-column.nvs-active{display:block!important}
+.nvs-column .nvs-column-title{display:none!important}
+.nvs-column.nvs-active .nvs-column-content{display:block!important}
+}
+</style></head>
 <body>
 
 <!-- MODAL ĐĂNG NHẬP SSO HVA -->
@@ -252,7 +272,7 @@
 <section class="nvs-workspace" aria-label="Danh mục nghiệp vụ số">
 <div class="nvs-toolbar"><div><h2>DANH MỤC NGHIỆP VỤ SỐ</h2><p>Chọn nhóm để mở đầy đủ các nghiệp vụ. Tài liệu nộp bằng liên kết Google Drive.</p></div><span class="nvs-workspace-note"><i class="bi bi-link-45deg"></i> Không tải tệp lên</span></div>
 <label class="nvs-search"><i class="bi bi-search"></i><input id="nvsSearch" type="search" placeholder="Tìm nghiệp vụ: dạy thêm, ma trận, nghỉ dạy, sáng kiến..." aria-label="Tìm nghiệp vụ"></label>
-<div class="nvs-four" id="nvsFour">
+<nav class="nvs-mobile-tabs" aria-label="Chọn khu vực nghiệp vụ"><button type="button" data-tab="1" onclick="nvsFocusColumn('1')"><i class="bi bi-pencil-square"></i><span>Thực hiện</span></button><button type="button" data-tab="2" onclick="nvsFocusColumn('2')"><i class="bi bi-search"></i><span>Tra cứu</span></button><button type="button" data-tab="3" onclick="nvsFocusColumn('3')"><i class="bi bi-folder2-open"></i><span>Hồ sơ tôi</span></button><button type="button" data-tab="4" onclick="nvsFocusColumn('4')"><i class="bi bi-check2-circle"></i><span>Xử lý</span></button><button type="button" data-tab="5" onclick="nvsFocusColumn('5')"><i class="bi bi-grid-1x2"></i><span>Điều hành</span></button></nav><div class="nvs-four" id="nvsFour">
 <section class="nvs-column" data-column="1"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('1')"><i class="bi bi-pencil-square"></i><span>1. THỰC HIỆN – NỘP</span><i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
 <details class="nvs-group"><summary><i class="bi bi-clipboard-check"></i><span>1.1. Báo cáo chuyên môn</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
 <a class="nvs-item nvs-live" href="BC_DayThemHocThem.html" data-search="1.1.1. Dạy thêm, học thêm BC-CM10"><span class="nvs-item-name">1.1.1. Dạy thêm, học thêm</span><span class="nvs-live-tag"><i class="bi bi-check-circle-fill"></i> PASS</span><i class="bi bi-chevron-right"></i></a>
@@ -371,7 +391,18 @@
 <div class="nvs-item nvs-soon" data-search="4.4.2. Theo dõi tiến độ xử lý "><span class="nvs-item-name">4.4.2. Theo dõi tiến độ xử lý</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
 </div></section>
-</div><div id="nvsEmpty" class="nvs-empty" hidden>Không tìm thấy nghiệp vụ phù hợp.</div></section>
+<section class="nvs-column nvs-management" data-column="5"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('5')"><i class="bi bi-grid-1x2"></i><span>5. ĐIỀU HÀNH</span><i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content"><details class="nvs-group" open><summary><i class="bi bi-shield-check"></i><span>5.1. Trung tâm điều hành</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items"><div class="nvs-item nvs-soon" data-search="5.1 Thông báo – Triển khai văn bản"><span class="nvs-item-name">5.1. Thông báo – Triển khai văn bản</span><span class="nvs-soon-tag">Đang phát triển</span></div>
+<div class="nvs-item nvs-soon" data-search="5.2 Giao nhiệm vụ"><span class="nvs-item-name">5.2. Giao nhiệm vụ</span><span class="nvs-soon-tag">Đang phát triển</span></div>
+<div class="nvs-item nvs-soon" data-search="5.3 Nhắc việc"><span class="nvs-item-name">5.3. Nhắc việc</span><span class="nvs-soon-tag">Đang phát triển</span></div>
+<div class="nvs-item nvs-soon" data-search="5.4 Lịch công tác"><span class="nvs-item-name">5.4. Lịch công tác</span><span class="nvs-soon-tag">Đang phát triển</span></div>
+<div class="nvs-item nvs-soon" data-search="5.5 Cuộc họp"><span class="nvs-item-name">5.5. Cuộc họp</span><span class="nvs-soon-tag">Đang phát triển</span></div>
+<div class="nvs-item nvs-soon" data-search="5.6 Khảo sát"><span class="nvs-item-name">5.6. Khảo sát</span><span class="nvs-soon-tag">Đang phát triển</span></div>
+<div class="nvs-item nvs-soon" data-search="5.7 Bình chọn"><span class="nvs-item-name">5.7. Bình chọn</span><span class="nvs-soon-tag">Đang phát triển</span></div>
+<div class="nvs-item nvs-soon" data-search="5.8 Theo dõi tiến độ"><span class="nvs-item-name">5.8. Theo dõi tiến độ</span><span class="nvs-soon-tag">Đang phát triển</span></div>
+<div class="nvs-item nvs-soon" data-search="5.9 Xử lý hồ sơ"><span class="nvs-item-name">5.9. Xử lý hồ sơ</span><span class="nvs-soon-tag">Đang phát triển</span></div>
+<div class="nvs-item nvs-soon" data-search="5.10 Báo cáo – Thống kê"><span class="nvs-item-name">5.10. Báo cáo – Thống kê</span><span class="nvs-soon-tag">Đang phát triển</span></div>
+<div class="nvs-item nvs-soon" data-search="5.11 Nhật ký điều hành"><span class="nvs-item-name">5.11. Nhật ký điều hành</span><span class="nvs-soon-tag">Đang phát triển</span></div>
+<div class="nvs-item nvs-soon" data-search="5.12 Trợ lý BGH"><span class="nvs-item-name">5.12. Trợ lý BGH</span><span class="nvs-soon-tag">Đang phát triển</span></div></div></details><p class="nvs-permission-note">Chức năng dành cho BGH và người được phân quyền. Các mục chưa kết nối backend được ghi rõ “Đang phát triển”.</p></div></section></div><div id="nvsEmpty" class="nvs-empty" hidden>Không tìm thấy nghiệp vụ phù hợp.</div></section>
 </main>
 
 <script>
@@ -608,6 +639,7 @@ async function initPortal(){
 /* NVS MENU: CHỈ ĐIỀU KHIỂN HIỂN THỊ, KHÔNG ĐỘNG AUTH / BACKEND */
 function nvsFocusColumn(num){
   document.querySelectorAll('.nvs-column').forEach(el=>el.classList.toggle('nvs-active',el.dataset.column===String(num)));
+  document.querySelectorAll('.nvs-mobile-tabs button').forEach(el=>el.setAttribute('aria-current',String(el.dataset.tab===String(num))));
 }
 function nvsFilter(){
   const q=(document.getElementById('nvsSearch')?.value||'').trim().toLocaleLowerCase('vi');
