@@ -153,6 +153,11 @@
 @media(max-width:850px){.nvs-four{gap:6px}.nvs-column{padding:5px}.nvs-column-title{font-size:10px;line-height:1.25;gap:3px}.nvs-group summary{font-size:10px;padding:8px 5px}.nvs-item{font-size:10px}.nvs-soon-tag{display:none}}
 @media(max-width:600px){.nvs-toolbar{align-items:flex-start}.nvs-workspace-note{display:none}.nvs-four{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.nvs-column{padding:3px;border-radius:10px}.nvs-column-title{display:flex;flex-direction:column;justify-content:center;text-align:center;min-height:67px;padding:6px 2px;font-size:9px;gap:4px}.nvs-column-title>.bi:first-child{font-size:17px}.nvs-column-chevron{display:none}.nvs-column-content{display:none}.nvs-column.nvs-active .nvs-column-content{display:block;position:relative}.nvs-four{display:flex;flex-wrap:wrap;align-items:flex-start}.nvs-column{width:calc(25% - 4px)}.nvs-column.nvs-active{width:100%;order:5;margin-top:6px;padding:8px}.nvs-column.nvs-active .nvs-column-title{min-height:30px;flex-direction:row;font-size:12px;justify-content:flex-start;text-align:left}.nvs-column.nvs-active .nvs-group summary{font-size:12px;padding:10px}.nvs-column.nvs-active .nvs-item{font-size:12px;min-height:38px}.nvs-column.nvs-active .nvs-soon-tag{display:inline;font-size:10px}.nvs-column.nvs-active .nvs-column-title>.bi:first-child{font-size:15px}}
 
+
+/* V3: cân đối bốn cột, menu xổ đầy đủ và dễ đọc */
+@media(min-width:601px){.nvs-four{align-items:stretch;gap:12px}.nvs-column{display:flex;flex-direction:column;min-height:360px;padding:10px}.nvs-column-content{flex:1}.nvs-column-title{font-size:12px;min-height:48px}.nvs-group summary{font-size:12px;padding:11px 9px}.nvs-item{font-size:11px;padding:8px 7px}.nvs-live-tag{font-size:9px}}
+@media(max-width:600px){.nvs-four{display:flex;flex-wrap:wrap;gap:5px}.nvs-column{box-sizing:border-box;width:calc(25% - 4px);flex:0 0 calc(25% - 4px)}.nvs-column.nvs-active{box-sizing:border-box;width:100%;flex:0 0 100%;order:5}.nvs-column:not(.nvs-active) .nvs-column-content{display:none}.nvs-column.nvs-active .nvs-column-content{display:block}.nvs-column.nvs-active .nvs-column-title{min-height:36px}.nvs-column.nvs-active .nvs-group summary{font-size:12px}.nvs-column.nvs-active .nvs-item{font-size:11.5px}.nvs-column.nvs-active .nvs-soon-tag{display:inline}}
+.nvs-group[hidden],.nvs-item[hidden],.nvs-column[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -245,73 +250,125 @@
   </div>
 
 <section class="nvs-workspace" aria-label="Danh mục nghiệp vụ số">
-<div class="nvs-toolbar"><div><h2>DANH MỤC NGHIỆP VỤ SỐ</h2><p>Chọn nhóm nghiệp vụ để thực hiện hoặc tra cứu hồ sơ theo phân quyền.</p></div><span class="nvs-workspace-note"><i class="bi bi-link-45deg"></i> Hồ sơ đính kèm: Google Drive</span></div>
-<label class="nvs-search"><i class="bi bi-search"></i><input id="nvsSearch" type="search" placeholder="Tìm nghiệp vụ: dạy thêm, chủ nhiệm, ma trận, nghỉ dạy..." aria-label="Tìm nghiệp vụ"></label>
+<div class="nvs-toolbar"><div><h2>DANH MỤC NGHIỆP VỤ SỐ</h2><p>Chọn nhóm để mở đầy đủ các nghiệp vụ. Tài liệu nộp bằng liên kết Google Drive.</p></div><span class="nvs-workspace-note"><i class="bi bi-link-45deg"></i> Không tải tệp lên</span></div>
+<label class="nvs-search"><i class="bi bi-search"></i><input id="nvsSearch" type="search" placeholder="Tìm nghiệp vụ: dạy thêm, ma trận, nghỉ dạy, sáng kiến..." aria-label="Tìm nghiệp vụ"></label>
 <div class="nvs-four" id="nvsFour">
-<section class="nvs-column" data-column="1"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('1')"><i class="bi bi-pencil-square"></i> <span>1. THỰC HIỆN – NỘP</span> <i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
-<details class="nvs-group" open><summary><i class="bi bi-clipboard-check"></i><span>1.1. Báo cáo chuyên môn</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
-<a class="nvs-item nvs-live" href="BC_DayThemHocThem.html" data-search="1.1 Dạy thêm, học thêm BC-CM10"><span class="nvs-item-name">Dạy thêm, học thêm</span><span class="nvs-live-tag"><i class="bi bi-check-circle-fill"></i> PASS</span><i class="bi bi-arrow-up-right-circle"></i></a>
-<a class="nvs-item nvs-live" href="BC_ChuNhiem.html" data-search="1.1 Công tác chủ nhiệm BC-CN01"><span class="nvs-item-name">Công tác chủ nhiệm</span><span class="nvs-live-tag"><i class="bi bi-check-circle-fill"></i> PASS</span><i class="bi bi-arrow-up-right-circle"></i></a>
-<div class="nvs-item nvs-soon" data-search="1.1 Nhiệm vụ được giao"><span class="nvs-item-name">Nhiệm vụ được giao</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="1.1 Báo cáo khác / theo yêu cầu"><span class="nvs-item-name">Báo cáo khác / theo yêu cầu</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<section class="nvs-column" data-column="1"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('1')"><i class="bi bi-pencil-square"></i><span>1. THỰC HIỆN – NỘP</span><i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
+<details class="nvs-group"><summary><i class="bi bi-clipboard-check"></i><span>1.1. Báo cáo chuyên môn</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<a class="nvs-item nvs-live" href="BC_DayThemHocThem.html" data-search="1.1.1. Dạy thêm, học thêm BC-CM10"><span class="nvs-item-name">1.1.1. Dạy thêm, học thêm</span><span class="nvs-live-tag"><i class="bi bi-check-circle-fill"></i> PASS</span><i class="bi bi-chevron-right"></i></a>
+<a class="nvs-item nvs-live" href="BC_ChuNhiem.html" data-search="1.1.2. Công tác chủ nhiệm BC-CN01"><span class="nvs-item-name">1.1.2. Công tác chủ nhiệm</span><span class="nvs-live-tag"><i class="bi bi-check-circle-fill"></i> PASS</span><i class="bi bi-chevron-right"></i></a>
+<div class="nvs-item nvs-soon" data-search="1.1.3. Nhiệm vụ được giao BC-CM01"><span class="nvs-item-name">1.1.3. Nhiệm vụ được giao</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.1.4. Tập huấn, bồi dưỡng BC-CM02"><span class="nvs-item-name">1.1.4. Tập huấn, bồi dưỡng</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.1.5. Sinh hoạt cụm chuyên môn BC-CM03"><span class="nvs-item-name">1.1.5. Sinh hoạt cụm chuyên môn</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.1.6. Hội thảo, hội nghị BC-CM04"><span class="nvs-item-name">1.1.6. Hội thảo, hội nghị</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.1.7. Công tác điều động BC-CM05"><span class="nvs-item-name">1.1.7. Công tác điều động</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.1.8. Chuyên đề, thao giảng BC-CM06"><span class="nvs-item-name">1.1.8. Chuyên đề, thao giảng</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.1.9. Bồi dưỡng HSG, phụ đạo, ôn thi BC-CM07"><span class="nvs-item-name">1.1.9. Bồi dưỡng HSG, phụ đạo, ôn thi</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.1.10. Chất lượng giáo dục BC-CM08"><span class="nvs-item-name">1.1.10. Chất lượng giáo dục</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.1.11. Sơ kết, tổng kết chuyên môn BC-CM09"><span class="nvs-item-name">1.1.11. Sơ kết, tổng kết chuyên môn</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.1.12. Kiểm tra, giám sát nội bộ BC-KT01"><span class="nvs-item-name">1.1.12. Kiểm tra, giám sát nội bộ</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.1.13. Báo cáo khác, theo yêu cầu BC-YC01"><span class="nvs-item-name">1.1.13. Báo cáo khác, theo yêu cầu</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
-<details class="nvs-group" ><summary><i class="bi bi-journal-text"></i><span>1.2. Kiểm tra – đánh giá</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
-<div class="nvs-item nvs-soon" data-search="1.2 Ma trận, bản đặc tả"><span class="nvs-item-name">Ma trận, bản đặc tả</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="1.2 Đề giữa kỳ, cuối kỳ I, II"><span class="nvs-item-name">Đề giữa kỳ, cuối kỳ I, II</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="1.2 Đáp án, hướng dẫn chấm"><span class="nvs-item-name">Đáp án, hướng dẫn chấm</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<details class="nvs-group"><summary><i class="bi bi-journal-check"></i><span>1.2. Kiểm tra – đánh giá</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="1.2.1. Nộp ma trận, bản đặc tả "><span class="nvs-item-name">1.2.1. Nộp ma trận, bản đặc tả</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.2.2. Nộp đề giữa kỳ I "><span class="nvs-item-name">1.2.2. Nộp đề giữa kỳ I</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.2.3. Nộp đề cuối kỳ I "><span class="nvs-item-name">1.2.3. Nộp đề cuối kỳ I</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.2.4. Nộp đề giữa kỳ II "><span class="nvs-item-name">1.2.4. Nộp đề giữa kỳ II</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.2.5. Nộp đề cuối kỳ II "><span class="nvs-item-name">1.2.5. Nộp đề cuối kỳ II</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.2.6. Nộp đáp án, hướng dẫn chấm "><span class="nvs-item-name">1.2.6. Nộp đáp án, hướng dẫn chấm</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
-<details class="nvs-group" ><summary><i class="bi bi-book"></i><span>1.3. Hồ sơ dạy học</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
-<div class="nvs-item nvs-soon" data-search="1.3 Link kế hoạch bài dạy"><span class="nvs-item-name">Link kế hoạch bài dạy</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="1.3 Chuyên đề / thao giảng"><span class="nvs-item-name">Chuyên đề / thao giảng</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<details class="nvs-group"><summary><i class="bi bi-book"></i><span>1.3. Hồ sơ dạy học</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="1.3.1. Nộp link kế hoạch bài dạy "><span class="nvs-item-name">1.3.1. Nộp link kế hoạch bài dạy</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.3.2. Báo cáo tiến độ chương trình "><span class="nvs-item-name">1.3.2. Báo cáo tiến độ chương trình</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.3.3. Đăng ký dự giờ, thao giảng "><span class="nvs-item-name">1.3.3. Đăng ký dự giờ, thao giảng</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
-<details class="nvs-group" ><summary><i class="bi bi-lightbulb"></i><span>1.4. KHKT – sáng kiến</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
-<div class="nvs-item nvs-soon" data-search="1.4 Sản phẩm khoa học kỹ thuật"><span class="nvs-item-name">Sản phẩm khoa học kỹ thuật</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="1.4 Sáng kiến"><span class="nvs-item-name">Sáng kiến</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="1.4 Tham luận / báo cáo chuyên đề"><span class="nvs-item-name">Tham luận / báo cáo chuyên đề</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<details class="nvs-group"><summary><i class="bi bi-lightbulb"></i><span>1.4. Sản phẩm chuyên môn</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="1.4.1. Nộp sản phẩm KHKT "><span class="nvs-item-name">1.4.1. Nộp sản phẩm KHKT</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.4.2. Nộp sáng kiến "><span class="nvs-item-name">1.4.2. Nộp sáng kiến</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.4.3. Nộp chuyên đề báo cáo "><span class="nvs-item-name">1.4.3. Nộp chuyên đề báo cáo</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.4.4. Nộp tham luận "><span class="nvs-item-name">1.4.4. Nộp tham luận</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.4.5. Nộp sản phẩm dự thi khác "><span class="nvs-item-name">1.4.5. Nộp sản phẩm dự thi khác</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
-<details class="nvs-group" ><summary><i class="bi bi-envelope-paper"></i><span>1.5. Đơn – đề nghị</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
-<div class="nvs-item nvs-soon" data-search="1.5 Xin phép nghỉ dạy / dạy thay"><span class="nvs-item-name">Xin phép nghỉ dạy / dạy thay</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="1.5 Đề nghị khác"><span class="nvs-item-name">Đề nghị khác</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<details class="nvs-group"><summary><i class="bi bi-envelope-paper"></i><span>1.5. Đơn – đề nghị</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="1.5.1. Xin phép nghỉ dạy "><span class="nvs-item-name">1.5.1. Xin phép nghỉ dạy</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.5.2. Phân công dạy thay "><span class="nvs-item-name">1.5.2. Phân công dạy thay</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.5.3. Xin phép ra ngoài, công tác "><span class="nvs-item-name">1.5.3. Xin phép ra ngoài, công tác</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.5.4. Đề nghị điều chỉnh chuyên môn "><span class="nvs-item-name">1.5.4. Đề nghị điều chỉnh chuyên môn</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.5.5. Đề nghị khác "><span class="nvs-item-name">1.5.5. Đề nghị khác</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
-<details class="nvs-group" ><summary><i class="bi bi-grid"></i><span>1.6. Hoạt động khác</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
-<div class="nvs-item nvs-soon" data-search="1.6 Đoàn – học sinh"><span class="nvs-item-name">Đoàn – học sinh</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="1.6 CSVC – thiết bị"><span class="nvs-item-name">CSVC – thiết bị</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="1.6 Văn phòng – thư viện – y tế"><span class="nvs-item-name">Văn phòng – thư viện – y tế</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="1.6 Tập huấn / bồi dưỡng"><span class="nvs-item-name">Tập huấn / bồi dưỡng</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<details class="nvs-group"><summary><i class="bi bi-people"></i><span>1.6. Đoàn – học sinh</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="1.6.1. Báo cáo hoạt động Đoàn "><span class="nvs-item-name">1.6.1. Báo cáo hoạt động Đoàn</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.6.2. Phong trào, cuộc thi, câu lạc bộ "><span class="nvs-item-name">1.6.2. Phong trào, cuộc thi, câu lạc bộ</span><span class="nvs-soon-tag">Dự kiến</span></div>
+</div></details>
+<details class="nvs-group"><summary><i class="bi bi-tools"></i><span>1.7. CSVC – thiết bị</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="1.7.1. Báo hỏng, đề nghị sửa chữa "><span class="nvs-item-name">1.7.1. Báo hỏng, đề nghị sửa chữa</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.7.2. Đề nghị thiết bị, phòng học "><span class="nvs-item-name">1.7.2. Đề nghị thiết bị, phòng học</span><span class="nvs-soon-tag">Dự kiến</span></div>
+</div></details>
+<details class="nvs-group"><summary><i class="bi bi-building"></i><span>1.8. Văn phòng – hỗ trợ</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="1.8.1. Nghiệp vụ giáo vụ, văn thư "><span class="nvs-item-name">1.8.1. Nghiệp vụ giáo vụ, văn thư</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.8.2. Thư viện "><span class="nvs-item-name">1.8.2. Thư viện</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.8.3. Y tế học đường "><span class="nvs-item-name">1.8.3. Y tế học đường</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="1.8.4. Kế toán và hỗ trợ khác "><span class="nvs-item-name">1.8.4. Kế toán và hỗ trợ khác</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
 </div></section>
-<section class="nvs-column" data-column="2"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('2')"><i class="bi bi-folder2-open"></i> <span>2. TRA CỨU – XEM</span> <i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
-<details class="nvs-group" ><summary><i class="bi bi-calendar2-week"></i><span>2.1. Chuyên môn</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
-<div class="nvs-item nvs-soon" data-search="2.1 Phân công chuyên môn"><span class="nvs-item-name">Phân công chuyên môn</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="2.1 Thời khóa biểu"><span class="nvs-item-name">Thời khóa biểu</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="2.1 Lịch kiểm tra"><span class="nvs-item-name">Lịch kiểm tra</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<section class="nvs-column" data-column="2"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('2')"><i class="bi bi-folder2-open"></i><span>2. TRA CỨU – XEM</span><i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
+<details class="nvs-group"><summary><i class="bi bi-calendar2-week"></i><span>2.1. Chuyên môn – dạy học</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="2.1.1. Phân công chuyên môn "><span class="nvs-item-name">2.1.1. Phân công chuyên môn</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="2.1.2. Thời khóa biểu "><span class="nvs-item-name">2.1.2. Thời khóa biểu</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="2.1.3. Lịch kiểm tra "><span class="nvs-item-name">2.1.3. Lịch kiểm tra</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="2.1.4. Kế hoạch bài dạy theo quyền "><span class="nvs-item-name">2.1.4. Kế hoạch bài dạy theo quyền</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
-<details class="nvs-group" ><summary><i class="bi bi-calendar-event"></i><span>2.2. Điều hành</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
-<div class="nvs-item nvs-soon" data-search="2.2 Lịch công tác – họp"><span class="nvs-item-name">Lịch công tác – họp</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="2.2 Văn bản – quy định"><span class="nvs-item-name">Văn bản – quy định</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="2.2 Nhiệm vụ được giao"><span class="nvs-item-name">Nhiệm vụ được giao</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<details class="nvs-group"><summary><i class="bi bi-calendar-event"></i><span>2.2. Lịch – công tác</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="2.2.1. Lịch công tác "><span class="nvs-item-name">2.2.1. Lịch công tác</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="2.2.2. Lịch họp, hội nghị "><span class="nvs-item-name">2.2.2. Lịch họp, hội nghị</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="2.2.3. Lịch tập huấn, bồi dưỡng "><span class="nvs-item-name">2.2.3. Lịch tập huấn, bồi dưỡng</span><span class="nvs-soon-tag">Dự kiến</span></div>
+</div></details>
+<details class="nvs-group"><summary><i class="bi bi-file-earmark-text"></i><span>2.3. Văn bản – tài liệu</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="2.3.1. Văn bản, quy định "><span class="nvs-item-name">2.3.1. Văn bản, quy định</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="2.3.2. Hướng dẫn nghiệp vụ "><span class="nvs-item-name">2.3.2. Hướng dẫn nghiệp vụ</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="2.3.3. Biểu mẫu sử dụng chung "><span class="nvs-item-name">2.3.3. Biểu mẫu sử dụng chung</span><span class="nvs-soon-tag">Dự kiến</span></div>
+</div></details>
+<details class="nvs-group"><summary><i class="bi bi-search"></i><span>2.4. Thông tin phục vụ công việc</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="2.4.1. Nhiệm vụ được giao "><span class="nvs-item-name">2.4.1. Nhiệm vụ được giao</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="2.4.2. Thông báo chuyên môn "><span class="nvs-item-name">2.4.2. Thông báo chuyên môn</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="2.4.3. Danh mục liên kết hữu ích "><span class="nvs-item-name">2.4.3. Danh mục liên kết hữu ích</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
 </div></section>
-<section class="nvs-column" data-column="3"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('3')"><i class="bi bi-person-lines-fill"></i> <span>3. HỒ SƠ CỦA TÔI</span> <i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
-<details class="nvs-group" ><summary><i class="bi bi-send"></i><span>3.1. Hồ sơ đã gửi</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
-<div class="nvs-item nvs-soon" data-search="3.1 Danh sách hồ sơ"><span class="nvs-item-name">Danh sách hồ sơ</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="3.1 Lịch sử hồ sơ"><span class="nvs-item-name">Lịch sử hồ sơ</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<section class="nvs-column" data-column="3"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('3')"><i class="bi bi-person-lines-fill"></i><span>3. HỒ SƠ CỦA TÔI</span><i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
+<details class="nvs-group"><summary><i class="bi bi-send"></i><span>3.1. Hồ sơ đã gửi</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="3.1.1. Danh sách hồ sơ đã gửi "><span class="nvs-item-name">3.1.1. Danh sách hồ sơ đã gửi</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="3.1.2. Lịch sử gửi và cập nhật link "><span class="nvs-item-name">3.1.2. Lịch sử gửi và cập nhật link</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
-<details class="nvs-group" ><summary><i class="bi bi-clock-history"></i><span>3.2. Theo dõi hồ sơ</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
-<div class="nvs-item nvs-soon" data-search="3.2 Đang xử lý"><span class="nvs-item-name">Đang xử lý</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="3.2 Chờ bổ sung"><span class="nvs-item-name">Chờ bổ sung</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="3.2 Đã hoàn thành"><span class="nvs-item-name">Đã hoàn thành</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<details class="nvs-group"><summary><i class="bi bi-clock-history"></i><span>3.2. Theo dõi tiến độ</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="3.2.1. Đang tiếp nhận, xử lý "><span class="nvs-item-name">3.2.1. Đang tiếp nhận, xử lý</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="3.2.2. Chờ bổ sung "><span class="nvs-item-name">3.2.2. Chờ bổ sung</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="3.2.3. Đã hoàn thành "><span class="nvs-item-name">3.2.3. Đã hoàn thành</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="3.2.4. Đã trả lại, không tiếp nhận "><span class="nvs-item-name">3.2.4. Đã trả lại, không tiếp nhận</span><span class="nvs-soon-tag">Dự kiến</span></div>
+</div></details>
+<details class="nvs-group"><summary><i class="bi bi-bell"></i><span>3.3. Thông báo cá nhân</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="3.3.1. Phản hồi từ TTCM, BGH "><span class="nvs-item-name">3.3.1. Phản hồi từ TTCM, BGH</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="3.3.2. Yêu cầu xử lý, bổ sung "><span class="nvs-item-name">3.3.2. Yêu cầu xử lý, bổ sung</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
 </div></section>
-<section class="nvs-column" data-column="4"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('4')"><i class="bi bi-check2-square"></i> <span>4. XỬ LÝ HỒ SƠ</span> <i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
-<details class="nvs-group" ><summary><i class="bi bi-inbox"></i><span>4.1. Tiếp nhận</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
-<div class="nvs-item nvs-soon" data-search="4.1 Chờ tiếp nhận"><span class="nvs-item-name">Chờ tiếp nhận</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="4.1 Chờ xác nhận"><span class="nvs-item-name">Chờ xác nhận</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<section class="nvs-column" data-column="4"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('4')"><i class="bi bi-check2-square"></i><span>4. XỬ LÝ HỒ SƠ</span><i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
+<details class="nvs-group"><summary><i class="bi bi-inbox"></i><span>4.1. Tiếp nhận hồ sơ</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="4.1.1. Chờ tiếp nhận "><span class="nvs-item-name">4.1.1. Chờ tiếp nhận</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="4.1.2. Kiểm tra liên kết Drive "><span class="nvs-item-name">4.1.2. Kiểm tra liên kết Drive</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="4.1.3. Yêu cầu bổ sung "><span class="nvs-item-name">4.1.3. Yêu cầu bổ sung</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
-<details class="nvs-group" ><summary><i class="bi bi-person-check"></i><span>4.2. Phân công – phê duyệt</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
-<div class="nvs-item nvs-soon" data-search="4.2 Phân công xử lý"><span class="nvs-item-name">Phân công xử lý</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="4.2 Chờ phê duyệt"><span class="nvs-item-name">Chờ phê duyệt</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
-<div class="nvs-item nvs-soon" data-search="4.2 Hồ sơ hoàn thành"><span class="nvs-item-name">Hồ sơ hoàn thành</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<details class="nvs-group"><summary><i class="bi bi-person-check"></i><span>4.2. Phân công – xác nhận</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="4.2.1. Phân công người xử lý "><span class="nvs-item-name">4.2.1. Phân công người xử lý</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="4.2.2. Xác nhận nhận nhiệm vụ "><span class="nvs-item-name">4.2.2. Xác nhận nhận nhiệm vụ</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="4.2.3. Phân công giáo viên dạy thay "><span class="nvs-item-name">4.2.3. Phân công giáo viên dạy thay</span><span class="nvs-soon-tag">Dự kiến</span></div>
+</div></details>
+<details class="nvs-group"><summary><i class="bi bi-shield-check"></i><span>4.3. Duyệt – hoàn tất</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="4.3.1. Chờ phê duyệt "><span class="nvs-item-name">4.3.1. Chờ phê duyệt</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="4.3.2. Đã duyệt, hoàn thành "><span class="nvs-item-name">4.3.2. Đã duyệt, hoàn thành</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="4.3.3. Trả lại hồ sơ "><span class="nvs-item-name">4.3.3. Trả lại hồ sơ</span><span class="nvs-soon-tag">Dự kiến</span></div>
+</div></details>
+<details class="nvs-group"><summary><i class="bi bi-bar-chart"></i><span>4.4. Thống kê – giám sát</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="4.4.1. Tổng hợp hồ sơ theo trạng thái "><span class="nvs-item-name">4.4.1. Tổng hợp hồ sơ theo trạng thái</span><span class="nvs-soon-tag">Dự kiến</span></div>
+<div class="nvs-item nvs-soon" data-search="4.4.2. Theo dõi tiến độ xử lý "><span class="nvs-item-name">4.4.2. Theo dõi tiến độ xử lý</span><span class="nvs-soon-tag">Dự kiến</span></div>
 </div></details>
 </div></section>
 </div><div id="nvsEmpty" class="nvs-empty" hidden>Không tìm thấy nghiệp vụ phù hợp.</div></section>
