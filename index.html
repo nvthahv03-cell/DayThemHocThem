@@ -143,6 +143,16 @@
   margin-top: 16px;
   padding: 8px 0;
 }
+
+/* NVS DASHBOARD V2: GIAO DIỆN THUẦN, GIỮ NGUYÊN AUTH VÀ ROUTE PASS */
+.nvs-workspace{margin-top:22px}.nvs-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.nvs-toolbar h2{font-size:17px;font-weight:900;color:#063f79;margin:0}.nvs-toolbar p{font-size:12px;color:#587089;margin:4px 0 0}.nvs-workspace-note{font-size:11px;font-weight:800;color:#087a74;white-space:nowrap}
+.nvs-search{height:45px;background:white;border:1px solid #cbdfea;border-radius:12px;display:flex;align-items:center;gap:10px;padding:0 13px;margin-bottom:14px;color:#577b96}.nvs-search input{width:100%;border:0;outline:0;font:500 13px Inter,Arial,sans-serif;background:transparent;color:#163b60;min-width:0}
+.nvs-four{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:start}.nvs-column{min-width:0;background:#eef5fd;border:1px solid #dceafa;border-radius:14px;padding:9px}.nvs-column:nth-child(2){background:#ecf9f5;border-color:#d2eee4}.nvs-column:nth-child(3){background:#f4f1ff;border-color:#e6defe}.nvs-column:nth-child(4){background:#fff7ed;border-color:#f8e6d0}
+.nvs-column-title{width:100%;border:0;background:transparent;color:#07509b;font-size:12px;font-weight:900;display:flex;align-items:center;gap:6px;text-align:left;padding:8px 5px 11px;cursor:pointer}.nvs-column-title>span{flex:1}.nvs-column:nth-child(2) .nvs-column-title{color:#08795b}.nvs-column:nth-child(3) .nvs-column-title{color:#6a43b9}.nvs-column:nth-child(4) .nvs-column-title{color:#b56b15}.nvs-column-chevron{display:none}
+.nvs-group{background:#fff;border:1px solid #dce5ed;border-radius:9px;margin-bottom:7px;overflow:hidden}.nvs-group:last-child{margin-bottom:0}.nvs-group summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;padding:11px 8px;color:#153d65;font-size:11.5px;font-weight:800;min-height:42px}.nvs-group summary::-webkit-details-marker{display:none}.nvs-group summary span{flex:1}.nvs-group summary>.bi:first-child{color:#1484d6;font-size:14px}.nvs-chevron{font-size:10px;color:#7c94a8;transition:transform .15s}.nvs-group[open] .nvs-chevron{transform:rotate(180deg)}.nvs-items{padding:0 6px 6px}.nvs-item{display:flex;align-items:center;gap:5px;min-height:35px;padding:7px 6px;border-top:1px solid #eef2f6;font-size:10.5px;line-height:1.35;text-decoration:none;color:#31526d}.nvs-item-name{flex:1;min-width:0}.nvs-live{font-weight:800;color:#07549c}.nvs-live:hover{background:#edf7ff;border-radius:6px}.nvs-live-tag{font-size:9px;color:#16854c;white-space:nowrap}.nvs-live>.bi{font-size:12px}.nvs-soon{opacity:.78}.nvs-soon-tag{font-size:9px;color:#8493a4;white-space:nowrap}.nvs-empty{text-align:center;color:#718096;padding:16px}
+@media(max-width:850px){.nvs-four{gap:6px}.nvs-column{padding:5px}.nvs-column-title{font-size:10px;line-height:1.25;gap:3px}.nvs-group summary{font-size:10px;padding:8px 5px}.nvs-item{font-size:10px}.nvs-soon-tag{display:none}}
+@media(max-width:600px){.nvs-toolbar{align-items:flex-start}.nvs-workspace-note{display:none}.nvs-four{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.nvs-column{padding:3px;border-radius:10px}.nvs-column-title{display:flex;flex-direction:column;justify-content:center;text-align:center;min-height:67px;padding:6px 2px;font-size:9px;gap:4px}.nvs-column-title>.bi:first-child{font-size:17px}.nvs-column-chevron{display:none}.nvs-column-content{display:none}.nvs-column.nvs-active .nvs-column-content{display:block;position:relative}.nvs-four{display:flex;flex-wrap:wrap;align-items:flex-start}.nvs-column{width:calc(25% - 4px)}.nvs-column.nvs-active{width:100%;order:5;margin-top:6px;padding:8px}.nvs-column.nvs-active .nvs-column-title{min-height:30px;flex-direction:row;font-size:12px;justify-content:flex-start;text-align:left}.nvs-column.nvs-active .nvs-group summary{font-size:12px;padding:10px}.nvs-column.nvs-active .nvs-item{font-size:12px;min-height:38px}.nvs-column.nvs-active .nvs-soon-tag{display:inline;font-size:10px}.nvs-column.nvs-active .nvs-column-title>.bi:first-child{font-size:15px}}
+
 </style>
 </head>
 <body>
@@ -234,69 +244,77 @@
     <button type="button" class="logout-btn" onclick="logoutHVA()"><i class="bi bi-box-arrow-right"></i> Đăng xuất</button>
   </div>
 
-  <!-- PHẦN A1: DANH MỤC BÁO CÁO HOẠT ĐỘNG CHUYÊN MÔN -->
-  <div class="portal-section-title">
-    <i class="bi bi-folder2-open"></i> A1. BÁO CÁO CHUYÊN MÔN & QUẢN LÝ
-  </div>
-
-  <div class="portal-grid">
-    <!-- 1. BÁO CÁO DẠY THÊM, HỌC THÊM (BC-CM10) -->
-    <a href="BC_DayThemHocThem.html" class="portal-card">
-      <span class="portal-badge badge-pass"><i class="bi bi-check-circle-fill"></i> PASS - LOCK</span>
-      <div class="portal-head">
-        <div class="portal-icon icon-blue"><i class="bi bi-journal-check"></i></div>
-        <div>
-          <div class="portal-code">BC-CM10</div>
-          <div class="portal-name">Dạy thêm, học thêm</div>
-        </div>
-      </div>
-      <div class="portal-desc">
-        Kê khai thông tin giáo viên tham gia hoặc không tham gia dạy thêm ngoài nhà trường theo Mẫu số 03 (Quy định hiện hành).
-      </div>
-      <div class="portal-action">
-        <span>Thực hiện kê khai trực tuyến</span>
-        <i class="bi bi-arrow-right-circle-fill"></i>
-      </div>
-    </a>
-
-    <!-- 2. BÁO CÁO CÔNG TÁC CHỦ NHIỆM (BC-CN01) -->
-    <a href="BC_ChuNhiem.html" class="portal-card">
-      <span class="portal-badge badge-ready"><i class="bi bi-stars"></i> MỚI · V1</span>
-      <div class="portal-head">
-        <div class="portal-icon icon-emerald"><i class="bi bi-clipboard2-data"></i></div>
-        <div>
-          <div class="portal-code">BC-CN01</div>
-          <div class="portal-name">Công tác chủ nhiệm</div>
-        </div>
-      </div>
-      <div class="portal-desc">
-        Báo cáo tình hình sĩ số, chuyên cần, nền nếp, học sinh cá biệt và các đề xuất gửi Ban Giám hiệu theo tháng hoặc giữa kỳ.
-      </div>
-      <div class="portal-action">
-        <span>Lập báo cáo chủ nhiệm</span>
-        <i class="bi bi-arrow-right-circle-fill"></i>
-      </div>
-    </a>
-
-    <!-- 3. BÁO CÁO THỰC HIỆN NHIỆM VỤ ĐƯỢC GIAO (BC-CM01) -->
-    <div class="portal-card" style="opacity:0.75;cursor:not-allowed;">
-      <span class="portal-badge badge-soon"><i class="bi bi-hourglass-split"></i> ĐANG MỞ RỘNG</span>
-      <div class="portal-head">
-        <div class="portal-icon icon-amber"><i class="bi bi-award"></i></div>
-        <div>
-          <div class="portal-code">BC-CM01</div>
-          <div class="portal-name">Nhiệm vụ được giao</div>
-        </div>
-      </div>
-      <div class="portal-desc">
-        Báo cáo tổng kết việc thực hiện các phân công chuyên môn, hoạt động bồi dưỡng học sinh giỏi hoặc công tác kiêm nhiệm.
-      </div>
-      <div class="portal-action" style="color:#64748b;">
-        <span>Sắp triển khai</span>
-        <i class="bi bi-lock-fill"></i>
-      </div>
-    </div>
-  </div>
+<section class="nvs-workspace" aria-label="Danh mục nghiệp vụ số">
+<div class="nvs-toolbar"><div><h2>DANH MỤC NGHIỆP VỤ SỐ</h2><p>Chọn nhóm nghiệp vụ để thực hiện hoặc tra cứu hồ sơ theo phân quyền.</p></div><span class="nvs-workspace-note"><i class="bi bi-link-45deg"></i> Hồ sơ đính kèm: Google Drive</span></div>
+<label class="nvs-search"><i class="bi bi-search"></i><input id="nvsSearch" type="search" placeholder="Tìm nghiệp vụ: dạy thêm, chủ nhiệm, ma trận, nghỉ dạy..." aria-label="Tìm nghiệp vụ"></label>
+<div class="nvs-four" id="nvsFour">
+<section class="nvs-column" data-column="1"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('1')"><i class="bi bi-pencil-square"></i> <span>1. THỰC HIỆN – NỘP</span> <i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
+<details class="nvs-group" open><summary><i class="bi bi-clipboard-check"></i><span>1.1. Báo cáo chuyên môn</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<a class="nvs-item nvs-live" href="BC_DayThemHocThem.html" data-search="1.1 Dạy thêm, học thêm BC-CM10"><span class="nvs-item-name">Dạy thêm, học thêm</span><span class="nvs-live-tag"><i class="bi bi-check-circle-fill"></i> PASS</span><i class="bi bi-arrow-up-right-circle"></i></a>
+<a class="nvs-item nvs-live" href="BC_ChuNhiem.html" data-search="1.1 Công tác chủ nhiệm BC-CN01"><span class="nvs-item-name">Công tác chủ nhiệm</span><span class="nvs-live-tag"><i class="bi bi-check-circle-fill"></i> PASS</span><i class="bi bi-arrow-up-right-circle"></i></a>
+<div class="nvs-item nvs-soon" data-search="1.1 Nhiệm vụ được giao"><span class="nvs-item-name">Nhiệm vụ được giao</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="1.1 Báo cáo khác / theo yêu cầu"><span class="nvs-item-name">Báo cáo khác / theo yêu cầu</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+</div></details>
+<details class="nvs-group" ><summary><i class="bi bi-journal-text"></i><span>1.2. Kiểm tra – đánh giá</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="1.2 Ma trận, bản đặc tả"><span class="nvs-item-name">Ma trận, bản đặc tả</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="1.2 Đề giữa kỳ, cuối kỳ I, II"><span class="nvs-item-name">Đề giữa kỳ, cuối kỳ I, II</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="1.2 Đáp án, hướng dẫn chấm"><span class="nvs-item-name">Đáp án, hướng dẫn chấm</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+</div></details>
+<details class="nvs-group" ><summary><i class="bi bi-book"></i><span>1.3. Hồ sơ dạy học</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="1.3 Link kế hoạch bài dạy"><span class="nvs-item-name">Link kế hoạch bài dạy</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="1.3 Chuyên đề / thao giảng"><span class="nvs-item-name">Chuyên đề / thao giảng</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+</div></details>
+<details class="nvs-group" ><summary><i class="bi bi-lightbulb"></i><span>1.4. KHKT – sáng kiến</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="1.4 Sản phẩm khoa học kỹ thuật"><span class="nvs-item-name">Sản phẩm khoa học kỹ thuật</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="1.4 Sáng kiến"><span class="nvs-item-name">Sáng kiến</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="1.4 Tham luận / báo cáo chuyên đề"><span class="nvs-item-name">Tham luận / báo cáo chuyên đề</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+</div></details>
+<details class="nvs-group" ><summary><i class="bi bi-envelope-paper"></i><span>1.5. Đơn – đề nghị</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="1.5 Xin phép nghỉ dạy / dạy thay"><span class="nvs-item-name">Xin phép nghỉ dạy / dạy thay</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="1.5 Đề nghị khác"><span class="nvs-item-name">Đề nghị khác</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+</div></details>
+<details class="nvs-group" ><summary><i class="bi bi-grid"></i><span>1.6. Hoạt động khác</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="1.6 Đoàn – học sinh"><span class="nvs-item-name">Đoàn – học sinh</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="1.6 CSVC – thiết bị"><span class="nvs-item-name">CSVC – thiết bị</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="1.6 Văn phòng – thư viện – y tế"><span class="nvs-item-name">Văn phòng – thư viện – y tế</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="1.6 Tập huấn / bồi dưỡng"><span class="nvs-item-name">Tập huấn / bồi dưỡng</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+</div></details>
+</div></section>
+<section class="nvs-column" data-column="2"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('2')"><i class="bi bi-folder2-open"></i> <span>2. TRA CỨU – XEM</span> <i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
+<details class="nvs-group" ><summary><i class="bi bi-calendar2-week"></i><span>2.1. Chuyên môn</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="2.1 Phân công chuyên môn"><span class="nvs-item-name">Phân công chuyên môn</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="2.1 Thời khóa biểu"><span class="nvs-item-name">Thời khóa biểu</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="2.1 Lịch kiểm tra"><span class="nvs-item-name">Lịch kiểm tra</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+</div></details>
+<details class="nvs-group" ><summary><i class="bi bi-calendar-event"></i><span>2.2. Điều hành</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="2.2 Lịch công tác – họp"><span class="nvs-item-name">Lịch công tác – họp</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="2.2 Văn bản – quy định"><span class="nvs-item-name">Văn bản – quy định</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="2.2 Nhiệm vụ được giao"><span class="nvs-item-name">Nhiệm vụ được giao</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+</div></details>
+</div></section>
+<section class="nvs-column" data-column="3"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('3')"><i class="bi bi-person-lines-fill"></i> <span>3. HỒ SƠ CỦA TÔI</span> <i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
+<details class="nvs-group" ><summary><i class="bi bi-send"></i><span>3.1. Hồ sơ đã gửi</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="3.1 Danh sách hồ sơ"><span class="nvs-item-name">Danh sách hồ sơ</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="3.1 Lịch sử hồ sơ"><span class="nvs-item-name">Lịch sử hồ sơ</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+</div></details>
+<details class="nvs-group" ><summary><i class="bi bi-clock-history"></i><span>3.2. Theo dõi hồ sơ</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="3.2 Đang xử lý"><span class="nvs-item-name">Đang xử lý</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="3.2 Chờ bổ sung"><span class="nvs-item-name">Chờ bổ sung</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="3.2 Đã hoàn thành"><span class="nvs-item-name">Đã hoàn thành</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+</div></details>
+</div></section>
+<section class="nvs-column" data-column="4"><button type="button" class="nvs-column-title" onclick="nvsFocusColumn('4')"><i class="bi bi-check2-square"></i> <span>4. XỬ LÝ HỒ SƠ</span> <i class="bi bi-chevron-down nvs-column-chevron"></i></button><div class="nvs-column-content">
+<details class="nvs-group" ><summary><i class="bi bi-inbox"></i><span>4.1. Tiếp nhận</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="4.1 Chờ tiếp nhận"><span class="nvs-item-name">Chờ tiếp nhận</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="4.1 Chờ xác nhận"><span class="nvs-item-name">Chờ xác nhận</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+</div></details>
+<details class="nvs-group" ><summary><i class="bi bi-person-check"></i><span>4.2. Phân công – phê duyệt</span><i class="bi bi-chevron-down nvs-chevron"></i></summary><div class="nvs-items">
+<div class="nvs-item nvs-soon" data-search="4.2 Phân công xử lý"><span class="nvs-item-name">Phân công xử lý</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="4.2 Chờ phê duyệt"><span class="nvs-item-name">Chờ phê duyệt</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+<div class="nvs-item nvs-soon" data-search="4.2 Hồ sơ hoàn thành"><span class="nvs-item-name">Hồ sơ hoàn thành</span><span class="nvs-soon-tag">Sắp triển khai</span></div>
+</div></details>
+</div></section>
+</div><div id="nvsEmpty" class="nvs-empty" hidden>Không tìm thấy nghiệp vụ phù hợp.</div></section>
 </main>
 
 <script>
@@ -528,6 +546,30 @@ async function initPortal(){
     $('userClassLabel').textContent = 'Không';
   }
 }
+
+
+/* NVS MENU: CHỈ ĐIỀU KHIỂN HIỂN THỊ, KHÔNG ĐỘNG AUTH / BACKEND */
+function nvsFocusColumn(num){
+  document.querySelectorAll('.nvs-column').forEach(el=>el.classList.toggle('nvs-active',el.dataset.column===String(num)));
+}
+function nvsFilter(){
+  const q=(document.getElementById('nvsSearch')?.value||'').trim().toLocaleLowerCase('vi');
+  let visible=0;
+  document.querySelectorAll('.nvs-group').forEach(group=>{
+    let hits=0;
+    group.querySelectorAll('.nvs-item').forEach(item=>{
+      const match=!q||(item.dataset.search||item.textContent).toLocaleLowerCase('vi').includes(q);
+      item.hidden=!match;if(match)hits++;
+    });
+    group.hidden=hits===0;
+    if(q&&hits)group.open=true;
+    visible+=hits;
+  });
+  document.querySelectorAll('.nvs-column').forEach(col=>{col.hidden=!!q&&!col.querySelector('.nvs-group:not([hidden])')});
+  const empty=document.getElementById('nvsEmpty');if(empty)empty.hidden=visible!==0;
+  if(q){const first=document.querySelector('.nvs-column:not([hidden])');if(first)nvsFocusColumn(first.dataset.column)}
+}
+document.addEventListener('DOMContentLoaded',()=>{nvsFocusColumn('1');document.getElementById('nvsSearch')?.addEventListener('input',nvsFilter)});
 
 document.addEventListener('DOMContentLoaded', initPortal);
 </script>
