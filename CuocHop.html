@@ -305,7 +305,7 @@
 
     <button type="button"
             class="hva-pro-back"
-            onclick="location.href='main.html'"
+            onclick="location.href='DieuHanh.html'"
             aria-label="Quay lại trang chủ HVA"
             title="Quay lại">
       <i class="bi bi-arrow-left"></i>
@@ -548,9 +548,9 @@
 
 <script src="HVA_Personnel.js"></script>
 <script>
-const WEB_APP_URL='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+const WEB_APP_URL='https://script.google.com/macros/s/AKfycbzTRkdqyYYI8LQo9MkiTjEIXkAC7BWK1MroUXPuvKMl9Yu_o9gXFS8QCcyQmq78-ikvvg/exec';
 // HVA NHAN SU FULL: dung dung SEARCH_API dang PASS cua Kinh lup; khong thay WEB_APP_URL nghiep vu Cuoc hop.
-const PERSONNEL_SEARCH_API='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+const PERSONNEL_SEARCH_API='https://script.google.com/macros/s/AKfycbzTRkdqyYYI8LQo9MkiTjEIXkAC7BWK1MroUXPuvKMl9Yu_o9gXFS8QCcyQmq78-ikvvg/exec';
 let meetingAllToData=[]; const meetingSelectedUsernames=new Set();
 const $=id=>document.getElementById(id);
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -625,7 +625,7 @@ async function generateMeetingDraftAI() {
   if (btn.disabled) return;
   btn.disabled = true;
   btn.classList.add('opacity-60');
-  hvaMeetingAISetStatus('Gemini đang soạn dự thảo cuộc họp...');
+  hvaMeetingAISetStatus('AI đang soạn dự thảo cuộc họp...');
   try {
     const res = await fetch(WEB_APP_URL, {
       method: 'POST',
@@ -749,7 +749,7 @@ async function loadMeetingPersonnel(){
   c.innerHTML=
     '<div class="py-5 text-center text-sm text-slate-400">'+
       '<i class="bi bi-arrow-repeat animate-spin mr-1"></i>'+
-      'Đang đồng bộ Nhân sự HVA...'+
+      'Đang đồng bộ Nhân sự NVS...'+
     '</div>';
 
   try{
@@ -760,7 +760,7 @@ async function loadMeetingPersonnel(){
     renderMeetingPersonnel();
   }catch(e){
     console.error('[HVA Personnel]',e);
-    let msg=e && e.message ? e.message : 'Không tải được Nhân sự HVA';
+    let msg=e && e.message ? e.message : 'Không tải được Nhân sự NVS';
     if(msg==='HVA_AUTH_REQUEST_NOT_READY') msg='Hệ thống xác thực HVA chưa sẵn sàng.';
     if(msg==='HVA_PERSONNEL_CORE_NOT_READY') msg='Bộ nhân sự HVA chưa được nạp.';
     c.innerHTML=
@@ -1207,7 +1207,7 @@ function updateMeetingSelectionUI() {
 
 
   
-function getMeetingOperatorUser(){try{return JSON.parse(sessionStorage.getItem('user')||localStorage.getItem('user')||'{}')}catch(e){return{}}}
+function getMeetingOperatorUser(){try{return JSON.parse(localStorage.getItem('user')||sessionStorage.getItem('user')||'{}')}catch(e){return{}}}
 
 function syncMeetingUserCard(){
   const u=getMeetingOperatorUser();
@@ -1217,7 +1217,7 @@ function syncMeetingUserCard(){
   if(nameEl) nameEl.textContent=name;
   if(roleEl) roleEl.textContent=role;
 }
-function getMeetingOperatorUsername(){const u=getMeetingOperatorUser();return String(u.username||u.userName||u.maGV||'').trim()}
+function getMeetingOperatorUsername(){const u=getMeetingOperatorUser();return String(u.tenDangNhap||u.username||u.userName||u.maGV||'').trim()}
 let managedMeetingData=[]; let currentQrInfo=null;
 function getMeetingSessionToken(){
   return String(
