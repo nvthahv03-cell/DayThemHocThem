@@ -208,7 +208,7 @@
 </main>
 
 <script>
-const DTHT_STANDALONE_BACKEND = 'https://script.google.com/macros/s/AKfycbz3RGGmU_75a_lbRn7vnyX4prrWiWZT9WO3SHI19GOwKpLkt6mJ0eJqsBjmcAl2z8wEUg/exec';
+const DTHT_STANDALONE_BACKEND = 'https://script.google.com/macros/s/AKfycbzTRkdqyYYI8LQo9MkiTjEIXkAC7BWK1MroUXPuvKMl9Yu_o9gXFS8QCcyQmq78-ikvvg/exec';
 
 const $ = id => document.getElementById(id);
 
@@ -218,7 +218,10 @@ function currentUser(){
 }
 
 function authToken(){
-  return String(localStorage.getItem('hvaSessionToken') || sessionStorage.getItem('hvaSessionToken') || '').trim();
+  const token = String(localStorage.getItem('hvaSessionToken') || sessionStorage.getItem('hvaSessionToken') || '').trim();
+  const expiry = Number(localStorage.getItem('hvaSessionExpiresAt') || sessionStorage.getItem('hvaSessionExpiresAt') || 0);
+  if (!token || !Number.isFinite(expiry) || expiry <= Date.now()) return '';
+  return token;
 }
 
 function dthtTogglePassword(){
