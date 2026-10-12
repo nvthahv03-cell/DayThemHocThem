@@ -120,6 +120,24 @@
 .nvs-choose-heading{text-align:center}.nvs-emblem{display:inline-grid;place-items:center;color:#0766ca;font-size:27px}.nvs-choose-heading h2{margin:9px 0 4px;color:#073d7b;font-size:24px;font-weight:900}.nvs-choose-heading p{margin:0;color:#54708c;font-size:13px}
 .nvs-two-gates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:24px}.nvs-gate{min-height:208px;border:1.5px solid #d2e6f9;border-radius:18px;padding:24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;text-decoration:none;transition:transform .18s,box-shadow .18s,border-color .18s}.nvs-gate:hover,.nvs-gate:focus-visible{transform:translateY(-3px);box-shadow:0 12px 30px rgba(5,81,151,.14);border-color:#4e9ce8;outline:none}.nvs-gate-admin{background:linear-gradient(135deg,#e9f2ff,#dbeafd)}.nvs-gate-work{background:linear-gradient(135deg,#e8faf6,#d7f5ec)}.nvs-gate-icon{font-size:32px;color:#1466d4}.nvs-gate-work .nvs-gate-icon{color:#00976c}.nvs-gate strong{font-size:20px;color:#07396d}.nvs-gate>span:not(.nvs-gate-icon):not(.nvs-gate-enter){font-size:13px;color:#496581;line-height:1.6}.nvs-gate-enter{margin-top:auto;font-size:12px;font-weight:900;color:#0959ae}.nvs-gate-work .nvs-gate-enter{color:#08765a}.nvs-process{text-align:center;padding-top:22px;color:#0a4d86}.nvs-process>i{display:block;font-size:20px;margin-bottom:8px}.nvs-process strong{font-size:16px}.nvs-process p{margin:8px 0 0;color:#5c7186;font-size:13px}
 @media(max-width:600px){.nvs-chooser{padding:14px}.nvs-two-gates{gap:10px}.nvs-gate{min-height:202px;padding:14px 8px;gap:9px}.nvs-gate strong{font-size:15px}.nvs-gate>span:not(.nvs-gate-icon):not(.nvs-gate-enter){font-size:11px}.nvs-choose-heading h2{font-size:20px}.nvs-process strong{font-size:13px}}
+
+/* NVS DIGITAL BLUE — chỉ phối màu khu vực chọn 2 cổng, không can thiệp đăng nhập */
+.nvs-chooser{position:relative;overflow:hidden;isolation:isolate;background:radial-gradient(circle at 88% 8%,rgba(31,232,255,.30),transparent 34%),radial-gradient(circle at 8% 100%,rgba(4,133,240,.32),transparent 45%),linear-gradient(125deg,#04265d 0%,#074e9c 48%,#007fb9 100%);border:1px solid rgba(67,210,255,.58);box-shadow:0 18px 40px rgba(2,57,121,.19),inset 0 1px 0 rgba(255,255,255,.2)}
+.nvs-chooser:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.42;background:linear-gradient(60deg,transparent 49.5%,rgba(119,238,255,.38) 50%,transparent 50.5%) 0 0/92px 80px,linear-gradient(120deg,transparent 49.5%,rgba(119,238,255,.24) 50%,transparent 50.5%) 0 0/120px 90px}
+.nvs-emblem{color:#a5f4ff;filter:drop-shadow(0 0 12px rgba(53,237,255,.55))}
+.nvs-choose-heading h2{color:#fff;text-shadow:0 2px 12px rgba(0,28,78,.35);letter-spacing:.025em}
+.nvs-choose-heading p{color:#d4f4ff}
+.nvs-gate{background:linear-gradient(145deg,rgba(12,101,191,.95),rgba(5,53,133,.97));border:1px solid rgba(126,219,255,.58);box-shadow:inset 0 1px 0 rgba(255,255,255,.17),0 12px 24px rgba(0,28,76,.20);color:#f5fdff}
+.nvs-gate-admin{background:linear-gradient(145deg,#1469ce 0%,#064b9b 55%,#063575 100%)}
+.nvs-gate-work{background:linear-gradient(145deg,#069cbe 0%,#0879af 45%,#07538d 100%)}
+.nvs-gate:hover,.nvs-gate:focus-visible{border-color:#b6faff;box-shadow:0 16px 32px rgba(0,26,70,.34),0 0 0 2px rgba(126,238,255,.26);transform:translateY(-3px)}
+.nvs-gate-icon{display:grid;place-items:center;width:62px;height:62px;border-radius:19px;color:#d7faff;background:rgba(255,255,255,.12);border:1px solid rgba(198,247,255,.28);text-shadow:0 0 16px rgba(102,237,255,.55)}
+.nvs-gate-work .nvs-gate-icon{color:#c9fff6}
+.nvs-gate strong{color:#fff;text-shadow:0 1px 8px rgba(0,38,88,.22)}
+.nvs-gate>span:not(.nvs-gate-icon):not(.nvs-gate-enter){color:#e3f6ff}
+.nvs-gate-enter,.nvs-gate-work .nvs-gate-enter{color:#fff;border-radius:999px;border:1px solid rgba(170,244,255,.42);background:rgba(255,255,255,.13);padding:9px 18px}
+.nvs-process{color:#fff}.nvs-process>i{color:#8aefff}.nvs-process p{color:#d4f4ff}
+@media(max-width:600px){.nvs-gate-icon{width:48px;height:48px;border-radius:14px;font-size:26px}.nvs-gate-enter,.nvs-gate-work .nvs-gate-enter{padding:8px 10px}}
 </style>
 </head>
 <body>
