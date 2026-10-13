@@ -153,6 +153,13 @@
  .hva-header-logo{width:54px!important;height:54px!important;margin-right:6px!important}
 }
 </style>
+<!-- NVS PWA: favicon và cài ứng dụng -->
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta name="theme-color" content="#075CAD">
 </head>
 <body>
 
@@ -486,3 +493,8 @@ async function initPortal(){
 
 document.addEventListener('DOMContentLoaded', initPortal);
 </script>
+
+<!-- NVS PWA: nút cài ứng dụng -->
+<script src="./nvs-pwa.js" defer></script>
+</body>
+</html>
