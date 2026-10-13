@@ -296,7 +296,9 @@ async function hvaPersonnelBuildGroups(){
     global[callback]=data=>{
       clean();
       if(!data||data.success!==true) return reject(new Error(data&&data.message||'Không tải được nhân sự NVS'));
-      const groups=(data.groups||[]).map(g=>hvaPersonnelMakeGroup(g.groupKey,g.tenTo,g.kind,g.members));
+      const groups=(data.groups||[])
+         .filter(g=>!/^cccd$/i.test(String(g.tenTo||'').trim()) && !/^workgroup:cccd$/i.test(String(g.groupKey||'').trim()))
+         .map(g=>hvaPersonnelMakeGroup(g.groupKey,g.tenTo,g.kind,g.members));
       resolve(groups);
     };
     script.onerror=()=>{clean();reject(new Error('Không kết nối được Backend NVS'))};
