@@ -421,6 +421,7 @@ async function dthtStandaloneLogin(){
 
     $('dthtAuth').classList.add('hidden');
     initPortal();
+    window.NVS_refreshNotifications?.();
   } catch(e) {
     msg.style.color = '#be123c';
     msg.textContent = e.message || 'Lỗi mạng khi đăng nhập.';
@@ -583,22 +584,89 @@ document.addEventListener('DOMContentLoaded', initPortal);
 
 
 <script>
-/* NVS quick cards: no mock data and no duplicate backend calls. */
+/* NVS quick cards: Thông báo thật; các thẻ khác giữ nguyên. */
 (()=>{
  const detail=document.getElementById('nvsQuickDetail');
  const cards=[...document.querySelectorAll('[data-nvs-quick]')];
  const sections={
   work:'<h3><i class="bi bi-person-check-fill"></i> VIỆC CỦA TÔI</h3><div class="nvs-work-status"><div><b>—</b>Việc được giao</div><div><b>—</b>Đang thực hiện</div><div><b>—</b>Quá hạn</div><div><b>—</b>Hoàn thành</div></div><p class="nvs-quick-note">Chưa kết nối dữ liệu nhiệm vụ NVS. Không hiển thị số liệu giả.</p>',
-  notice:'<h3><i class="bi bi-bell-fill"></i> THÔNG BÁO</h3><p class="nvs-quick-note">Giao diện đã sẵn sàng. Danh sách thông báo và số chưa đọc sẽ hiển thị khi kết nối nguồn dữ liệu thực.</p>',
   survey:'<h3><i class="bi bi-clipboard-data-fill"></i> KHẢO SÁT – BÌNH CHỌN</h3><p class="nvs-quick-note">Giao diện đã sẵn sàng. Các khảo sát, bình chọn và báo cáo sẽ được hiển thị khi có API được xác nhận.</p>'
  };
+ let notices=[],loaded=false,loading=null,noticeError='';
+ function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+ function identity(){
+  let u={};try{u=JSON.parse(localStorage.getItem('user')||'{}')}catch(_){}
+  return {username:String(u.tenDangNhap||u.username||'').trim().toLowerCase(),
+          token:String(localStorage.getItem('hvaSessionToken')||'').trim()};
+ }
+ function renderNotice(){
+  let html='<h3><i class="bi bi-bell-fill"></i> THÔNG BÁO</h3>';
+  if(noticeError) html+='<p class="nvs-quick-note" role="alert" style="color:#b42332">'+esc(noticeError)+'</p>';
+  else if(!loaded) html+='<p class="nvs-quick-note">Đang tải thông báo...</p>';
+  else if(!notices.length) html+='<p class="nvs-quick-note">Chưa có thông báo.</p>';
+  else html+=notices.map(n=>'<article style="padding:12px 2px;border-top:1px solid #e1ebf3">'+
+    '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">'+
+    '<strong style="color:#074b88;font-size:13px">'+esc(n.tieuDe||'Thông báo')+'</strong>'+
+    (n.daDoc?'':'<span style="color:#be123c;font-size:11px;font-weight:800">Chưa đọc</span>')+'</div>'+
+    '<div style="margin-top:6px;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere">'+esc(n.noiDung||'')+'</div>'+
+    '<div style="margin-top:6px;color:#526b81;font-size:11px">'+esc(n.thoiGian||'')+'</div>'+
+    (n.daDoc?'':'<button type="button" data-nvs-read="'+esc(n.id)+'" style="margin-top:9px;padding:7px 11px;border-radius:8px;background:#e7f6ff;border:1px solid #a5d8f4;color:#07518d;cursor:pointer">Đánh dấu đã đọc</button>')+
+    '</article>').join('');
+  detail.innerHTML=html;
+ }
+ function setNoticeCount(){
+  if(!loaded||noticeError)return;
+  window.NVS_setQuickCounts({notice:notices.filter(n=>!n.daDoc).length});
+ }
+ async function loadNotices(force){
+  const id=identity();
+  if(!id.username||!id.token){noticeError='Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.';loaded=false;if(!detail.hidden&&detail.dataset.current==='notice')renderNotice();return;}
+  if(loading)return loading;
+  if(loaded&&!force)return;
+  noticeError='';
+  loading=(async()=>{
+   try{
+    const url=new URL(DTHT_STANDALONE_BACKEND);
+    url.searchParams.set('action','getNotificationsByUser');
+    url.searchParams.set('sessionToken',id.token);
+    const response=await fetch(url.toString(),{cache:'no-store'});
+    if(!response.ok)throw new Error('Máy chủ trả về HTTP '+response.status);
+    const data=await response.json();
+    if(!data||data.ok!==true||data.success!==true||!Array.isArray(data.notifications))
+      throw new Error(data&&data.message||'Dữ liệu thông báo không hợp lệ.');
+    if(identity().username!==id.username||identity().token!==id.token)return;
+    notices=data.notifications;loaded=true;noticeError='';setNoticeCount();
+   }catch(e){noticeError='Không tải được thông báo: '+(e.message||'Lỗi kết nối.');loaded=false;}
+   finally{loading=null;if(!detail.hidden&&detail.dataset.current==='notice')renderNotice();}
+  })();
+  return loading;
+ }
+ async function markRead(notificationId,btn){
+  const id=identity();if(!id.token)return;
+  btn.disabled=true;btn.textContent='Đang xử lý...';
+  try{
+   const response=await fetch(DTHT_STANDALONE_BACKEND,{
+    method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},
+    body:JSON.stringify({action:'markNotificationRead',sessionToken:id.token,id:notificationId})
+   });
+   if(!response.ok)throw new Error('HTTP '+response.status);
+   const data=await response.json();
+   if(!data||data.ok!==true||data.success!==true)throw new Error(data&&data.message||'Không cập nhật được.');
+   await loadNotices(true);
+  }catch(e){btn.disabled=false;btn.textContent='Đánh dấu đã đọc';noticeError='Không cập nhật trạng thái: '+(e.message||'Lỗi kết nối.');renderNotice();}
+ }
+ detail.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-nvs-read]');
+  if(btn&&detail.contains(btn))markRead(btn.getAttribute('data-nvs-read'),btn);
+ });
  function open(key){
   const same=!detail.hidden&&detail.dataset.current===key;
   cards.forEach(c=>c.setAttribute('aria-expanded',String(!same&&c.dataset.nvsQuick===key)));
   if(same){detail.hidden=true;detail.dataset.current='';return}
-  detail.innerHTML=sections[key];detail.dataset.current=key;detail.hidden=false;
+  detail.dataset.current=key;detail.hidden=false;
+  if(key==='notice'){renderNotice();loadNotices(true);}
+  else detail.innerHTML=sections[key]||'';
  }
- // Chỉ cập nhật huy hiệu khi Backend đã cung cấp số thực; không gán số 0 giả.
  window.NVS_setQuickCounts=function(counts){
   if(!counts||typeof counts!=='object')return;
   for(const key of ['work','notice','survey']){
@@ -608,12 +676,15 @@ document.addEventListener('DOMContentLoaded', initPortal);
    const value=counts[key];
    if(!Number.isInteger(value)||value<0){badge.hidden=true;badge.textContent='';continue}
    badge.textContent=value>99?'99+':String(value);
-   badge.hidden=false;
+   badge.hidden=value===0;
    badge.setAttribute('aria-label',String(value)+' mục');
   }
  };
  cards.forEach(c=>c.addEventListener('click',()=>open(c.dataset.nvsQuick)));
  document.getElementById('nvsBell')?.addEventListener('click',()=>open('notice'));
+ // Đồng bộ khi đăng nhập hoàn tất và khi mở lại trang.
+ window.NVS_refreshNotifications=()=>loadNotices(true);
+ if(identity().username&&identity().token)loadNotices(false);
 })();
 </script>
 
