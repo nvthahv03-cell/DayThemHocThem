@@ -12,8 +12,8 @@
 </style>
 </head>
 <body>
-<header class="hero"><div class="orb" aria-hidden="true"></div><div class="container hero-inner"><div class="topline"><div class="identity"><span class="emblem" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-7h6v7M9 9h.01M15 9h.01"/></svg></span><div class="brand">TRƯỜNG THPT HÒA VANG<br>CỔNG NGHIỆP VỤ SỐ</div></div><a class="back" href="./index.html" aria-label="Quay về trang chính Cổng Nghiệp vụ số">← Trang chính NVS</a></div><div class="hero-copy"><div class="eyebrow">Không gian quản trị · Điều hành</div><h1>DANH MỤC ĐIỀU HÀNH SỐ</h1><p>Thông báo – Phát hành · Lịch công tác · Cuộc họp · Theo dõi · Trợ lý điều hành</p></div></div></header>
-<main class="container main"><div class="panel"><div class="panel-top"><div><h2 class="panel-title">Trung tâm điều hành</h2><p class="panel-sub">Chọn chức năng để thực hiện nghiệp vụ theo phân quyền.</p></div><span id="count" class="count">18 chức năng</span></div><div class="toolbar"><label class="search-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input class="search" id="search" type="search" placeholder="Tìm thông báo, lịch công tác, cuộc họp..." autocomplete="off" aria-label="Tìm chức năng điều hành"></label></div><div id="sections"></div><div id="empty" class="empty">Không tìm thấy chức năng phù hợp.</div><div class="footnote"><strong>Trạng thái bản giao diện:</strong> Đây là danh mục Điều hành số độc lập. Cuộc họp mở module hiện có; các menu khác chỉ là danh mục định hướng, chưa thực hiện lưu hoặc phát hành. Phân quyền và xác thực phiên cần được kiểm tra tại backend trước khi đưa vào vận hành.</div></div></main>
+<header class="hero"><div class="orb" aria-hidden="true"></div><div class="container hero-inner"><div class="topline"><div class="identity"><span class="emblem" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-7h6v7M9 9h.01M15 9h.01"/></svg></span><div class="brand">TRƯỜNG THPT HÒA VANG<br>CỔNG NGHIỆP VỤ SỐ</div></div><a class="back" href="./index.html" aria-label="Quay về trang chính Cổng Nghiệp vụ số">← Trang chính NVS</a></div><div class="hero-copy"><div class="eyebrow">Không gian quản trị · Điều hành</div><h1>TRUNG TÂM ĐIỀU HÀNH CHUYÊN MÔN & CHUYỂN ĐỔI SỐ</h1><p>Điều hành chuyên môn · Chuyển đổi số · AI hỗ trợ quản lý</p></div></div></header>
+<main class="container main"><div class="panel"><div class="panel-top"><div><h2 class="panel-title">Trung tâm điều hành</h2><p class="panel-sub">Chọn chức năng để thực hiện nghiệp vụ theo phân quyền.</p></div><span id="count" class="count">18 chức năng</span></div><div class="toolbar"><label class="search-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input class="search" id="search" type="search" placeholder="Tìm thông báo, lịch công tác, cuộc họp..." autocomplete="off" aria-label="Tìm chức năng điều hành"></label></div><div id="sections"></div><div id="empty" class="empty">Không tìm thấy chức năng phù hợp.</div><div class="footnote"><strong>Trạng thái bản giao diện:</strong> Đây là danh mục Điều hành chuyên môn và CĐS. Cuộc họp mở module hiện có; các menu khác chỉ là danh mục định hướng, chưa thực hiện lưu hoặc phát hành. Phân quyền và xác thực phiên cần được kiểm tra tại backend trước khi đưa vào vận hành.</div></div></main>
 <footer>© 2026 Trường THPT Hòa Vang. Bảo lưu mọi quyền.</footer>
 <div id="modal" class="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc" aria-hidden="true"><div class="dialog"><div class="dialog-symbol" aria-hidden="true">✦</div><h2 id="modalTitle"></h2><p id="modalDesc"></p><div class="dialog-actions"><button type="button" id="modalClose">Đóng</button></div></div></div>
 <script>
@@ -21,29 +21,29 @@
 /* Danh mục tách khỏi backend; các đường dẫn chỉ kích hoạt sau khi được xác thực và kiểm thử. */
 const iconPaths={megaphone:'<path d="M3 11v2a2 2 0 0 0 2 2h2l2 5h3l-2-5h2l8 4V5l-8 4H5a2 2 0 0 0-2 2Z"/><path d="M20 9a3 3 0 0 1 0 6"/>',task:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5h6M9 10h6M9 14h6M9 18h4"/>',bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h3M14 14h3M8 18h3"/>',meeting:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 5a3 3 0 0 1 0 6M17 14a5 5 0 0 1 4 5v1"/>',survey:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',vote:'<rect x="3" y="10" width="18" height="11" rx="2"/><path d="m9 5 3-3 4 4-3 3M7 15h10"/>',progress:'<path d="M3 20h18M6 17V9M12 17V4M18 17v-6"/>',folder:'<path d="M3 7a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v9H3Z"/><path d="m9 14 2 2 4-4"/>',chart:'<path d="M3 3v18h18M7 17v-5M12 17V7M17 17v-9"/>',history:'<path d="M3 12a9 9 0 1 0 3-7M3 4v5h5M12 7v5l4 2"/>',assistant:'<path d="m12 2 2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2ZM19 18l.8 1.2L21 20l-1.2.8L19 22l-.8-1.2L17 20l1.2-.8Z"/>'};
 const groups=[
-{name:'Chỉ đạo – Tổ chức',items:[
-['Thông báo – Phát hành','Triển khai văn bản, xác nhận, khảo sát, bình chọn','megaphone','blue'],
-['Lịch công tác','Lịch tuần, tháng, đột xuất và phê duyệt','calendar','cyan'],
-['Cuộc họp','Tạo cuộc họp, chọn thành phần, điểm danh và kết luận','meeting','teal'],
-['Giao nhiệm vụ','Phân công người thực hiện, thời hạn và kết quả','task','blue'],
-['Chỉ đạo văn bản','Bút phê, phân công và theo dõi xử lý văn bản','folder','cyan'],
-['Tổ chức hoạt động','Tập huấn, hội thảo, đoàn công tác và sự kiện','meeting','teal']
+{name:'Điều hành chuyên môn',items:[
+['Cuộc họp','Tổ chức họp chuyên môn, phân công và theo dõi kết luận','meeting','teal'],
+['Giao nhiệm vụ chuyên môn','Giao việc theo tổ, giáo viên, hạn xử lý và kết quả','task','blue'],
+['Lịch công tác chuyên môn','Lịch dạy học, kiểm tra, họp tổ và nhiệm vụ','calendar','cyan'],
+['Thông báo chuyên môn','Triển khai kế hoạch, xác nhận và khảo sát','megaphone','blue'],
+['Theo dõi tiến độ','Theo dõi báo cáo và nhiệm vụ chuyên môn','progress','blue'],
+['Kiểm tra – Giám sát chuyên môn','Kế hoạch kiểm tra, minh chứng và kết quả','task','teal']
 ]},
-{name:'Tương tác – Xử lý',items:[
-['Nhắc việc','Nhắc nhiệm vụ sắp hạn, quá hạn, chưa xác nhận','bell','cyan'],
-['Theo dõi tiến độ','Tiến độ công việc theo người, tổ và thời hạn','progress','blue'],
-['Xử lý hồ sơ','Nghỉ phép, dạy thay, yêu cầu bổ sung và phê duyệt','folder','teal'],
-['Phản hồi – Giải trình','Tiếp nhận ý kiến, giải trình và xử lý','survey','blue'],
-['Xác nhận – Cam kết','Xác nhận đã đọc, đã nhận và cam kết thực hiện','vote','cyan'],
-['Kiểm tra – Giám sát','Kế hoạch kiểm tra, minh chứng và kết quả','task','teal']
+{name:'Quản lý chuyển đổi số',items:[
+['Cơ sở dữ liệu ngành','Theo dõi cập nhật, rà soát và chất lượng dữ liệu','folder','cyan'],
+['Hồ sơ điện tử','Theo dõi việc triển khai hồ sơ, sổ sách điện tử','folder','teal'],
+['Ứng dụng CNTT và CĐS','Theo dõi ứng dụng công nghệ trong quản lý, dạy học','progress','blue'],
+['Khảo sát trực tuyến','Tổ chức khảo sát, tổng hợp phản hồi','survey','cyan'],
+['Học liệu số','Theo dõi phát triển, chia sẻ và sử dụng học liệu','folder','teal'],
+['Báo cáo chuyển đổi số','Tổng hợp minh chứng và kết quả triển khai','chart','blue']
 ]},
-{name:'Quản trị – Hỗ trợ',items:[
-['Báo cáo – Thống kê','Tổng hợp kết quả điều hành, lọc và xuất báo cáo','chart','blue'],
-['Nhật ký điều hành','Tra cứu lịch sử phát hành, xử lý, điều chỉnh','history','violet'],
-['Trợ lý điều hành','Hỗ trợ dự thảo, tóm tắt và cảnh báo','assistant','violet'],
-['Danh bạ – Nhân sự','Tra cứu nhân sự, tổ, nhóm công tác','meeting','blue'],
-['Quản trị dữ liệu','Cấu hình dữ liệu nghiệp vụ, kiểm tra sao lưu','folder','cyan'],
-['Quản trị hệ thống','Quản lý quyền truy cập, phiên và cấu hình','task','violet']
+{name:'Thống kê – AI hỗ trợ',items:[
+['Báo cáo – Thống kê chuyên môn','Tổng hợp và phân tích dữ liệu chuyên môn','chart','blue'],
+['Trợ lý điều hành AI','Hỗ trợ dự thảo, tóm tắt và gợi ý xử lý','assistant','violet'],
+['Phân tích chất lượng giáo dục','Tổng hợp kết quả học tập, kiểm tra đánh giá','chart','cyan'],
+['Nhắc việc chuyên môn','Theo dõi hạn xử lý công việc được giao','bell','cyan'],
+['Tra cứu văn bản chuyên môn','Tra cứu hướng dẫn và quy định liên quan','history','blue'],
+['Danh bạ – Tổ chuyên môn','Tra cứu nhân sự theo tổ và phân công','meeting','teal']
 ]}];
 const MODULE_LINKS={'Cuộc họp':'./CuocHop.html'};
 function getNVSUser(){try{return JSON.parse(localStorage.getItem('user')||sessionStorage.getItem('user')||'{}')||{}}catch(_){return {}}}
