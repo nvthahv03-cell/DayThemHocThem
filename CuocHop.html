@@ -395,10 +395,13 @@
         placeholder="Nhập yêu cầu tạo cuộc họp tại đây..."></textarea>
       <p class="text-xs text-slate-500" style="line-height:1.55;margin-top:6px">Ví dụ: Họp Liên tịch trực tuyến lúc 14:00 ngày 15/10/2026, 90 phút. Thành phần: Ban Giám hiệu và các tổ trưởng chuyên môn. Nội dung: triển khai nhiệm vụ chuyên môn tháng 10.</p>
       <div class="flex flex-wrap items-center gap-3">
+        <button id="nvsVoiceBtn" type="button" onclick="nvsToggleVoice()" class="raised-btn raised-blue px-4" aria-pressed="false" title="Nhập yêu cầu bằng giọng nói tiếng Việt"><i class="bi bi-mic-fill"></i> NHẬP BẰNG GIỌNG NÓI</button>
         <button id="hvaMeetingAIBtn" type="button" onclick="generateMeetingDraftAI()"
           class="raised-btn raised-blue px-5"><i class="bi bi-stars"></i> TẠO DỰ THẢO BẰNG AI</button>
         <span class="text-xs text-slate-500">AI chỉ điền dự thảo; thầy/cô kiểm tra trước khi lưu hoặc phát hành.</span>
       </div>
+      <div id="nvsVoiceStatus" role="status" aria-live="polite" class="text-xs font-semibold text-slate-600"></div>
+      <div id="nvsAIMissingFields" class="hidden rounded-xl border border-sky-200 bg-sky-50 p-3 text-xs text-sky-900" aria-live="polite"></div>
       <div id="hvaMeetingAIStatus" role="status" aria-live="polite" class="text-xs font-semibold text-slate-600"></div>
       <div id="hvaMeetingAIWarnings" class="hidden rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900"></div>
       <div id="hvaMeetingAIAttendees" class="hidden rounded-xl border border-blue-200 bg-blue-50 p-3 text-xs text-blue-900"></div>
@@ -555,6 +558,57 @@ let meetingAllToData=[]; const meetingSelectedUsernames=new Set();
 const $=id=>document.getElementById(id);
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
+/* NVS VOICE: chỉ chuyển lời nói thành văn bản trong ô yêu cầu, không tự gọi AI. */
+let nvsVoiceRecognition = null;
+let nvsVoiceListening = false;
+function nvsVoiceStatus(message, error) {
+  const el = $('nvsVoiceStatus');
+  if (el) { el.textContent = message || ''; el.className = 'text-xs font-semibold ' + (error ? 'text-red-700' : 'text-slate-600'); }
+  const btn = $('nvsVoiceBtn');
+  if (btn) { btn.setAttribute('aria-pressed', String(nvsVoiceListening)); btn.innerHTML = nvsVoiceListening ? '<i class="bi bi-stop-circle-fill"></i> DỪNG GHI ÂM' : '<i class="bi bi-mic-fill"></i> NHẬP BẰNG GIỌNG NÓI'; }
+}
+function nvsToggleVoice() {
+  if (nvsVoiceListening && nvsVoiceRecognition) { nvsVoiceRecognition.stop(); return; }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) { nvsVoiceStatus('Trình duyệt này chưa hỗ trợ nhận dạng giọng nói. Thầy/cô có thể nhập bằng bàn phím.', true); return; }
+  try {
+    const rec = new SpeechRecognition();
+    nvsVoiceRecognition = rec;
+    rec.lang = 'vi-VN'; rec.continuous = false; rec.interimResults = false;
+    rec.onstart = () => { nvsVoiceListening = true; nvsVoiceStatus('Đang nghe tiếng Việt… Nhấn DỪNG khi cần.'); };
+    rec.onresult = (event) => {
+      const spoken = Array.from(event.results).map(r => r[0] && r[0].transcript || '').join(' ').trim();
+      const field = $('hvaMeetingAIPrompt');
+      if (spoken && field) { field.value = (field.value.trim() ? field.value.trim() + ' ' : '') + spoken; field.dispatchEvent(new Event('input', {bubbles:true})); }
+      nvsVoiceStatus(spoken ? 'Đã nhận giọng nói. Vui lòng kiểm tra câu chữ rồi nhấn TẠO DỰ THẢO BẰNG AI.' : 'Không nhận được nội dung giọng nói.', !spoken);
+    };
+    rec.onerror = e => { nvsVoiceStatus(e.error === 'not-allowed' ? 'Chưa được cấp quyền micro. Vui lòng cho phép micro trong trình duyệt.' : 'Không nhận dạng được giọng nói (' + String(e.error || 'unknown') + '). Vui lòng thử lại hoặc nhập tay.', true); };
+    rec.onend = () => { nvsVoiceListening = false; nvsVoiceRecognition = null; const btn = $('nvsVoiceBtn'); if(btn) {btn.setAttribute('aria-pressed','false'); btn.innerHTML='<i class="bi bi-mic-fill"></i> NHẬP BẰNG GIỌNG NÓI';} };
+    rec.start();
+  } catch(e) { nvsVoiceListening = false; nvsVoiceStatus('Không khởi động được micro. Vui lòng nhập tay.', true); }
+}
+function nvsNormalizeWarning(s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+}
+function nvsShowMissingFields(d) {
+  const el = $('nvsAIMissingFields'); if(!el) return;
+  const checks = [
+    ['Ngày họp','meetingDate'], ['Giờ bắt đầu','meetingStart'], ['Giờ kết thúc','meetingEnd'],
+    ['Người chủ trì','chairperson'], ['Thư ký','secretary']
+  ];
+  if ($('meetingMode').value === 'OFFLINE') checks.push(['Địa điểm','meetingPlace']);
+  const missing = checks.filter(([label,id]) => !String($(id) && $(id).value || '').trim()).map(([label]) => label);
+  if ($('meetingMode').value === 'OFFLINE' && $('meetingPlace').value === 'Khác' && !$('otherPlace').value.trim() && !missing.includes('Địa điểm')) missing.push('Địa điểm cụ thể');
+  el.classList.toggle('hidden', missing.length === 0);
+  el.textContent = missing.length ? 'Cần bổ sung trước khi hoàn tất: ' + missing.join(' • ') + '. Các ô chưa rõ được giữ trống, không tự suy diễn.' : '';
+}
+function nvsMeetingGroupSuggestion(d) {
+  const text = [d.title, d.attendeeSuggestion, $('hvaMeetingAIPrompt') && $('hvaMeetingAIPrompt').value].join(' ').toLowerCase();
+  if (/liên tịch mở rộng|lien tich mo rong/.test(text)) return 'Liên tịch mở rộng';
+  if (/liên tịch|lien tich/.test(text)) return 'Liên tịch';
+  return '';
+}
+
 /* HVA MEETING AI — tích hợp độc lập, không tác động QR/nhân sự/phát hành */
 function hvaMeetingAISetStatus(message, error) {
   const el = $('hvaMeetingAIStatus');
@@ -597,17 +651,19 @@ function hvaMeetingAIApply(d) {
   const attendeeBox = $('hvaMeetingAIAttendees');
   if (attendeeBox) {
     const attendee = String(d.attendeeSuggestion || '').trim();
-    attendeeBox.classList.toggle('hidden', !attendee);
+    const suggestedGroup = nvsMeetingGroupSuggestion(d);
+    attendeeBox.classList.toggle('hidden', !attendee && !suggestedGroup);
     attendeeBox.textContent = attendee
-      ? 'Thành phần AI ghi nhận: ' + attendee + '. Vui lòng chọn thủ công đúng người/nhóm ở mục Thành phần tham dự bên dưới.'
-      : '';
+      ? 'Thành phần AI ghi nhận: ' + attendee + (suggestedGroup ? '. Gợi ý nhóm nhân sự: ' + suggestedGroup : '') + '. Thầy/cô xác nhận và chọn nhóm/người ở mục Thành phần tham dự; AI không tự chọn.'
+      : (suggestedGroup ? 'Gợi ý nhóm nhân sự: ' + suggestedGroup + '. Thầy/cô xác nhận và chọn thủ công; AI không tự chọn.' : '');
   }
   const warningsBox = $('hvaMeetingAIWarnings');
   if (warningsBox) {
-    const warnings = Array.isArray(d.warnings) ? d.warnings.filter(x => typeof x === 'string' && x.trim()) : [];
+    const warnings = Array.isArray(d.warnings) ? [...new Map(d.warnings.filter(x => typeof x === 'string' && x.trim()).map(x => [nvsNormalizeWarning(x), x.trim()])).values()] : [];
     warningsBox.classList.toggle('hidden', warnings.length === 0);
-    warningsBox.textContent = warnings.length ? 'Cần kiểm tra: ' + warnings.join(' • ') : '';
+    warningsBox.textContent = warnings.length ? 'AI lưu ý: ' + warnings.join(' • ') : '';
   }
+  nvsShowMissingFields(d);
 }
 async function generateMeetingDraftAI() {
   const prompt = String($('hvaMeetingAIPrompt').value || '').trim();
