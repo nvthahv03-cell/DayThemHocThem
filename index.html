@@ -138,6 +138,21 @@
 .hva-logout-cancel{background:#e8f4ff;color:#075cad;border:1px solid #b5d9f6}
 .hva-logout-confirm{background:linear-gradient(115deg,#d83758,#b91844);color:#fff;border:1px solid #d83758;box-shadow:0 7px 17px #ba204029}
 @media(max-width:720px){.hva-header-logo{width:43px;height:43px;margin-right:6px}.hva-pro-brand{gap:4px}.hva-pro-brandtext{width:auto}.hva-pro-divider{height:38px}.hva-logout-dialog{padding:25px 18px}}
+
+/* Logo chính thức: nền trắng tròn để giữ đúng màu trên header Digital */
+.hva-header-logo{
+  width:78px!important;height:78px!important;
+  padding:6px!important;object-fit:contain!important;
+  background:#fff!important;border-radius:50%!important;
+  border:2px solid rgba(255,255,255,.95)!important;
+  box-shadow:0 5px 18px rgba(0,29,80,.25)!important;
+  filter:none!important;margin-right:14px!important;
+}
+.hva-login-logo{background:transparent!important;border:0!important;box-shadow:none!important}
+.hva-login-logo img{object-fit:contain!important}
+@media(max-width:720px){
+ .hva-header-logo{width:50px!important;height:50px!important;padding:4px!important;margin-right:6px!important}
+}
 </style>
 </head>
 <body>
