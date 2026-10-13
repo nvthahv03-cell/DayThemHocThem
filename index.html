@@ -200,6 +200,17 @@
 <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="theme-color" content="#075CAD">
+<style>
+/* NVS Compact V2.1: tên gọn, chuông cam, huy hiệu chỉ hiện khi có dữ liệu thật */
+.nvs-quick-card{min-height:62px;padding:10px 13px;gap:10px}
+.nvs-quick-card .nvs-quick-icon{position:relative;display:inline-flex;flex-shrink:0}
+.nvs-quick-card .nvs-quick-icon>i{width:39px;height:39px;font-size:21px}
+.nvs-quick-card[data-nvs-quick="notice"] .nvs-quick-icon>i{background:linear-gradient(135deg,#f59e0b,#f97316)}
+.nvs-quick-badge{position:absolute;right:-7px;top:-7px;min-width:19px;height:19px;padding:0 4px;display:grid;place-items:center;background:#ef3348;color:#fff;border:2px solid #fff;border-radius:20px;font:800 10px/1 Arial,sans-serif;box-shadow:0 2px 5px #70121a30}
+.nvs-quick-badge[hidden]{display:none!important}
+.nvs-quick-card>strong{font-size:13px;line-height:1.2}
+@media(max-width:720px){.nvs-quick-card{min-height:67px;padding:8px 3px;gap:6px;flex-direction:column;text-align:center}.nvs-quick-card .nvs-quick-icon>i{width:34px;height:34px;font-size:18px}.nvs-quick-card>strong{font-size:10px;overflow-wrap:anywhere}}
+</style>
 </head>
 <body>
 
@@ -290,9 +301,9 @@
 
   <!-- NVS: Trung tâm cá nhân - giao diện tham khảo HVA, dữ liệu thực chờ kết nối -->
   <section class="nvs-quick" aria-label="Trung tâm cá nhân">
-    <button class="nvs-quick-card" type="button" data-nvs-quick="work" aria-expanded="false"><i class="bi bi-person-check-fill"></i><span><strong>Việc của tôi</strong><small>Nhiệm vụ · Tiến độ</small></span></button>
-    <button class="nvs-quick-card" type="button" data-nvs-quick="notice" aria-expanded="false"><i class="bi bi-bell-fill"></i><span><strong>Thông báo</strong><small>Thông tin mới</small></span></button>
-    <button class="nvs-quick-card" type="button" data-nvs-quick="survey" aria-expanded="false"><i class="bi bi-clipboard-data-fill"></i><span><strong>Khảo sát/Bình chọn</strong><small>Khảo sát · Bình chọn</small></span></button>
+    <button class="nvs-quick-card" type="button" data-nvs-quick="work" aria-expanded="false"><span class="nvs-quick-icon"><i class="bi bi-person-check-fill"></i><span class="nvs-quick-badge" data-nvs-count="work" hidden></span></span><strong>Việc của tôi</strong></button>
+    <button class="nvs-quick-card" type="button" data-nvs-quick="notice" aria-expanded="false"><span class="nvs-quick-icon"><i class="bi bi-bell-fill"></i><span class="nvs-quick-badge" data-nvs-count="notice" hidden></span></span><strong>Thông báo</strong></button>
+    <button class="nvs-quick-card" type="button" data-nvs-quick="survey" aria-expanded="false"><span class="nvs-quick-icon"><i class="bi bi-clipboard-data-fill"></i><span class="nvs-quick-badge" data-nvs-count="survey" hidden></span></span><strong>Khảo sát/Bình chọn</strong></button>
   </section>
   <section id="nvsQuickDetail" class="nvs-quick-detail" hidden aria-live="polite"></section>
 
@@ -564,6 +575,20 @@ document.addEventListener('DOMContentLoaded', initPortal);
   if(same){detail.hidden=true;detail.dataset.current='';return}
   detail.innerHTML=sections[key];detail.dataset.current=key;detail.hidden=false;
  }
+ // Chỉ cập nhật huy hiệu khi Backend đã cung cấp số thực; không gán số 0 giả.
+ window.NVS_setQuickCounts=function(counts){
+  if(!counts||typeof counts!=='object')return;
+  for(const key of ['work','notice','survey']){
+   if(!Object.prototype.hasOwnProperty.call(counts,key))continue;
+   const badge=document.querySelector('[data-nvs-count="'+key+'"]');
+   if(!badge)continue;
+   const value=counts[key];
+   if(!Number.isInteger(value)||value<0){badge.hidden=true;badge.textContent='';continue}
+   badge.textContent=value>99?'99+':String(value);
+   badge.hidden=false;
+   badge.setAttribute('aria-label',String(value)+' mục');
+  }
+ };
  cards.forEach(c=>c.addEventListener('click',()=>open(c.dataset.nvsQuick)));
  document.getElementById('nvsBell')?.addEventListener('click',()=>open('notice'));
 })();
