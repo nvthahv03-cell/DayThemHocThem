@@ -167,6 +167,31 @@
 .nvs-work-status b{display:block;font-size:19px;margin-bottom:4px}.nvs-quick-note{font-size:12px;color:#526b81;margin:8px 0 0;line-height:1.6}
 .nvs-head-bell{border:1px solid #7fe3f4;border-radius:14px;width:43px;height:42px;display:grid;place-items:center;background:#07528e;color:#fff;font-size:19px;cursor:pointer}
 @media(max-width:720px){.nvs-quick{gap:7px}.nvs-quick-card{padding:10px 7px;flex-direction:column;gap:7px;text-align:center;min-height:95px}.nvs-quick-card i{width:34px;height:34px;font-size:18px}.nvs-quick-card strong{font-size:11px}.nvs-quick-card small{font-size:9px}.nvs-work-status{gap:4px}.nvs-work-status div{font-size:9px}}
+/* NVS Mobile Compact V2: chỉ bổ sung giao diện, không thay logic đăng nhập */
+.nvs-header-logout{white-space:nowrap;padding:9px 13px;flex-shrink:0}
+.nvs-search{position:relative;margin-top:12px;z-index:12}
+.nvs-search-wrap{display:flex;align-items:center;gap:13px;min-height:54px;border:2px solid #70c8f4;border-radius:16px;background:linear-gradient(110deg,#fff,#e9f9ff);padding:0 16px;box-shadow:0 7px 19px #075cad17;color:#0076bf}
+.nvs-search-wrap:focus-within{border-color:#0284c7;box-shadow:0 0 0 4px #38bdf82b}
+.nvs-search-wrap i{font-size:24px}
+.nvs-search-wrap input{width:100%;min-width:0;outline:none;border:0;background:transparent;font:600 14px Inter,Arial,sans-serif;color:#063e79;padding:12px 0}
+.nvs-search-results{position:absolute;left:0;right:0;top:calc(100% + 5px);background:white;border:1px solid #9fd5f3;border-radius:14px;box-shadow:0 15px 30px #073b7829;overflow:hidden;max-height:290px;overflow-y:auto}
+.nvs-search-results[hidden]{display:none}
+.nvs-search-result{display:flex;align-items:center;gap:10px;width:100%;padding:13px 15px;background:white;color:#074b88;border:0;border-bottom:1px solid #e6eff8;text-align:left;font:700 13px Inter,Arial,sans-serif;cursor:pointer}
+.nvs-search-result:hover,.nvs-search-result:focus{background:#e7f6ff}
+.nvs-search-result i{font-size:18px}
+@media(max-width:720px){
+ .hva-pro-header{min-height:67px}.hva-pro-header-inner{min-height:65px;grid-template-columns:34px minmax(0,1fr) auto;gap:5px;padding:6px 7px}
+ .hva-pro-back{width:33px;height:33px}.hva-pro-tools{gap:4px;flex-direction:column;align-items:flex-end}
+ .hva-pro-online{height:23px;padding:0 7px;font-size:7px;gap:5px}.hva-pro-online-dot{width:7px;height:7px}.hva-pro-version{display:none}
+ .nvs-header-logout{padding:4px 7px;font-size:9px;border-radius:7px;gap:3px}
+ .hva-pro-school{font-size:clamp(11px,3.3vw,14px)}.hva-pro-kicker{font-size:7px}.hva-pro-slogan{font-size:7px}
+ .shell{margin-top:9px}.hero{padding:11px 14px;gap:7px;border-radius:14px}.hero h1{font-size:17px}.hero p{font-size:11px;margin-top:3px}.legal{padding:5px 9px;font-size:10px}
+ .user-card{margin-top:9px;padding:10px 12px;min-height:66px;border-radius:13px}.user-info{gap:9px}.user-avatar{width:38px;height:38px;border-radius:11px;font-size:20px}.user-name{font-size:16px}.user-meta{font-size:10px;gap:5px 9px;margin-top:2px}
+ .nvs-search{margin-top:9px}.nvs-search-wrap{min-height:44px;padding:0 12px;gap:9px;border-radius:12px}.nvs-search-wrap i{font-size:21px}.nvs-search-wrap input{font-size:12px}
+ .nvs-quick{margin-top:9px;gap:6px}.nvs-quick-card{min-height:72px;padding:8px 4px;gap:4px;border-radius:12px}.nvs-quick-card i{width:29px;height:29px;font-size:16px;border-radius:9px}.nvs-quick-card strong{font-size:10px;overflow-wrap:anywhere}.nvs-quick-card small{font-size:8px;margin-top:1px}
+ .nvs-chooser{margin-top:10px;padding:13px 10px;border-radius:16px}.nvs-emblem{font-size:19px}.nvs-choose-heading h2{font-size:18px;margin:4px 0}.nvs-choose-heading p{font-size:10px}
+ .nvs-two-gates{margin-top:12px;gap:8px}.nvs-gate{min-height:137px;padding:10px 6px;gap:5px;border-radius:13px}.nvs-gate-icon{width:36px;height:36px;font-size:20px;border-radius:10px}.nvs-gate strong{font-size:13px}.nvs-gate>span:not(.nvs-gate-icon):not(.nvs-gate-enter){font-size:9px;line-height:1.3}.nvs-gate-enter{font-size:9px;padding:5px 9px}.nvs-process{padding-top:10px}.nvs-process>i{font-size:15px;margin-bottom:2px}.nvs-process strong{font-size:11px}.nvs-process p{font-size:9px;margin-top:3px}
+}
 </style>
 <!-- NVS PWA: favicon và cài ứng dụng -->
 <link rel="manifest" href="./manifest.json">
@@ -229,7 +254,7 @@
   <div class="hva-pro-header-inner">
     <button type="button" class="hva-pro-back" onclick="location.reload()" aria-label="Làm mới"><i class="bi bi-house"></i></button>
     <div class="hva-pro-brand"><span class="hva-pro-divider"></span><div class="hva-pro-brandtext"><div class="hva-pro-kicker">CỔNG NGHIỆP VỤ SỐ</div><div class="hva-pro-school">Trường THPT Hòa Vang</div><div class="hva-pro-slogan">Quản trị thông minh <b>•</b> Giáo dục sáng tạo</div></div></div>
-    <div class="hva-pro-tools"><div class="hva-pro-online"><span class="hva-pro-online-dot"></span><span>TRỰC TUYẾN</span><span class="hva-pro-version">PORTAL</span></div></div>
+    <div class="hva-pro-tools"><div class="hva-pro-online"><span class="hva-pro-online-dot"></span><span>TRỰC TUYẾN</span><span class="hva-pro-version">PORTAL</span></div><button type="button" class="logout-btn nvs-header-logout" onclick="logoutHVA()"><i class="bi bi-box-arrow-right"></i> Đăng xuất</button></div>
   </div>
 </header>
 
@@ -255,14 +280,19 @@
         </div>
       </div>
     </div>
-    <button type="button" class="logout-btn" onclick="logoutHVA()"><i class="bi bi-box-arrow-right"></i> Đăng xuất</button>
   </div>
+
+  <!-- Kính lúp tìm kiếm nhanh trên menu và nghiệp vụ hiện có -->
+  <section class="nvs-search" aria-label="Tìm kiếm nhanh">
+    <label class="nvs-search-wrap" for="nvsLiveSearch"><i class="bi bi-search" aria-hidden="true"></i><input id="nvsLiveSearch" type="search" autocomplete="off" placeholder="Tìm nhanh menu, nghiệp vụ..." aria-controls="nvsSearchResults" aria-expanded="false"></label>
+    <div id="nvsSearchResults" class="nvs-search-results" hidden aria-live="polite"></div>
+  </section>
 
   <!-- NVS: Trung tâm cá nhân - giao diện tham khảo HVA, dữ liệu thực chờ kết nối -->
   <section class="nvs-quick" aria-label="Trung tâm cá nhân">
     <button class="nvs-quick-card" type="button" data-nvs-quick="work" aria-expanded="false"><i class="bi bi-person-check-fill"></i><span><strong>Việc của tôi</strong><small>Nhiệm vụ · Tiến độ</small></span></button>
     <button class="nvs-quick-card" type="button" data-nvs-quick="notice" aria-expanded="false"><i class="bi bi-bell-fill"></i><span><strong>Thông báo</strong><small>Thông tin mới</small></span></button>
-    <button class="nvs-quick-card" type="button" data-nvs-quick="survey" aria-expanded="false"><i class="bi bi-clipboard-data-fill"></i><span><strong>KS/BC</strong><small>Khảo sát · Bình chọn</small></span></button>
+    <button class="nvs-quick-card" type="button" data-nvs-quick="survey" aria-expanded="false"><i class="bi bi-clipboard-data-fill"></i><span><strong>Khảo sát/Bình chọn</strong><small>Khảo sát · Bình chọn</small></span></button>
   </section>
   <section id="nvsQuickDetail" class="nvs-quick-detail" hidden aria-live="polite"></section>
 
@@ -539,6 +569,37 @@ document.addEventListener('DOMContentLoaded', initPortal);
 })();
 </script>
 
+<script>
+/* Tìm trực tiếp từ ký tự đầu, chỉ điều hướng tới trang đã tồn tại. */
+(()=>{
+ const input=document.getElementById('nvsLiveSearch'), panel=document.getElementById('nvsSearchResults');
+ const entries=[
+  {name:'BGH – Điều hành',url:'./DieuHanh.html',icon:'bi-shield-check'},
+  {name:'GV – TTCM / Nghiệp vụ',url:'./NghiepVu.html',icon:'bi-clipboard2-check'},
+  {name:'Cuộc họp',url:'./CuocHop.html',icon:'bi-people'},
+  {name:'Thông báo',quick:'notice',icon:'bi-bell'},
+  {name:'Việc của tôi',quick:'work',icon:'bi-person-check'},
+  {name:'Khảo sát/Bình chọn',quick:'survey',icon:'bi-clipboard-data'}
+ ];
+ const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase();
+ function close(){panel.hidden=true;input.setAttribute('aria-expanded','false')}
+ input.addEventListener('input',()=>{
+  const q=norm(input.value.trim());panel.replaceChildren();
+  if(!q){close();return}
+  const matches=entries.filter(e=>norm(e.name).includes(q));
+  if(!matches.length){const p=document.createElement('div');p.className='nvs-search-result';p.textContent='Không tìm thấy chức năng phù hợp';panel.appendChild(p)}
+  matches.forEach(e=>{
+   const b=document.createElement('button');b.type='button';b.className='nvs-search-result';
+   const i=document.createElement('i');i.className='bi '+e.icon;b.appendChild(i);b.appendChild(document.createTextNode(e.name));
+   b.addEventListener('click',()=>{close();input.value='';if(e.url){location.href=e.url}else{document.querySelector('[data-nvs-quick="'+e.quick+'"]')?.click()}});
+   panel.appendChild(b);
+  });
+  panel.hidden=false;input.setAttribute('aria-expanded','true');
+ });
+ input.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+ document.addEventListener('click',e=>{if(!e.target.closest('.nvs-search'))close()});
+})();
+</script>
 <!-- NVS PWA: nút cài ứng dụng -->
 <script src="./nvs-pwa.js" defer></script>
 </body>
