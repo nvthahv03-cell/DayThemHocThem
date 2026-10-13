@@ -6,9 +6,16 @@
 .search{display:flex;align-items:center;gap:10px;border:1px solid #c9def6;background:#f8fbff;border-radius:14px;margin:20px 0;padding:0 14px;color:#477ba9}.search:focus-within{outline:2px solid #65c8f6}.search input{font:inherit;font-size:14px;border:0;outline:0;background:transparent;width:100%;padding:14px 0;color:#173e68;min-width:0}.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:18px}.tab{border:1px solid #c9dff6;border-radius:15px;background:#f1f7ff;color:#376c9c;min-height:72px;padding:10px 8px;cursor:pointer;font:700 13px "Segoe UI",Arial,sans-serif;display:flex;align-items:center;justify-content:center;gap:9px}.tab:nth-child(2){background:#edf9f6}.tab:nth-child(3){background:#f5f2ff}.tab:nth-child(4){background:#fff6ec}.tab[aria-selected=true]{background:linear-gradient(125deg,#0754af,#008ed9);border-color:#0863ba;color:white;box-shadow:0 8px 19px #0b69b833}.tab:focus-visible{outline:3px solid #34c7f3;outline-offset:2px}.tab-icon{font-size:20px}
 .panel[hidden]{display:none}.panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}.group{border:1px solid #dbe8f7;background:#fbfdff;border-radius:14px;overflow:hidden}.group[open]{border-color:#aacded;background:white;box-shadow:0 6px 16px #14588a0d}.group summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:15px 14px;font-weight:750;font-size:13px;color:#164d80}.group summary::-webkit-details-marker{display:none}.group-num{border-radius:8px;background:#e9f4ff;color:#1765ae;padding:6px 7px;font-size:11px}.chev{margin-left:auto;color:#7d9cb8;font-size:19px}.group[open] .chev{transform:rotate(180deg)}.items{border-top:1px solid #e8f0f9;padding:3px 11px 9px}.item{min-height:43px;padding:10px 4px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #eef3f9;font-size:12px;line-height:1.5;color:#345d84}.item:last-child{border-bottom:0}.item-num{color:#6687a8;margin-right:5px;font-weight:650}.item.live{color:#0752a2;text-decoration:none;font-weight:750}.item.live:hover{color:#027fb9;background:#f0faff}.status{white-space:nowrap;font-size:10px;color:#8ba0b6}.live-status{color:#08795f;background:#e6f8ef;padding:4px 7px;border-radius:8px}.empty{display:none;color:#71869d;text-align:center;padding:25px;font-size:14px}.note{margin:18px 0 0;font-size:12px;color:#67829e;line-height:1.6}.footer{text-align:center;font-size:12px;color:#6682a0;padding:0 15px 25px}
 @media(max-width:730px){.panel{grid-template-columns:1fr}.workspace{padding:16px}.hero{padding:22px 18px 72px}.pill{display:none}.tabs{gap:6px}.tab{flex-direction:column;font-size:10px;min-height:74px;padding:7px 3px;gap:5px}.tab-icon{font-size:21px}.workspace h2{font-size:17px}.item{font-size:11.5px}.status{font-size:9px}}
+
+/* NVS chuyên môn & CĐS – lớp giao diện bổ sung, không đổi logic */
+.workspace{background:linear-gradient(160deg,#fff,#f8fcff);box-shadow:0 22px 55px #064d981e}
+.group{transition:border-color .2s,box-shadow .2s}.group summary:hover{background:#edf8ff}
+.group summary{font-size:13.5px}.group-num{background:linear-gradient(135deg,#0865c6,#06b7df);color:#fff;min-width:42px;text-align:center}
+.item.live{border-radius:8px;padding-left:8px}.item.pending .status{color:#708da8}
+@media(max-width:730px){.shell{width:calc(100% - 16px)}.workspace{padding:13px}.group summary{padding:13px 10px}.item{padding:10px 3px}}
 </style></head><body>
-<header class="hero"><div class="hero-top"><div class="eyebrow">TRƯỜNG THPT HÒA VANG · CỔNG NGHIỆP VỤ SỐ</div><a class="back" href="./index.html">← Trang chính</a></div><h1>DANH MỤC NGHIỆP VỤ SỐ</h1><p>Thực hiện công việc · Tra cứu thông tin · Theo dõi hồ sơ · Xử lý theo phân quyền</p></header>
-<main class="shell"><div class="workspace"><div class="workspace-top"><div><h2>Không gian tác nghiệp GV – TTCM</h2><p>Chọn nhóm để xem đầy đủ nghiệp vụ. Hồ sơ, sản phẩm được nộp bằng liên kết Google Drive.</p></div><span class="pill">Không tải tệp trực tiếp</span></div>
+<header class="hero"><div class="hero-top"><div class="eyebrow">TRƯỜNG THPT HÒA VANG · CỔNG NGHIỆP VỤ SỐ</div><a class="back" href="./index.html">← Trang chính</a></div><h1>DANH MỤC NGHIỆP VỤ SỐ</h1><p>Chuyên môn · Kiểm tra đánh giá · Học liệu số · Chuyển đổi số</p></header>
+<main class="shell"><div class="workspace"><div class="workspace-top"><div><h2>Không gian tác nghiệp – Tổ chuyên môn & Giáo viên</h2><p>Chọn nhóm để xem đầy đủ nghiệp vụ. Hồ sơ, sản phẩm được nộp bằng liên kết Google Drive.</p></div><span class="pill">Không tải tệp trực tiếp</span></div>
 <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Tìm nghiệp vụ, mã báo cáo, nghỉ dạy, ma trận..." aria-label="Tìm nghiệp vụ" oninput="filterItems()"></label>
 <nav class="tabs" role="tablist" aria-label="Bốn nhóm nghiệp vụ"><button class="tab" id="tab-0" role="tab" aria-controls="panel-0" aria-selected="true" onclick="switchTab(0)"><span class="tab-icon">✎</span><span>Thực hiện – Nộp</span></button><button class="tab" id="tab-1" role="tab" aria-controls="panel-1" aria-selected="false" onclick="switchTab(1)"><span class="tab-icon">⌕</span><span>Tra cứu – Xem</span></button><button class="tab" id="tab-2" role="tab" aria-controls="panel-2" aria-selected="false" onclick="switchTab(2)"><span class="tab-icon">▤</span><span>Hồ sơ của tôi</span></button><button class="tab" id="tab-3" role="tab" aria-controls="panel-3" aria-selected="false" onclick="switchTab(3)"><span class="tab-icon">✓</span><span>Xử lý hồ sơ</span></button></nav>
 <section class="panel" id="panel-0" role="tabpanel" aria-labelledby="tab-0" >
@@ -39,6 +46,8 @@
 <div class="item pending" data-search="1.3.1 Nộp liên kết kế hoạch bài dạy "><span><b class="item-num">1.3.1</b> Nộp liên kết kế hoạch bài dạy</span><span class="status">Chưa kết nối</span></div>
 <div class="item pending" data-search="1.3.2 Báo cáo tiến độ chương trình "><span><b class="item-num">1.3.2</b> Báo cáo tiến độ chương trình</span><span class="status">Chưa kết nối</span></div>
 <div class="item pending" data-search="1.3.3 Nộp minh chứng chuyên môn theo yêu cầu "><span><b class="item-num">1.3.3</b> Nộp minh chứng chuyên môn theo yêu cầu</span><span class="status">Chưa kết nối</span></div>
+<div class="item pending" data-search="1.3.4 Học liệu số ngân hàng học liệu"><span><b class="item-num">1.3.4</b> Học liệu số – Ngân hàng học liệu</span><span class="status">Đang phát triển</span></div>
+<div class="item pending" data-search="1.3.5 Sổ chủ nhiệm điện tử"><span><b class="item-num">1.3.5</b> Sổ chủ nhiệm điện tử</span><span class="status">Đang phát triển</span></div>
 </div></details>
 <details class="group" ><summary><span class="group-num">1.4</span><span>Sản phẩm chuyên môn</span><span class="chev">⌄</span></summary><div class="items">
 <div class="item pending" data-search="1.4.1 Sản phẩm khoa học kỹ thuật "><span><b class="item-num">1.4.1</b> Sản phẩm khoa học kỹ thuật</span><span class="status">Chưa kết nối</span></div>
@@ -55,28 +64,21 @@
 <div class="item pending" data-search="1.5.5 Đề nghị công tác, công vụ "><span><b class="item-num">1.5.5</b> Đề nghị công tác, công vụ</span><span class="status">Chưa kết nối</span></div>
 <div class="item pending" data-search="1.5.6 Đề nghị khác "><span><b class="item-num">1.5.6</b> Đề nghị khác</span><span class="status">Chưa kết nối</span></div>
 </div></details>
-<details class="group" ><summary><span class="group-num">1.6</span><span>Đoàn – hoạt động học sinh</span><span class="chev">⌄</span></summary><div class="items">
-<div class="item pending" data-search="1.6.1 Báo cáo hoạt động Đoàn "><span><b class="item-num">1.6.1</b> Báo cáo hoạt động Đoàn</span><span class="status">Chưa kết nối</span></div>
-<div class="item pending" data-search="1.6.2 Kế hoạch, minh chứng hoạt động "><span><b class="item-num">1.6.2</b> Kế hoạch, minh chứng hoạt động</span><span class="status">Chưa kết nối</span></div>
-<div class="item pending" data-search="1.6.3 Đề xuất hoạt động học sinh "><span><b class="item-num">1.6.3</b> Đề xuất hoạt động học sinh</span><span class="status">Chưa kết nối</span></div>
-</div></details>
-<details class="group" ><summary><span class="group-num">1.7</span><span>Cơ sở vật chất – thiết bị</span><span class="chev">⌄</span></summary><div class="items">
+<details class="group" ><summary><span class="group-num">1.7</span><span>Thiết bị phục vụ dạy học</span><span class="chev">⌄</span></summary><div class="items">
 <div class="item pending" data-search="1.7.1 Đề nghị thiết bị dạy học "><span><b class="item-num">1.7.1</b> Đề nghị thiết bị dạy học</span><span class="status">Chưa kết nối</span></div>
-<div class="item pending" data-search="1.7.2 Báo hỏng, sửa chữa "><span><b class="item-num">1.7.2</b> Báo hỏng, sửa chữa</span><span class="status">Chưa kết nối</span></div>
 <div class="item pending" data-search="1.7.3 Báo cáo sử dụng thiết bị "><span><b class="item-num">1.7.3</b> Báo cáo sử dụng thiết bị</span><span class="status">Chưa kết nối</span></div>
 </div></details>
-<details class="group" ><summary><span class="group-num">1.8</span><span>Văn phòng – thư viện – y tế</span><span class="chev">⌄</span></summary><div class="items">
-<div class="item pending" data-search="1.8.1 Nghiệp vụ văn phòng "><span><b class="item-num">1.8.1</b> Nghiệp vụ văn phòng</span><span class="status">Chưa kết nối</span></div>
-<div class="item pending" data-search="1.8.2 Nghiệp vụ thư viện "><span><b class="item-num">1.8.2</b> Nghiệp vụ thư viện</span><span class="status">Chưa kết nối</span></div>
-<div class="item pending" data-search="1.8.3 Nghiệp vụ y tế học đường "><span><b class="item-num">1.8.3</b> Nghiệp vụ y tế học đường</span><span class="status">Chưa kết nối</span></div>
+<details class="group"><summary><span class="group-num">1.11</span><span>Chuyển đổi số trong dạy học</span><span class="chev">⌄</span></summary><div class="items">
+<div class="item pending" data-search="1.11.1 Ứng dụng CNTT chuyển đổi số dạy học"><span><b class="item-num">1.11.1</b> Ứng dụng CNTT và CĐS trong dạy học</span><span class="status">Đang phát triển</span></div>
+<div class="item pending" data-search="1.11.2 Bồi dưỡng năng lực số"><span><b class="item-num">1.11.2</b> Bồi dưỡng năng lực số</span><span class="status">Đang phát triển</span></div>
+<div class="item pending" data-search="1.11.3 Hướng dẫn hồ sơ điện tử"><span><b class="item-num">1.11.3</b> Hướng dẫn hồ sơ điện tử</span><span class="status">Đang phát triển</span></div>
+<div class="item pending" data-search="1.11.4 AI hỗ trợ giáo viên"><span><b class="item-num">1.11.4</b> AI hỗ trợ giáo viên</span><span class="status">Đang phát triển</span></div>
 </div></details>
-<details class="group" ><summary><span class="group-num">1.9</span><span>Tư vấn, hỗ trợ học sinh</span><span class="chev">⌄</span></summary><div class="items">
-<div class="item pending" data-search="1.9.1 Đề xuất hỗ trợ học sinh "><span><b class="item-num">1.9.1</b> Đề xuất hỗ trợ học sinh</span><span class="status">Chưa kết nối</span></div>
-<div class="item pending" data-search="1.9.2 Báo cáo công tác tư vấn "><span><b class="item-num">1.9.2</b> Báo cáo công tác tư vấn</span><span class="status">Chưa kết nối</span></div>
-</div></details>
-<details class="group" ><summary><span class="group-num">1.10</span><span>Trực – bàn giao</span><span class="chev">⌄</span></summary><div class="items">
-<div class="item pending" data-search="1.10.1 Báo cáo trực "><span><b class="item-num">1.10.1</b> Báo cáo trực</span><span class="status">Chưa kết nối</span></div>
-<div class="item pending" data-search="1.10.2 Bàn giao công việc "><span><b class="item-num">1.10.2</b> Bàn giao công việc</span><span class="status">Chưa kết nối</span></div>
+<details class="group"><summary><span class="group-num">1.12</span><span>Bồi dưỡng HSG – Đội tuyển</span><span class="chev">⌄</span></summary><div class="items">
+<div class="item pending" data-search="1.12.1 Danh sách đội tuyển HSG"><span><b class="item-num">1.12.1</b> Danh sách, phân công đội tuyển</span><span class="status">Đang phát triển</span></div>
+<div class="item pending" data-search="1.12.2 Kế hoạch lịch bồi dưỡng HSG"><span><b class="item-num">1.12.2</b> Kế hoạch – Lịch bồi dưỡng</span><span class="status">Đang phát triển</span></div>
+<div class="item pending" data-search="1.12.3 Sổ ghi đầu bài bồi dưỡng HSG"><span><b class="item-num">1.12.3</b> Sổ ghi đầu bài BD HSG 12</span><span class="status">Chờ kết nối</span></div>
+<div class="item pending" data-search="1.12.4 Đề thi kết quả đội tuyển"><span><b class="item-num">1.12.4</b> Đề thi – Kết quả đội tuyển</span><span class="status">Đang phát triển</span></div>
 </div></details>
 </section>
 <section class="panel" id="panel-1" role="tabpanel" aria-labelledby="tab-1" hidden>
