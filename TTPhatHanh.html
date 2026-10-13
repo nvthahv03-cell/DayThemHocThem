@@ -23,7 +23,7 @@
         })();
     </script>
 
-    <title>Trung Tâm Điều Phối Phát Hành Số - TTĐHS_HVA</title>
+    <title>Nghiệp vụ số THPT Hòa Vang - Phát hành cuộc họp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -83,8 +83,8 @@ body.hva-receiver-mode #hva-module-content-viewer {
                     <i class="bi bi-diagram-3-fill text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-base font-extrabold tracking-wide uppercase text-slate-100">TRUNG TÂM ĐIỀU PHỐI PHÁT HÀNH SỐ <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono">v2.2 Engine</span></h1>
-                    <p class="text-[11px] text-slate-400">Hệ thống điều phối tài liệu & nhiệm vụ tập trung - TTĐHS_HVA</p>
+                    <h1 class="text-base font-extrabold tracking-wide uppercase text-slate-100">NGHIỆP VỤ SỐ - PHÁT HÀNH <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono">v2.2 Engine</span></h1>
+                    <p class="text-[11px] text-slate-400">Cổng Nghiệp vụ số Trường THPT Hòa Vang</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -2511,9 +2511,51 @@ return;
         if (btn) { btn.disabled = true; btn.innerHTML = '<i class="bi bi-hourglass-split"></i> ĐANG PHÁT HÀNH...'; }
         try {
             const payload = PublishEngine.preparePayload(TTDHS_State);
-            const result = await PublishEngine.postToBackend(payload);
+            const isMeeting = /cuochop/i.test(String(TTDHS_State.document?.moduleSource || TTDHS_State.rawSource?.moduleSource || ''));
+            let result;
+            if (isMeeting) {
+                const raw = TTDHS_State.rawSource || {};
+                const data = raw.data || TTDHS_State.document?.data || {};
+                const token = String(localStorage.getItem('hvaSessionToken') || sessionStorage.getItem('hvaSessionToken') || '').trim();
+                if (!token) throw new Error('Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.');
+                const recipients = (Array.isArray(raw.recipientDetails) ? raw.recipientDetails :
+                    (Array.isArray(data.recipients) ? data.recipients : []))
+                    .filter(r => r && typeof r === 'object' && String(r.username || '').trim());
+                if (!recipients.length) throw new Error('Thiếu danh sách người tham dự có tài khoản. Vui lòng trở lại Cuộc họp để chọn lại.');
+                let meetingId = String(raw.meetingId || data.meetingId || '').trim();
+                if (!meetingId) {
+                    if (!data.title || !data.date || !data.startTime || !data.endTime) {
+                        throw new Error('Thiếu tiêu đề, ngày hoặc giờ họp. Vui lòng quay lại Cuộc họp để bổ sung.');
+                    }
+                    // Chỉ tạo bản ghi một lần. Nếu kết nối bị ngắt sau khi gửi,
+                    // không tự thử lại để tránh sinh cuộc họp trùng.
+                    let saved;
+                    try {
+                        saved = await PublishEngine.postToBackend({
+                            action:'createMeeting', sessionToken:token,
+                            ...data, attendanceEnabled:!!data.attendance?.enabled
+                        });
+                    } catch (e) {
+                        throw new Error('Chưa xác nhận được kết quả lưu cuộc họp. Kiểm tra lịch sử cuộc họp trước khi thử lại để tránh tạo trùng. ' + (e.message || e));
+                    }
+                    meetingId = String(saved.meetingId || '').trim();
+                    if (!meetingId) throw new Error('Backend chưa trả mã cuộc họp; chưa thể phát hành.');
+                    raw.meetingId = meetingId;
+                    if (raw.data) raw.data.meetingId = meetingId;
+                    TTDHS_State.rawSource = raw;
+                    StorageEngine.save(CONFIG.STORAGE_KEYS.CURRENT_DOC, raw);
+                }
+                result = await PublishEngine.postToBackend({
+                    action:'publishMeeting',sessionToken:token,meetingId:meetingId,
+                    recipients:recipients
+                });
+            } else {
+                // Không thay đổi tuyến tổng quát đang được Backend khóa.
+                result = await PublishEngine.postToBackend(payload);
+            }
             StorageEngine.save(CONFIG.STORAGE_KEYS.LAST_RESULT, result);
-            alert(result.documentCount ? ('PHÁT HÀNH THÀNH CÔNG ' + result.documentCount + ' VĂN BẢN') : 'PHÁT HÀNH THÀNH CÔNG');
+            alert(result.duplicated ? 'Cuộc họp đã được phát hành trước đó (không tạo trùng).' :
+                (result.documentCount ? ('PHÁT HÀNH THÀNH CÔNG ' + result.documentCount + ' VĂN BẢN') : 'PHÁT HÀNH THÀNH CÔNG'));
         } catch (err) {
             console.error(err);
             alert('PHÁT HÀNH KHÔNG THÀNH CÔNG\n' + (err.message || err));
