@@ -152,6 +152,21 @@
 @media(max-width:720px){
  .hva-header-logo{width:54px!important;height:54px!important;margin-right:6px!important}
 }
+
+/* NVS Dashboard: ba chức năng kế thừa bố cục HVA, chưa giả lập số liệu */
+.nvs-quick{margin:17px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.nvs-quick-card{border:1px solid #b9def5;border-radius:16px;background:linear-gradient(125deg,#eff8ff,#fff);padding:15px;display:flex;align-items:center;gap:12px;text-align:left;color:#07518d;cursor:pointer;min-width:0;box-shadow:0 4px 13px #075cad0e}
+.nvs-quick-card:hover,.nvs-quick-card[aria-expanded=true]{border-color:#1ba7dc;background:#e7f6ff}
+.nvs-quick-card i{font-size:23px;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#0d63bd,#03bad3);color:white;display:grid;place-items:center;flex-shrink:0}
+.nvs-quick-card strong{font-size:14px;font-weight:900;line-height:1.25}.nvs-quick-card small{display:block;font-size:11px;color:#54708b;margin-top:3px}
+.nvs-quick-detail{margin-top:10px;background:white;border:1px solid #c5dff0;border-radius:15px;padding:16px;box-shadow:0 8px 22px #075cad12}
+.nvs-quick-detail[hidden]{display:none}.nvs-quick-detail h3{font-size:15px;font-weight:900;color:#07518d;margin:0 0 10px}
+.nvs-work-status{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.nvs-work-status div{padding:12px 6px;border-radius:12px;text-align:center;background:#edf6ff;color:#174b7b;font-size:11px;font-weight:800}
+.nvs-work-status div:nth-child(2){background:#fff6e5;color:#a35a00}.nvs-work-status div:nth-child(3){background:#fff0f0;color:#b42332}.nvs-work-status div:nth-child(4){background:#eafaf1;color:#087a54}
+.nvs-work-status b{display:block;font-size:19px;margin-bottom:4px}.nvs-quick-note{font-size:12px;color:#526b81;margin:8px 0 0;line-height:1.6}
+.nvs-head-bell{border:1px solid #7fe3f4;border-radius:14px;width:43px;height:42px;display:grid;place-items:center;background:#07528e;color:#fff;font-size:19px;cursor:pointer}
+@media(max-width:720px){.nvs-quick{gap:7px}.nvs-quick-card{padding:10px 7px;flex-direction:column;gap:7px;text-align:center;min-height:95px}.nvs-quick-card i{width:34px;height:34px;font-size:18px}.nvs-quick-card strong{font-size:11px}.nvs-quick-card small{font-size:9px}.nvs-work-status{gap:4px}.nvs-work-status div{font-size:9px}}
 </style>
 <!-- NVS PWA: favicon và cài ứng dụng -->
 <link rel="manifest" href="./manifest.json">
@@ -242,6 +257,14 @@
     </div>
     <button type="button" class="logout-btn" onclick="logoutHVA()"><i class="bi bi-box-arrow-right"></i> Đăng xuất</button>
   </div>
+
+  <!-- NVS: Trung tâm cá nhân - giao diện tham khảo HVA, dữ liệu thực chờ kết nối -->
+  <section class="nvs-quick" aria-label="Trung tâm cá nhân">
+    <button class="nvs-quick-card" type="button" data-nvs-quick="work" aria-expanded="false"><i class="bi bi-person-check-fill"></i><span><strong>Việc của tôi</strong><small>Nhiệm vụ · Tiến độ</small></span></button>
+    <button class="nvs-quick-card" type="button" data-nvs-quick="notice" aria-expanded="false"><i class="bi bi-bell-fill"></i><span><strong>Thông báo</strong><small>Thông tin mới</small></span></button>
+    <button class="nvs-quick-card" type="button" data-nvs-quick="survey" aria-expanded="false"><i class="bi bi-clipboard-data-fill"></i><span><strong>KS/BC</strong><small>Khảo sát · Bình chọn</small></span></button>
+  </section>
+  <section id="nvsQuickDetail" class="nvs-quick-detail" hidden aria-live="polite"></section>
 
   <!-- NVS: HAI CỔNG ĐỘC LẬP, KHÔNG CÒN DANH MỤC CŨ -->
   <section class="nvs-chooser" aria-labelledby="nvs-choose-title">
@@ -492,6 +515,28 @@ async function initPortal(){
 }
 
 document.addEventListener('DOMContentLoaded', initPortal);
+</script>
+
+
+<script>
+/* NVS quick cards: no mock data and no duplicate backend calls. */
+(()=>{
+ const detail=document.getElementById('nvsQuickDetail');
+ const cards=[...document.querySelectorAll('[data-nvs-quick]')];
+ const sections={
+  work:'<h3><i class="bi bi-person-check-fill"></i> VIỆC CỦA TÔI</h3><div class="nvs-work-status"><div><b>—</b>Việc được giao</div><div><b>—</b>Đang thực hiện</div><div><b>—</b>Quá hạn</div><div><b>—</b>Hoàn thành</div></div><p class="nvs-quick-note">Chưa kết nối dữ liệu nhiệm vụ NVS. Không hiển thị số liệu giả.</p>',
+  notice:'<h3><i class="bi bi-bell-fill"></i> THÔNG BÁO</h3><p class="nvs-quick-note">Giao diện đã sẵn sàng. Danh sách thông báo và số chưa đọc sẽ hiển thị khi kết nối nguồn dữ liệu thực.</p>',
+  survey:'<h3><i class="bi bi-clipboard-data-fill"></i> KHẢO SÁT – BÌNH CHỌN</h3><p class="nvs-quick-note">Giao diện đã sẵn sàng. Các khảo sát, bình chọn và báo cáo sẽ được hiển thị khi có API được xác nhận.</p>'
+ };
+ function open(key){
+  const same=!detail.hidden&&detail.dataset.current===key;
+  cards.forEach(c=>c.setAttribute('aria-expanded',String(!same&&c.dataset.nvsQuick===key)));
+  if(same){detail.hidden=true;detail.dataset.current='';return}
+  detail.innerHTML=sections[key];detail.dataset.current=key;detail.hidden=false;
+ }
+ cards.forEach(c=>c.addEventListener('click',()=>open(c.dataset.nvsQuick)));
+ document.getElementById('nvsBell')?.addEventListener('click',()=>open('notice'));
+})();
 </script>
 
 <!-- NVS PWA: nút cài ứng dụng -->
