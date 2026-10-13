@@ -211,6 +211,22 @@
 .nvs-quick-card>strong{font-size:13px;line-height:1.2}
 @media(max-width:720px){.nvs-quick-card{min-height:67px;padding:8px 3px;gap:6px;flex-direction:column;text-align:center}.nvs-quick-card .nvs-quick-icon>i{width:34px;height:34px;font-size:18px}.nvs-quick-card>strong{font-size:10px;overflow-wrap:anywhere}}
 </style>
+
+<style>
+/* NVS Responsive Full Screen V2.2 – chỉ vá bố cục, không can thiệp JS. */
+html{min-height:100%;background:#f5f8fb}
+body{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+/* Main co giãn để vùng Digital lấp phần chiều cao còn lại. */
+body>.shell{flex:1 0 auto;width:100%;display:flex;flex-direction:column;margin-bottom:0;padding-bottom:max(12px,env(safe-area-inset-bottom,0px))}
+body>.shell>.nvs-chooser{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center}
+@media(max-width:720px){
+  body>.shell{margin-top:9px;padding-bottom:max(8px,env(safe-area-inset-bottom,0px))}
+  body>.shell>.nvs-chooser{min-height:0}
+  .nvs-chooser .nvs-process{padding-top:9px}
+  .nvs-chooser .nvs-process p{margin-top:2px}
+}
+/* Nếu mở bảng chi tiết hoặc bàn phím, nội dung được phép cuộn tự nhiên. */
+</style>
 </head>
 <body>
 
