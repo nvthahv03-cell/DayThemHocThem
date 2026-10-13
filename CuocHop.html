@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TTĐHS HVA - Cuộc họp</title>
+<title>Nghiệp vụ số THPT Hòa Vang - Cuộc họp</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -306,7 +306,7 @@
     <button type="button"
             class="hva-pro-back"
             onclick="location.href='./DieuHanh.html'"
-            aria-label="Quay lại trang chủ HVA"
+            aria-label="Quay lại trang Điều hành Nghiệp vụ số"
             title="Quay lại">
       <i class="bi bi-arrow-left"></i>
     </button>
@@ -392,7 +392,7 @@
       <label class="lbl" for="hvaMeetingAIPrompt">Yêu cầu tạo cuộc họp</label>
       <textarea id="hvaMeetingAIPrompt" maxlength="3000" rows="3" class="field textarea-field"
         style="display:block;box-sizing:border-box;width:100%;height:110px;min-height:110px;padding:14px 16px;line-height:1.6;resize:vertical;overflow-y:auto"
-        placeholder="Nhập yêu cầu tạo cuộc họp tại đây..."></textarea>
+        placeholder="Nhập yêu cầu hoặc bấm micro, nói “Hết” để dừng..."></textarea>
       <p class="text-xs text-slate-500" style="line-height:1.55;margin-top:6px">Ví dụ: Họp Liên tịch trực tuyến lúc 14:00 ngày 15/10/2026, 90 phút. Thành phần: Ban Giám hiệu và các tổ trưởng chuyên môn. Nội dung: triển khai nhiệm vụ chuyên môn tháng 10.</p>
       <div class="flex flex-wrap items-center gap-3">
         <button id="nvsVoiceBtn" type="button" onclick="nvsToggleVoice()" class="raised-btn raised-blue px-4" aria-pressed="false" title="Nhập yêu cầu bằng giọng nói tiếng Việt"><i class="bi bi-mic-fill"></i> NHẬP BẰNG GIỌNG NÓI</button>
@@ -558,35 +558,119 @@ let meetingAllToData=[]; const meetingSelectedUsernames=new Set();
 const $=id=>document.getElementById(id);
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-/* NVS VOICE: chỉ chuyển lời nói thành văn bản trong ô yêu cầu, không tự gọi AI. */
+/* NVS VOICE V2: nghe nhiều lượt, khẩu lệnh "Hết", không tự gọi AI. */
 let nvsVoiceRecognition = null;
 let nvsVoiceListening = false;
+let nvsVoiceWanted = false;
+let nvsVoiceRestartTimer = null;
+let nvsVoiceRestartCount = 0;
+let nvsVoiceLastError = '';
+const NVS_VOICE_MAX_RESTARTS = 25;
 function nvsVoiceStatus(message, error) {
   const el = $('nvsVoiceStatus');
   if (el) { el.textContent = message || ''; el.className = 'text-xs font-semibold ' + (error ? 'text-red-700' : 'text-slate-600'); }
   const btn = $('nvsVoiceBtn');
-  if (btn) { btn.setAttribute('aria-pressed', String(nvsVoiceListening)); btn.innerHTML = nvsVoiceListening ? '<i class="bi bi-stop-circle-fill"></i> DỪNG GHI ÂM' : '<i class="bi bi-mic-fill"></i> NHẬP BẰNG GIỌNG NÓI'; }
+  if (btn) {
+    btn.setAttribute('aria-pressed', String(nvsVoiceWanted));
+    btn.innerHTML = nvsVoiceWanted ? '<i class="bi bi-stop-circle-fill"></i> DỪNG GHI ÂM' : '<i class="bi bi-mic-fill"></i> NHẬP BẰNG GIỌNG NÓI';
+    btn.style.background = nvsVoiceWanted ? '#b91c1c' : '';
+  }
+}
+function nvsVoiceStop(message, error) {
+  nvsVoiceWanted = false;
+  nvsVoiceListening = false;
+  if (nvsVoiceRestartTimer) { clearTimeout(nvsVoiceRestartTimer); nvsVoiceRestartTimer = null; }
+  const rec = nvsVoiceRecognition;
+  nvsVoiceRecognition = null;
+  if (rec) { try { rec.stop(); } catch (_) {} }
+  nvsVoiceStatus(message || 'Đã dừng nhập giọng nói. Kiểm tra nội dung rồi nhấn TẠO DỰ THẢO BẰNG AI.', !!error);
+}
+function nvsVoiceAppend(text) {
+  const field = $('hvaMeetingAIPrompt');
+  if (!field || !text) return;
+  const existing = field.value.trimEnd();
+  const remaining = Math.max(0, 3000 - existing.length - (existing ? 1 : 0));
+  if (!remaining) { nvsVoiceStop('Đã đạt giới hạn 3.000 ký tự. Vui lòng kiểm tra nội dung.', true); return; }
+  field.value = existing + (existing ? ' ' : '') + text.slice(0, remaining);
+  field.dispatchEvent(new Event('input', {bubbles:true}));
+}
+function nvsVoiceStartSession() {
+  if (!nvsVoiceWanted) return;
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) { nvsVoiceStop('Trình duyệt chưa hỗ trợ nhận dạng giọng nói. Vui lòng nhập bằng bàn phím.', true); return; }
+  let rec;
+  try {
+    rec = new SpeechRecognition();
+    nvsVoiceRecognition = rec;
+    rec.lang = 'vi-VN';
+    rec.continuous = true;
+    rec.interimResults = false;
+    rec.maxAlternatives = 1;
+    rec.onstart = () => {
+      if (nvsVoiceRecognition !== rec) return;
+      nvsVoiceListening = true;
+      nvsVoiceStatus('ĐANG NGHE — Thầy/cô nói tự nhiên; nói “Hết” ở cuối hoặc bấm DỪNG GHI ÂM.');
+    };
+    rec.onresult = event => {
+      if (nvsVoiceRecognition !== rec || !nvsVoiceWanted) return;
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const result = event.results[i];
+        if (!result.isFinal) continue;
+        let spoken = String(result[0] && result[0].transcript || '').trim();
+        if (!spoken) continue;
+        // Chỉ nhận "Hết" như khẩu lệnh ở cuối một kết quả nhận dạng.
+        // Không xóa các từ "hết" xuất hiện giữa câu.
+        const stopWord = /(?:^|[\s,;.!?])hết[\s.!?]*$/iu;
+        const shouldStop = stopWord.test(spoken);
+        if (shouldStop) spoken = spoken.replace(stopWord, '').trim();
+        if (spoken) { nvsVoiceAppend(spoken); nvsVoiceRestartCount = 0; }
+        if (shouldStop) {
+          nvsVoiceStop('Đã nhận khẩu lệnh “Hết”. Thầy/cô kiểm tra nội dung trước khi tạo dự thảo.');
+          return;
+        }
+      }
+      if (nvsVoiceWanted) nvsVoiceStatus('ĐANG NGHE — Đã ghi nhận lời nói. Tiếp tục nói hoặc nói “Hết” để dừng.');
+    };
+    rec.onerror = event => {
+      if (nvsVoiceRecognition !== rec || !nvsVoiceWanted) return;
+      const code = String(event.error || 'unknown');
+      nvsVoiceLastError = code;
+      if (['not-allowed','service-not-allowed','audio-capture','language-not-supported'].includes(code)) {
+        nvsVoiceStop('Không thể tiếp tục nhận giọng nói (' + code + '). Kiểm tra quyền micro và trình duyệt.', true);
+      } else if (code !== 'no-speech' && code !== 'aborted') {
+        nvsVoiceStatus('Nhận dạng tạm gián đoạn (' + code + '). Đang thử nối lại...', true);
+      }
+    };
+    rec.onend = () => {
+      if (nvsVoiceRecognition !== rec) return;
+      nvsVoiceRecognition = null;
+      nvsVoiceListening = false;
+      if (!nvsVoiceWanted) return;
+      if (++nvsVoiceRestartCount > NVS_VOICE_MAX_RESTARTS) {
+        nvsVoiceStop('Trình duyệt ngắt nhận dạng nhiều lần. Vui lòng bấm micro để bắt đầu lượt mới.', true);
+        return;
+      }
+      nvsVoiceStatus('Micro tạm ngắt; đang nối lại để thầy/cô tiếp tục nói...');
+      nvsVoiceRestartTimer = setTimeout(() => {
+        nvsVoiceRestartTimer = null;
+        if (nvsVoiceWanted) nvsVoiceStartSession();
+      }, 450);
+    };
+    rec.start();
+  } catch (e) {
+    if (nvsVoiceRecognition === rec) nvsVoiceRecognition = null;
+    nvsVoiceStop('Không khởi động được micro. Vui lòng thử lại hoặc nhập tay.', true);
+  }
 }
 function nvsToggleVoice() {
-  if (nvsVoiceListening && nvsVoiceRecognition) { nvsVoiceRecognition.stop(); return; }
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) { nvsVoiceStatus('Trình duyệt này chưa hỗ trợ nhận dạng giọng nói. Thầy/cô có thể nhập bằng bàn phím.', true); return; }
-  try {
-    const rec = new SpeechRecognition();
-    nvsVoiceRecognition = rec;
-    rec.lang = 'vi-VN'; rec.continuous = false; rec.interimResults = false;
-    rec.onstart = () => { nvsVoiceListening = true; nvsVoiceStatus('Đang nghe tiếng Việt… Nhấn DỪNG khi cần.'); };
-    rec.onresult = (event) => {
-      const spoken = Array.from(event.results).map(r => r[0] && r[0].transcript || '').join(' ').trim();
-      const field = $('hvaMeetingAIPrompt');
-      if (spoken && field) { field.value = (field.value.trim() ? field.value.trim() + ' ' : '') + spoken; field.dispatchEvent(new Event('input', {bubbles:true})); }
-      nvsVoiceStatus(spoken ? 'Đã nhận giọng nói. Vui lòng kiểm tra câu chữ rồi nhấn TẠO DỰ THẢO BẰNG AI.' : 'Không nhận được nội dung giọng nói.', !spoken);
-    };
-    rec.onerror = e => { nvsVoiceStatus(e.error === 'not-allowed' ? 'Chưa được cấp quyền micro. Vui lòng cho phép micro trong trình duyệt.' : 'Không nhận dạng được giọng nói (' + String(e.error || 'unknown') + '). Vui lòng thử lại hoặc nhập tay.', true); };
-    rec.onend = () => { nvsVoiceListening = false; nvsVoiceRecognition = null; const btn = $('nvsVoiceBtn'); if(btn) {btn.setAttribute('aria-pressed','false'); btn.innerHTML='<i class="bi bi-mic-fill"></i> NHẬP BẰNG GIỌNG NÓI';} };
-    rec.start();
-  } catch(e) { nvsVoiceListening = false; nvsVoiceStatus('Không khởi động được micro. Vui lòng nhập tay.', true); }
+  if (nvsVoiceWanted) { nvsVoiceStop(); return; }
+  nvsVoiceWanted = true;
+  nvsVoiceRestartCount = 0;
+  nvsVoiceLastError = '';
+  nvsVoiceStatus('Đang khởi động micro...');
+  nvsVoiceStartSession();
 }
+
 function nvsNormalizeWarning(s) {
   return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
 }
