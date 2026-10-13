@@ -1,6 +1,342 @@
 <!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NVS | Phân công đề kiểm tra - Bản xem trước</title><style>
-:root{font-family:Arial,sans-serif;color:#163d65;background:#f1f7fc}*{box-sizing:border-box}body{margin:0}.shell{max-width:1180px;margin:25px auto;padding:0 15px}header{padding:16px;border-radius:18px;background:linear-gradient(110deg,#063d84,#06afd0);color:white}header h1{font-size:24px;margin:7px 0}header p{margin:0;opacity:.92}.panel{background:white;border:1px solid #cde3f5;border-radius:16px;padding:15px;margin-top:10px;box-shadow:0 5px 15px #063b7810}h2{font-size:17px;margin:0 0 10px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.field{display:flex;flex-direction:column;gap:7px;font-weight:bold;font-size:13px}input,select{height:38px;width:100%;border:1px solid #b6cfe4;border-radius:9px;padding:0 12px;color:#193e60;font-size:14px;background:white}input:focus,select:focus{outline:2px solid #5ac5ef}button{border:0;background:#0876c1;color:white;padding:10px 14px;border-radius:10px;font-weight:bold;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}.note{font-size:13px;color:#55748c;line-height:1.6}.banner{padding:12px 15px;background:#eaf6ff;border:1px solid #b8dffc;border-radius:10px;margin:13px 0}.warning{color:#a43b18}.steps{display:grid;gap:7px}.step{border:1px solid #d8e7f3;border-radius:12px;padding:9px 11px;display:grid;grid-template-columns:1.35fr 1.2fr 1fr;gap:12px;align-items:center}.step strong{font-size:14px}.step small{display:block;margin-top:6px;color:#647d91}#msg{white-space:pre-wrap}.actions{display:flex;gap:10px;flex-wrap:wrap}.outline{background:#e9f5fd;color:#0869aa;border:1px solid #b2d9f4}@media(max-width:760px){.grid{grid-template-columns:1fr}.step{grid-template-columns:1fr}header h1{font-size:20px}}.deadline-group{display:grid;grid-template-columns:minmax(0,1fr) 105px;gap:6px}.deadline-group input{min-width:0;padding:0 8px}.exam-heading{font-size:15px;color:#075cad;background:#eaf6ff;border-radius:9px;padding:8px 11px;margin:10px 0 7px}.step small{margin-top:3px}.step strong{font-size:12.5px}.shell{margin-top:12px}.panel .note{margin:7px 0}.actions button{padding:9px 12px}@media(max-width:760px){.deadline-group{grid-template-columns:1fr 100px}} </style></head><body><div class="shell"><header><small>TRƯỜNG THPT HÒA VANG · CỔNG NGHIỆP VỤ SỐ</small><h1>PHÂN CÔNG – LUÂN CHUYỂN – PHẢN BIỆN ĐỀ KIỂM TRA</h1><p>Bản xem trước độc lập · Chưa lưu dữ liệu · Chưa giao nhiệm vụ</p></header>
-<section class="panel"><h2>1. Nhận diện TTCM và tổ chuyên môn</h2><div id="msg" class="banner">Đang kiểm tra phiên NVS...</div><div class="grid"><label class="field">Tài khoản đăng nhập<input id="user" readonly placeholder="Đọc từ phiên NVS"></label><label class="field">Tổ chuyên môn<input id="team" readonly placeholder="Tự xác định từ nhân sự"></label><label class="field">Số nhân sự tổ<input id="count" readonly placeholder="Chưa tải"></label></div><p class="note">Kế thừa API <code>getNVSMeetingPersonnel</code> của Cuộc họp. Không nhập danh sách giáo viên thủ công. Để xem dữ liệu thật, mở từ cùng miền NVS đã đăng nhập; bản xem trước không yêu cầu nhập mật khẩu.</p><button id="reload" class="outline">Tải lại nhân sự tổ</button></section>
+:root{font-family:Arial,sans-serif;color:#163d65;background:#f1f7fc}*{box-sizing:border-box}body{margin:0}.shell{max-width:1180px;margin:25px auto;padding:0 15px}header{padding:16px;border-radius:18px;background:linear-gradient(110deg,#063d84,#06afd0);color:white}header h1{font-size:24px;margin:7px 0}header p{margin:0;opacity:.92}.panel{background:white;border:1px solid #cde3f5;border-radius:16px;padding:15px;margin-top:10px;box-shadow:0 5px 15px #063b7810}h2{font-size:17px;margin:0 0 10px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.field{display:flex;flex-direction:column;gap:7px;font-weight:bold;font-size:13px}input,select{height:38px;width:100%;border:1px solid #b6cfe4;border-radius:9px;padding:0 12px;color:#193e60;font-size:14px;background:white}input:focus,select:focus{outline:2px solid #5ac5ef}button{border:0;background:#0876c1;color:white;padding:10px 14px;border-radius:10px;font-weight:bold;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}.note{font-size:13px;color:#55748c;line-height:1.6}.banner{padding:12px 15px;background:#eaf6ff;border:1px solid #b8dffc;border-radius:10px;margin:13px 0}.warning{color:#a43b18}.steps{display:grid;gap:7px}.step{border:1px solid #d8e7f3;border-radius:12px;padding:9px 11px;display:grid;grid-template-columns:1.35fr 1.2fr 1fr;gap:12px;align-items:center}.step strong{font-size:14px}.step small{display:block;margin-top:6px;color:#647d91}#msg{white-space:pre-wrap}.actions{display:flex;gap:10px;flex-wrap:wrap}.outline{background:#e9f5fd;color:#0869aa;border:1px solid #b2d9f4}@media(max-width:760px){.grid{grid-template-columns:1fr}.step{grid-template-columns:1fr}header h1{font-size:20px}}.deadline-group{display:grid;grid-template-columns:minmax(0,1fr) 105px;gap:6px}.deadline-group input{min-width:0;padding:0 8px}.exam-heading{font-size:15px;color:#075cad;background:#eaf6ff;border-radius:9px;padding:8px 11px;margin:10px 0 7px}.step small{margin-top:3px}.step strong{font-size:12.5px}.shell{margin-top:12px}.panel .note{margin:7px 0}.actions button{padding:9px 12px}@media(max-width:760px){.deadline-group{grid-template-columns:1fr 100px}} :root{
+  --hva-h-navy:#073b78;
+  --hva-h-blue:#075cad;
+  --hva-h-cyan:#08abc5;
+  --hva-h-white:#f8fdff;
+  --hva-h-line:rgba(190,238,255,.58);
+}
+
+.hva-pro-header{
+  position:sticky;top:0;z-index:40;
+  margin:12px 14px 0;
+  min-height:126px;
+  border-radius:16px;
+  overflow:hidden;isolation:isolate;
+  color:var(--hva-h-white);
+  background:
+    radial-gradient(circle at 82% 34%,rgba(24,225,255,.26),transparent 22%),
+    radial-gradient(circle at 55% 110%,rgba(0,200,255,.36),transparent 31%),
+    linear-gradient(108deg,var(--hva-h-navy) 0%,#064b96 29%,var(--hva-h-blue) 53%,#078fc0 77%,var(--hva-h-cyan) 100%);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 10px 28px rgba(3,43,84,.18),inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+/* Lớp hiệu ứng công nghệ */
+.hva-pro-header::before{
+  content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;opacity:.55;
+  background:
+    radial-gradient(circle at 48% 25%,#67f4ff 0 1px,transparent 2px),
+    radial-gradient(circle at 56% 70%,#3fe2ff 0 1.2px,transparent 2.2px),
+    radial-gradient(circle at 64% 22%,#72f5ff 0 1.1px,transparent 2px),
+    radial-gradient(circle at 72% 68%,#45e6ff 0 1.2px,transparent 2.2px),
+    linear-gradient(60deg,transparent 49.5%,rgba(91,228,255,.30) 50%,transparent 50.5%) 44% 0/118px 82px,
+    linear-gradient(120deg,transparent 49.5%,rgba(91,228,255,.24) 50%,transparent 50.5%) 48% 0/150px 96px;
+}
+.hva-pro-header::after{
+  content:"";position:absolute;z-index:-1;
+  width:245px;height:245px;right:-22px;top:-58px;
+  border-radius:50%;pointer-events:none;opacity:.20;
+  border:1px solid rgba(129,239,255,.72);
+  background:
+    repeating-radial-gradient(circle,transparent 0 21px,rgba(128,238,255,.28) 22px 23px),
+    repeating-linear-gradient(90deg,transparent 0 27px,rgba(128,238,255,.20) 28px 29px),
+    repeating-linear-gradient(0deg,transparent 0 27px,rgba(128,238,255,.18) 28px 29px);
+  box-shadow:0 0 48px rgba(48,221,255,.28),inset 0 0 35px rgba(53,224,255,.22);
+}
+
+.hva-pro-header-inner{
+  min-height:124px;max-width:1460px;margin:0 auto;padding:13px 24px;
+  display:grid;
+  grid-template-columns:58px minmax(570px,1fr) auto;
+  align-items:center;gap:20px;
+}
+
+/* Nút quay lại */
+.hva-pro-back{
+  width:54px;height:54px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  color:#eaf8ff;
+  background:linear-gradient(145deg,rgba(16,112,187,.95),rgba(7,73,141,.95));
+  border:1.5px solid rgba(79,192,255,.50);
+  box-shadow:0 6px 16px rgba(0,36,78,.20),inset 0 1px 0 rgba(255,255,255,.11);
+  transition:transform .14s ease,filter .14s ease,box-shadow .14s ease;
+}
+.hva-pro-back i{font-size:27px;line-height:1;-webkit-text-stroke:.28px currentColor}
+.hva-pro-back:hover{filter:brightness(1.12);transform:translateY(-1px);box-shadow:0 9px 20px rgba(0,35,77,.24)}
+.hva-pro-back:active{transform:translateY(2px) scale(.98)}
+
+/* Logo + thương hiệu */
+.hva-pro-brand{min-width:0;display:flex;align-items:center}
+.hva-pro-logo{
+  width:88px;height:88px;flex:0 0 88px;object-fit:contain;
+  filter:drop-shadow(0 5px 10px rgba(0,31,76,.28));
+}
+.hva-pro-divider{
+  width:1px;height:70px;flex:0 0 1px;
+  background:linear-gradient(transparent,var(--hva-h-line) 16%,var(--hva-h-line) 84%,transparent);
+}
+.hva-pro-brandtext{
+  min-width:0;width:min(620px,100%);
+  text-align:center;line-height:1.06;
+}
+.hva-pro-kicker{
+  font-size:14px;font-weight:800;letter-spacing:.17em;
+  color:rgba(226,244,255,.90);white-space:nowrap;
+}
+.hva-pro-school{
+  margin-top:7px;font-size:30px;font-weight:800;letter-spacing:-.025em;
+  color:#fff;white-space:nowrap;text-shadow:0 2px 10px rgba(0,31,72,.28);
+}
+.hva-pro-slogan{
+  margin-top:8px;font-size:15px;font-weight:600;
+  color:rgba(235,248,255,.90);white-space:nowrap;
+}
+.hva-pro-slogan b{font-weight:800;padding:0 5px;color:#d9f7ff}
+
+/* Cụm bên phải */
+.hva-pro-tools{display:flex;align-items:center;justify-content:flex-end;gap:9px;white-space:nowrap}
+.hva-pro-online{
+  height:42px;padding:0 17px;display:flex;align-items:center;gap:10px;
+  border-radius:22px;border:1.5px solid rgba(83,246,237,.88);
+  background:rgba(2,77,119,.40);
+  box-shadow:inset 0 0 20px rgba(22,230,225,.08),0 5px 15px rgba(0,40,84,.14);
+  font-size:12px;font-weight:800;
+}
+.hva-pro-online-dot{
+  width:11px;height:11px;border-radius:50%;background:#19e98a;
+  box-shadow:0 0 0 5px rgba(25,233,138,.12),0 0 13px rgba(25,233,138,.82);
+}
+.hva-meeting-history{position:relative;margin-top:10px;background:transparent}
+.hva-meeting-history-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:stretch}
+.hva-meeting-history-btn,.hva-meeting-count-btn{
+  min-height:46px;padding:10px 14px;display:flex;align-items:center;gap:9px;
+  color:#0F4C81;background:#eaf6ff;border:1.5px solid #b9d9ee;border-radius:14px;
+  box-shadow:0 5px 15px rgba(15,76,129,.06);
+  font-size:12px;font-weight:900;letter-spacing:.01em;
+  transition:background .14s ease,transform .14s ease,box-shadow .14s ease
+}
+.hva-meeting-history-btn{justify-content:flex-start;text-align:left}
+.hva-meeting-count-btn{justify-content:center;text-align:center;white-space:nowrap}
+.hva-meeting-count-number{color:#ea580c;font-size:13px;font-weight:950}
+.hva-meeting-history-btn:hover,.hva-meeting-count-btn:hover{background:#dff1fd;box-shadow:0 7px 18px rgba(15,76,129,.10)}
+.hva-meeting-history-btn:active,.hva-meeting-count-btn:active{transform:translateY(1px)}
+.hva-meeting-history-btn i,.hva-meeting-count-btn i{font-size:14px;-webkit-text-stroke:.3px currentColor;transition:transform .16s ease}
+.hva-meeting-history.is-open .hva-meeting-count-btn i{transform:rotate(180deg)}
+.hva-meeting-history-menu{
+  display:none;position:static;width:100%;overflow:hidden;margin-top:8px;
+  background:#fff;color:#16324a;border:1.5px solid #d9e7f2;border-radius:14px;
+  box-shadow:0 8px 22px rgba(15,76,129,.08)
+}
+.hva-meeting-history.is-open .hva-meeting-history-menu{display:block}
+.hva-meeting-history-head{padding:12px 15px;border-bottom:1px solid #e6eef5;background:#f6fbff;color:#075cad;font-size:12px;font-weight:800}
+.hva-meeting-history-list{max-height:330px;overflow:auto}
+.hva-meeting-history-empty{padding:20px 16px;text-align:center;color:#64748b;font-size:12px;font-weight:600}
+.hva-meeting-history-item{width:100%;display:grid;grid-template-columns:26px minmax(0,1fr);gap:9px;padding:11px 14px;text-align:left;background:#fff;border:0;border-bottom:1px solid #edf2f7;color:#16324a}
+.hva-meeting-history-item:last-child{border-bottom:0}
+.hva-meeting-history-item:hover{background:#f4faff}
+.hva-meeting-history-no{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:#e8f4ff;color:#075cad;font-size:11px;font-weight:900}
+.hva-meeting-history-name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:800;color:#123b60}
+.hva-meeting-history-meta{margin-top:4px;display:flex;flex-wrap:wrap;gap:4px 12px;color:#64748b;font-size:10.5px;font-weight:600}
+@media(max-width:470px){
+  .hva-meeting-history-actions{grid-template-columns:1fr 1fr;gap:8px}
+  .hva-meeting-history-btn,.hva-meeting-count-btn{min-height:44px;padding:8px 9px;font-size:10px}
+  .hva-meeting-count-btn{white-space:normal}
+  .hva-meeting-count-number{font-size:11px}
+}
+
+.hva-pro-divider-right{height:52px;margin:0 3px}
+
+.hva-pro-user{
+  min-width:205px;display:flex;align-items:center;gap:10px;padding:5px 6px;
+  border-radius:14px;color:#fff;background:transparent;border:1px solid transparent;text-align:left;
+}
+.hva-pro-user:hover{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.10)}
+.hva-pro-avatar{
+  width:52px;height:52px;flex:0 0 52px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;color:#0c73bd;background:#f4fbff;
+  box-shadow:0 3px 12px rgba(0,31,76,.17);
+}
+.hva-pro-avatar i{font-size:31px}
+.hva-pro-usertext{min-width:0;display:flex;flex-direction:column;gap:3px}
+.hva-pro-usertext strong,.hva-pro-usertext small{
+  max-width:155px;overflow:hidden;text-overflow:ellipsis;
+}
+.hva-pro-usertext strong{font-size:13px;font-weight:800;line-height:1.15}
+.hva-pro-usertext small{font-size:11px;font-weight:500;color:rgba(236,248,255,.88)}
+.hva-pro-userchev{margin-left:auto;font-size:14px;-webkit-text-stroke:.25px currentColor}
+
+/* Tablet */
+@media(max-width:1080px){
+  .hva-pro-header-inner{grid-template-columns:50px minmax(430px,1fr) auto;padding:11px 16px;gap:13px}
+  .hva-pro-logo{width:75px;height:75px;flex-basis:75px}
+  .hva-pro-divider{height:60px}
+  .hva-pro-kicker{font-size:11px}
+  .hva-pro-school{font-size:24px}
+  .hva-pro-slogan{font-size:12px}
+  .hva-pro-user{min-width:auto}
+  .hva-pro-usertext,.hva-pro-userchev{display:none}
+  .hva-pro-avatar{width:44px;height:44px;flex-basis:44px}
+}
+
+/* Mobile */
+@media(max-width:720px){
+  .hva-pro-header{margin:6px 6px 0;border-radius:13px;min-height:78px}
+  .hva-pro-header-inner{min-height:76px;padding:7px 9px;grid-template-columns:37px minmax(0,1fr) auto;gap:7px}
+  .hva-pro-back{width:36px;height:36px;border-radius:10px}
+  .hva-pro-back i{font-size:18px}
+  .hva-pro-brand{gap:7px}
+  .hva-pro-logo{width:49px;height:49px;flex-basis:49px}
+  .hva-pro-divider{height:42px}
+  .hva-pro-brandtext{width:auto}
+  .hva-pro-kicker{font-size:7px;letter-spacing:.08em;white-space:normal}
+  .hva-pro-school{font-size:14px;margin-top:3px;white-space:normal}
+  .hva-pro-slogan{font-size:8px;margin-top:4px;white-space:normal}
+  .hva-pro-tools{gap:3px}
+  .hva-pro-online{height:31px;padding:0 9px;font-size:9px}
+  .hva-pro-online-dot{width:8px;height:8px}
+  .hva-pro-header::after{right:-105px;opacity:.12}
+}
+@media(max-width:470px){
+  .hva-pro-online{
+    width:auto;
+    min-width:92px;
+    padding:0 10px;
+    justify-content:center;
+    gap:7px;
+  }
+  .hva-pro-online span:last-child{display:inline}
+}
+
+/* ===== USER TRONG CARD TẠO CUỘC HỌP ===== */
+.hva-create-user-card{gap:18px}
+.hva-create-user{
+  margin-left:auto;display:flex;align-items:center;gap:10px;
+  padding-left:18px;border-left:1px solid rgba(255,255,255,.30);
+  color:#fff;white-space:nowrap;
+}
+.hva-create-avatar{
+  width:48px;height:48px;flex:0 0 48px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:#f4fbff;color:#0c73bd;box-shadow:0 3px 10px rgba(0,31,76,.16);
+}
+.hva-create-avatar i{font-size:28px}
+.hva-create-usertext{display:flex;flex-direction:column;gap:3px;min-width:0}
+.hva-create-usertext strong{max-width:180px;overflow:hidden;text-overflow:ellipsis;font-size:13px;font-weight:900;line-height:1.15}
+.hva-create-usertext small{max-width:180px;overflow:hidden;text-overflow:ellipsis;font-size:11px;font-weight:600;color:rgba(235,248,255,.90)}
+@media(max-width:720px){
+  .hva-create-user-card{gap:10px}
+  .hva-create-user{padding-left:10px;gap:7px}
+  .hva-create-avatar{width:38px;height:38px;flex-basis:38px}
+  .hva-create-avatar i{font-size:22px}
+  .hva-create-usertext strong{max-width:110px;font-size:10px}
+  .hva-create-usertext small{max-width:110px;font-size:9px}
+}
+@media(max-width:430px){
+  .hva-create-user-card{flex-wrap:wrap}
+  .hva-create-user{width:100%;margin-left:0;padding:9px 0 0;border-left:0;border-top:1px solid rgba(255,255,255,.25)}
+}
+
+
+/* Nút × trên từng người/nhóm đã chọn */
+.chip-remove{
+  width:18px;height:18px;flex:0 0 18px;border:0;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:0;margin:0 -2px 0 1px;
+  background:rgba(15,76,129,.10);color:#0F4C81;
+  font-size:16px;font-weight:900;line-height:1;cursor:pointer;
+}
+.chip-remove:hover{background:#fee2e2;color:#dc2626}
+
+
+/* ===== HVA QR CONTROL PASS6 — chỉ bố cục, không đổi nghiệp vụ ===== */
+.hva-qr-control{display:block!important;padding:16px!important}
+.hva-qr-control-head{display:flex;align-items:center;gap:10px}
+.hva-qr-control-head .hero-icon-qr{flex:0 0 auto}
+.hva-qr-control-title{min-width:0;flex:1}
+.hva-qr-refresh{flex:0 0 auto}
+.hva-qr-meetings{margin-top:12px!important;display:grid;gap:10px}
+.hva-qr-meeting-card{
+  padding:12px;border:1.5px solid #ddd6fe;border-radius:14px;
+  background:rgba(255,255,255,.78);box-shadow:0 4px 12px rgba(91,33,182,.05)
+}
+.hva-qr-meeting-top{display:flex;align-items:flex-start;gap:10px}
+.hva-qr-meeting-info{min-width:0;flex:1}
+.hva-qr-meeting-name{font-size:12px;font-weight:900;color:#1e293b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hva-qr-meeting-meta{margin-top:3px;font-size:10px;font-weight:600;color:#64748b}
+.hva-qr-meeting-status{margin-top:6px}
+.hva-qr-actions{margin-top:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.hva-qr-action{
+  min-height:36px;padding:6px 8px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  font-size:9px;font-weight:900;white-space:nowrap
+}
+.hva-qr-action-in{background:#7c3aed;color:#fff}
+.hva-qr-action-out{background:#f59e0b;color:#fff}
+.hva-qr-action-talk{background:#ecfeff;color:#0e7490;border:1px solid #a5f3fc}
+.hva-qr-action-end{background:#fff7ed;color:#dc2626;border:1px solid #fecaca}
+.hva-qr-action-history{grid-column:1/-1;background:#f8fafc;color:#475569;border:1px solid #e2e8f0}
+@media(max-width:470px){
+  .hva-qr-control{padding:13px!important}
+  .hva-qr-control-head{align-items:center}
+  .hva-qr-control-head .hero-icon-qr{width:42px;height:42px;flex-basis:42px}
+  .hva-qr-refresh{width:38px;height:38px;padding:0!important;border-radius:11px!important}
+  .hva-qr-refresh span{display:none}
+  .hva-qr-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+  .hva-qr-action{padding:5px 4px;font-size:8.5px}
+}
+
+
+ 
+body{font-family:Inter,'Segoe UI',Arial,sans-serif;background:#f2f7fd;color:#12385e}
+.shell{max-width:1240px;margin:14px auto;padding:0 14px}
+.panel{border:1px solid #d7e7f6;box-shadow:0 8px 26px #0c4c8210;border-radius:17px}
+input,select{font-family:inherit;min-height:44px;height:44px;border:1.5px solid #c8dcef;border-radius:12px;padding:0 14px;background:#fbfdff;font-weight:600;font-size:14px;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus{outline:0;border-color:#0b8fce;box-shadow:0 0 0 3px #0b9cd421;background:#fff}
+input[readonly],input:disabled{background:#f1f6fb;color:#466782}
+select{padding-right:30px;cursor:pointer}
+.field{gap:6px;font-size:13px;color:#31577b}
+.step{background:#fff;border-color:#e0eaf5;border-radius:11px;gap:10px;padding:8px 11px;grid-template-columns:minmax(205px,1.35fr) minmax(210px,1.25fr) minmax(215px,1fr)}
+.step:nth-of-type(even){background:#f5faff}
+.step strong{font-size:13px;color:#154c82}
+.step small{font-size:11px;line-height:1.35}
+.deadline-group{grid-template-columns:minmax(0,1fr) 94px;gap:7px}
+.deadline-group input{min-width:0;padding:0 10px;font-size:13px}
+.exam-heading{background:linear-gradient(95deg,#e6f3ff,#f3fbff);border-left:4px solid #0989cb;padding:10px 12px}
+button{min-height:41px;border-radius:11px}
+button:focus-visible{outline:3px solid #5ac5ef;outline-offset:2px}
+@media(max-width:760px){.step{grid-template-columns:1fr;gap:7px;padding:11px}.deadline-group{grid-template-columns:minmax(0,1fr) 100px}.shell{padding:0 9px}}
+</style><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><script src="./HVA_Personnel.js"></script></head><body><header class="hva-pro-header">
+  <div class="hva-pro-header-inner">
+
+    <button type="button"
+            class="hva-pro-back"
+            onclick="location.href='./NghiepVu.html'"
+            aria-label="Quay lại Nghiệp vụ số"
+            title="Quay lại">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+
+    <div class="hva-pro-brand">
+<span class="hva-pro-divider" aria-hidden="true"></span>
+
+      <div class="hva-pro-brandtext">
+        <div class="hva-pro-kicker">NGHIỆP VỤ SỐ THPT HÒA VANG</div>
+        <div class="hva-pro-school">Trường THPT Hòa Vang</div>
+        <div class="hva-pro-slogan">Quản trị thông minh <b>•</b> Giáo dục sáng tạo</div>
+      </div>
+    </div>
+
+    <div class="hva-pro-tools">
+      <div class="hva-pro-online-wrap"><div class="hva-pro-online" title="Hệ thống đang trực tuyến">
+        <span class="hva-pro-online-dot"></span>
+        <span>TRỰC TUYẾN</span><span class="hva-pro-version" id="hvaVersionLabel">NVS</span>
+      </div></div>
+    </div>
+
+  </div>
+</header><div class="shell">
+<section class="panel"><h2>1. Thông tin người đăng nhập và tổ chuyên môn</h2><div id="msg" class="banner">Đang kiểm tra phiên NVS...</div><div class="grid"><label class="field">Giáo viên đăng nhập<input id="user" readonly placeholder="Đọc từ phiên NVS"></label><label class="field">Tổ chuyên môn<input id="team" readonly placeholder="Tự xác định từ nhân sự"></label><label class="field">Số nhân sự tổ<input id="count" readonly placeholder="Chưa tải"></label></div><p class="note">Sử dụng HVA_Personnel.js chung với Cuộc họp. Nhân sự lọc theo tổ của người đăng nhập; Backend phải xác thực quyền TTCM trước khi phân công thật.</p><button id="reload" class="outline">Tải lại nhân sự tổ</button></section>
 <section class="panel"><h2>2. Thông tin đợt kiểm tra</h2><div class="grid"><label class="field">Kế hoạch đã phát hành<input placeholder="Sẽ liên kết từ Điều hành" disabled></label><label class="field">Môn kiểm tra<input id="subject" placeholder="Ví dụ: Hóa học"></label><label class="field">Khối<select id="grade"><option value="">Chọn khối</option><option>10</option><option>11</option><option>12</option></select></label><label class="field">Kỳ kiểm tra<select id="exam"><option>Giữa kỳ I</option><option>Cuối kỳ I</option><option>Giữa kỳ II</option><option>Cuối kỳ II</option></select></label><label class="field">Số đề<input id="number" value="1" readonly></label><label class="field">Năm học<input value="2026–2027" readonly></label></div></section>
 <section class="panel"><h2>3. Phân công và thời hạn từng công đoạn</h2><p class="note">Mặc định Đề 1. Bấm “Thêm đề” khi thực sự cần. Ngày tháng hiển thị dd/MM/yyyy.</p><div id="assignments"></div><div class="actions" style="margin-top:10px"><button id="add" class="outline">＋ Thêm đề</button><button id="remove" class="outline" hidden>− Bỏ đề cuối</button><button id="check" class="outline">Kiểm tra</button><button id="preview" class="outline">Xem trước</button><button id="assign">Phân công → TT Phát hành</button></div><div id="result" class="banner" aria-live="polite">Bản V2 là giao diện xem trước: chưa lưu dữ liệu hoặc gửi thông báo thật.</div></section>
 <section class="panel"><h2>4. Quy tắc nghiệp vụ</h2><p class="note">Mỗi đề có chuỗi: ma trận – đặc tả – đề minh họa → đề chính thức và đáp án → phản biện → chỉnh sửa → TTCM nghiệm thu. Người phản biện phải khác người ra đề chính thức của cùng đề. TTCM nhập thời hạn từng bước; khi kết nối Backend mới có chuyển giao, thông báo và lưu liên kết Google Drive.</p><p class="note warning">Lưu ý: API nhân sự của Cuộc họp hiện trả về các nhóm tổ chuyên môn. Việc giới hạn quyền TTCM theo tổ ở Backend phân công phải được bổ sung và kiểm thử trước khi đưa vào vận hành; bộ lọc trên giao diện chưa phải cơ chế bảo mật.</p></section></div>
@@ -10,11 +346,35 @@ const API='https://script.google.com/macros/s/AKfycbzTRkdqyYYI8LQo9MkiTjEIXkAC7B
 const $=id=>document.getElementById(id);let members=[],team='',actor='',proposal=null,numberOfExams=1;
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').toLowerCase().trim();
 function session(){let u={};for(const k of ['hvaCurrentUser','hvaUser','nvsUser','user']){try{const v=JSON.parse(localStorage.getItem(k)||'null');if(v&&(v.username||v.tenDangNhap)){u=v;break}}catch(_){}}return {username:String(u.username||u.tenDangNhap||'').trim(),token:String(localStorage.getItem('hvaSessionToken')||sessionStorage.getItem('hvaSessionToken')||'').trim()}}
-function jsonp(){return new Promise((resolve,reject)=>{const id='nvsTeamCb'+Date.now();const s=document.createElement('script');const timeout=setTimeout(()=>finish(new Error('Hết thời gian chờ nhân sự')),15000);function finish(err,data){clearTimeout(timeout);delete window[id];s.remove();err?reject(err):resolve(data)}window[id]=data=>finish(null,data);s.onerror=()=>finish(new Error('Không kết nối được API nhân sự'));s.src=API+'?action=getNVSMeetingPersonnel&sessionToken='+encodeURIComponent(session().token)+'&callback='+id;document.head.appendChild(s)})}
-async function load(){const s=session();$('user').value=s.username||'';if(!s.username||!s.token){$('msg').textContent='Chưa tìm thấy phiên NVS trên miền này. Hãy đăng nhập ở trang chủ rồi mở module từ cùng miền.';return} $('msg').textContent='Đang lấy nhân sự từ nguồn Cuộc họp...';try{const d=await jsonp();if(!d||d.success!==true)throw Error(d&&d.message||'API từ chối');const groups=(d.groups||[]).filter(g=>g.kind==='TEAM');const own=groups.find(g=>(g.members||[]).some(m=>norm(m.username)===norm(s.username)));if(!own)throw Error('Tài khoản không có trong nhóm tổ chuyên môn của nguồn nhân sự Cuộc họp.');team=own.tenTo;actor=s.username;members=own.members||[];$('team').value=team;$('count').value=members.length+' người';$('msg').textContent='Đã nhận diện tổ '+team+' từ nguồn Cuộc họp. Chỉ hiển thị nhân sự thuộc tổ này.';render()}catch(e){$('msg').textContent='Không tải được nhân sự: '+e.message;members=[];render()}}
+async function load(){
+  const s=session();
+  const core=window.HVAPersonnel;
+  const current=core&&typeof core.currentUser==='function'?core.currentUser():{};
+  const username=String(current.username||current.tenDangNhap||s.username||'').trim();
+  $('user').value=String(current.hoTen||current.hoten||current.fullName||username);
+  if(!username){$('msg').textContent='Chưa nhận diện được người đăng nhập NVS. Vui lòng đăng nhập từ trang chính.';return}
+  if(!core||typeof core.buildGroups!=='function'){$('msg').textContent='Chưa tải được HVA_Personnel.js.';return}
+  $('msg').textContent='Đang đồng bộ nhân sự tổ từ HVA Personnel...';
+  try{
+    const groups=await core.buildGroups();
+    const teams=(Array.isArray(groups)?groups:Object.values(groups||{})).filter(g=>g&&typeof g==='object');
+    const own=teams.find(g=>{
+      const arr=g.members||g.nhanSu||g.people||[];
+      return Array.isArray(arr)&&arr.some(m=>norm(m.username||m.tenDangNhap)===norm(username))
+        && (g.kind==='TEAM'||g.type==='TEAM'||/tổ|to /i.test(String(g.tenTo||g.name||g.label||'')));
+    });
+    if(!own)throw Error('Chưa xác định được tổ chuyên môn của tài khoản từ HVA Personnel.');
+    const raw=own.members||own.nhanSu||own.people||[];
+    members=raw.map(m=>({username:String(m.username||m.tenDangNhap||'').trim(),hoTen:String(m.hoTen||m.hoten||m.fullName||m.name||'').trim()})).filter(m=>m.username);
+    team=String(own.tenTo||own.name||own.label||'');actor=username;
+    $('team').value=team;$('count').value=members.length+' người';
+    $('msg').textContent='Đã đồng bộ '+members.length+' nhân sự thuộc '+team+'. Quyền TTCM sẽ được xác thực ở Backend khi triển khai.';
+    render();
+  }catch(e){members=[];render();$('msg').textContent='Không tải được nhân sự: '+e.message}
+}
 function toISO(value,time){const m=String(value||'').match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(!m)return '';const d=+m[1],mo=+m[2],y=+m[3],test=new Date(y,mo-1,d);if(test.getFullYear()!==y||test.getMonth()!==mo-1||test.getDate()!==d)return '';return m[3]+'-'+m[2]+'-'+m[1]+'T'+(time||'00:00')}
 const stages=['Ma trận – Đặc tả – Đề minh họa','Đề chính thức – Đáp án','Phản biện đề và đáp án','Chỉnh sửa – Hoàn thiện','Nghiệm thu (TTCM)'];
 function render(){const saved={};document.querySelectorAll('#assignments select,#assignments input').forEach(el=>saved[el.id]=el.value);const n=numberOfExams;const container=$('assignments');container.textContent='';for(let i=1;i<=n;i++){const title=document.createElement('h3');title.className='exam-heading';title.textContent='Đề '+i;container.appendChild(title);stages.forEach((stage,j)=>{const box=document.createElement('div');box.className='step';const text=document.createElement('div');const strong=document.createElement('strong');strong.textContent=(j+1)+'. '+stage;const small=document.createElement('small');small.textContent=j===4?'TTCM kiểm tra và nghiệm thu':'Chỉ nộp liên kết Google Drive khi triển khai thật';text.append(strong,small);const sel=document.createElement('select');sel.id='person-'+i+'-'+j;sel.setAttribute('aria-label','Giáo viên đề '+i+', công đoạn '+stage);const empty=document.createElement('option');empty.value='';empty.textContent='Chọn giáo viên trong tổ';sel.appendChild(empty);members.forEach(m=>{const opt=document.createElement('option');opt.value=m.username;opt.textContent=m.hoTen+' ('+m.username+')';sel.appendChild(opt)});if(j===4&&actor&&members.some(m=>norm(m.username)===norm(actor)))sel.value=actor;const dateWrap=document.createElement('div');dateWrap.className='deadline-group';const date=document.createElement('input');date.type='text';date.inputMode='numeric';date.placeholder='dd/MM/yyyy';date.maxLength=10;date.id='deadline-'+i+'-'+j;date.setAttribute('aria-label','Hạn hoàn thành đề '+i+', công đoạn '+stage);const time=document.createElement('input');time.type='time';time.id='time-'+i+'-'+j;time.value='17:00';time.setAttribute('aria-label','Giờ hoàn thành đề '+i+', công đoạn '+stage);dateWrap.append(date,time);box.append(text,sel,dateWrap);container.appendChild(box);[sel,date,time].forEach(el=>{if(Object.prototype.hasOwnProperty.call(saved,el.id))el.value=saved[el.id]})})}}
 function validate(){const problems=[];const n=numberOfExams;for(let i=1;i<=n;i++){let previous='';for(let j=0;j<5;j++){const p=$('person-'+i+'-'+j).value;const d=$('deadline-'+i+'-'+j).value;if(!p)problems.push('Đề '+i+', bước '+(j+1)+': chưa chọn người phụ trách.');if(!d)problems.push('Đề '+i+', bước '+(j+1)+': chưa nhập hạn.');const iso=toISO(d,$('time-'+i+'-'+j).value);if(d&&!iso)problems.push('Đề '+i+', bước '+(j+1)+': ngày không hợp lệ (dd/MM/yyyy).');if(previous&&iso&&iso<previous)problems.push('Đề '+i+', bước '+(j+1)+': hạn trước bước liền kề.');if(iso)previous=iso}if($('person-'+i+'-1').value&&$('person-'+i+'-1').value===$('person-'+i+'-2').value)problems.push('Đề '+i+': người ra đề chính thức không được tự phản biện.')}return problems}
-$('add').addEventListener('click',()=>{if(numberOfExams>=8){$('result').textContent='Tối đa 8 đề trong bản mẫu.';return;}numberOfExams++;$('number').value=numberOfExams;render();$('remove').hidden=numberOfExams===1});$('remove').addEventListener('click',()=>{if(numberOfExams<=1)return;numberOfExams--;$('number').value=numberOfExams;render();$('remove').hidden=numberOfExams===1});$('reload').addEventListener('click',load);$('check').addEventListener('click',()=>{const p=validate();$('result').textContent=p.length?'CẦN HOÀN THIỆN:\n'+p.join('\n'):'Hợp lệ về dữ liệu giao diện. Chưa lưu, chưa phân công thật và chưa kiểm tra quyền ở Backend.'});$('preview').addEventListener('click',()=>{const p=validate();if(p.length){$('result').textContent='Cần hoàn thiện trước khi xem tổng hợp:\n'+p.join('\n');return}const n=numberOfExams;const lines=[];for(let i=1;i<=n;i++){lines.push('ĐỀ '+i);stages.forEach((st,j)=>{const u=$('person-'+i+'-'+j).value;const m=members.find(x=>x.username===u);lines.push('• '+st+': '+(m?m.hoTen:u)+' | Hạn: '+$('deadline-'+i+'-'+j).value+' '+$('time-'+i+'-'+j).value)})}$('result').textContent=lines.join('\n')+'\n\nBẢN XEM TRƯỚC — CHƯA LƯU DỮ LIỆU.'});$('assign').addEventListener('click',()=>{const p=validate();if(p.length){$('result').textContent='Cần hoàn thiện trước khi chuyển TT Phát hành:\\n'+p.join('\\n');return;}const assignees=new Set();const lines=[];for(let i=1;i<=numberOfExams;i++){lines.push('ĐỀ '+i);stages.forEach((st,j)=>{const u=$('person-'+i+'-'+j).value;assignees.add(u);const m=members.find(x=>x.username===u);lines.push(st+' — '+(m?m.hoTen:u)+' — Hạn '+$('deadline-'+i+'-'+j).value+' '+$('time-'+i+'-'+j).value)})}proposal={type:'PHAN_CONG_DE_KIEM_TRA',team,createdBy:actor,subject:$('subject').value,grade:$('grade').value,exam:$('exam').value,recipients:[...assignees],includeBGH:true,lines};$('result').textContent='BẢN CHUẨN BỊ CHUYỂN TT PHÁT HÀNH (CHƯA GỬI):\\nNgười nhận dự kiến: toàn bộ BGH + '+assignees.size+' tài khoản được phân công.\\n\\n'+lines.join('\\n')+'\\n\\nCẦN TÍCH HỢP: TT Phát hành hiện chưa hỗ trợ phát hành loại hồ sơ này. Không tự gửi hoặc điều hướng để tránh mất dữ liệu.';});render();load();
+$('add').addEventListener('click',()=>{if(numberOfExams>=8){$('result').textContent='Tối đa 8 đề trong bản mẫu.';return;}numberOfExams++;$('number').value=numberOfExams;render();$('remove').hidden=numberOfExams===1});$('remove').addEventListener('click',()=>{if(numberOfExams<=1)return;numberOfExams--;$('number').value=numberOfExams;render();$('remove').hidden=numberOfExams===1});$('reload').addEventListener('click',load);$('check').addEventListener('click',()=>{const p=validate();$('result').textContent=p.length?'CẦN HOÀN THIỆN:\n'+p.join('\n'):'Hợp lệ về dữ liệu giao diện. Chưa lưu, chưa phân công thật và chưa kiểm tra quyền ở Backend.'});$('preview').addEventListener('click',()=>{const p=validate();if(p.length){$('result').textContent='Cần hoàn thiện trước khi xem tổng hợp:\n'+p.join('\n');return}const n=numberOfExams;const lines=[];for(let i=1;i<=n;i++){lines.push('ĐỀ '+i);stages.forEach((st,j)=>{const u=$('person-'+i+'-'+j).value;const m=members.find(x=>x.username===u);lines.push('• '+st+': '+(m?m.hoTen:u)+' | Hạn: '+$('deadline-'+i+'-'+j).value+' '+$('time-'+i+'-'+j).value)})}$('result').textContent=lines.join('\n')+'\n\nBẢN XEM TRƯỚC — CHƯA LƯU DỮ LIỆU.'});$('assign').addEventListener('click',()=>{const p=validate();if(p.length){$('result').textContent='Cần hoàn thiện trước khi chuyển TT Phát hành:\\n'+p.join('\n');return;}const assignees=new Set();const lines=[];for(let i=1;i<=numberOfExams;i++){lines.push('ĐỀ '+i);stages.forEach((st,j)=>{const u=$('person-'+i+'-'+j).value;assignees.add(u);const m=members.find(x=>x.username===u);lines.push(st+' — '+(m?m.hoTen:u)+' — Hạn '+$('deadline-'+i+'-'+j).value+' '+$('time-'+i+'-'+j).value)})}proposal={type:'PHAN_CONG_DE_KIEM_TRA',team,createdBy:actor,subject:$('subject').value,grade:$('grade').value,exam:$('exam').value,recipients:[...assignees],includeBGH:true,lines};$('result').textContent='BẢN CHUẨN BỊ CHUYỂN TT PHÁT HÀNH (CHƯA GỬI):\\nNgười nhận dự kiến: toàn bộ BGH + '+assignees.size+' tài khoản được phân công.\\n\\n'+lines.join('\n')+'\\n\\nCẦN TÍCH HỢP: TT Phát hành hiện chưa hỗ trợ phát hành loại hồ sơ này. Không tự gửi hoặc điều hướng để tránh mất dữ liệu.';});render();load();
 </script></body></html>
