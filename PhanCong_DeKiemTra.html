@@ -521,6 +521,10 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 <div class="pcdk-cccd-wrap"><input id="signCCCD" type="password" maxlength="12" inputmode="numeric" autocomplete="off" placeholder="Nhập 12 chữ số CCCD"><button type="button" id="toggleCCCD" aria-label="Hiện CCCD" aria-pressed="false" title="Hiện hoặc ẩn CCCD"><i class="bi bi-eye" aria-hidden="true"></i></button></div>
 <p class="pcdk-privacy">CCCD chỉ dùng để đối chiếu, không lưu trong trình duyệt.</p><div id="verifyStatus" class="note" role="status" aria-live="polite"></div>
 <div class="actions"><button type="button" class="outline" id="closeVerify">Hủy</button><button type="button" id="doVerify">Xác thực</button></div></div></div>
+<div class="verify-modal" id="pcdkSuccessModal" hidden><div class="verify-box" role="dialog" aria-modal="true" aria-labelledby="pcdkSuccessTitle">
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#e5f8ef;color:#09844d;font-size:26px">✓</span><h3 id="pcdkSuccessTitle" style="margin:0;color:#075cad;font-size:18px"></h3></div>
+<p id="pcdkSuccessMessage" style="color:#31577b;line-height:1.6;margin:0 0 20px"></p>
+<div class="actions" style="justify-content:flex-end"><button type="button" id="pcdkSuccessClose">Đóng</button></div></div></div>
 <script>
 'use strict';
 const API='https://script.google.com/macros/s/AKfycbzTRkdqyYYI8LQo9MkiTjEIXkAC7BWK1MroUXPuvKMl9Yu_o9gXFS8QCcyQmq78-ikvvg/exec';
@@ -722,6 +726,14 @@ function resetSignedDocument(){
 
 const ASSIGNMENT_SIGN_VERIFY_ACTION='verifyPhanCongDeSigner';
 const ASSIGNMENT_SIGN_BACKEND=API;
+function pcdkShowSuccess(title,message){
+ $('pcdkSuccessTitle').textContent=title;
+ $('pcdkSuccessMessage').textContent=message;
+ $('pcdkSuccessModal').hidden=false;
+ $('pcdkSuccessClose').focus();
+}
+$('pcdkSuccessClose').addEventListener('click',()=>{$('pcdkSuccessModal').hidden=true;});
+
 function syncSignature(){
  const box=$('paperSignature');if(!box)return;
  box.textContent='';if(signatureState.signed&&signatureState.image){const img=document.createElement('img');img.src=signatureState.image;img.alt='Chữ ký xác nhận';box.appendChild(img)}
@@ -746,15 +758,15 @@ $('doVerify').addEventListener('click',async()=>{
  const cccd=$('signCCCD').value.trim(),status=$('verifyStatus');
  if(!/^\d{12}$/.test(cccd)){status.textContent='CCCD phải đủ 12 chữ số.';return}
  const btn=$('doVerify');btn.disabled=true;status.textContent='Đang đối chiếu với Backend...';
- try{const r=await fetch(ASSIGNMENT_SIGN_BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({action:ASSIGNMENT_SIGN_VERIFY_ACTION,sessionToken:session().token,cccd})});const data=await r.json();if(!data.ok)throw Error(data.message||'Backend chưa hỗ trợ xác thực nghiệp vụ Phân công.');signatureState.proof=String(data.signProof||'');signatureState.verified=Boolean(signatureState.proof);signatureState.signed=Boolean(signatureState.pendingPreview&&signatureState.image&&actorName);signatureState.pendingPreview=false;closeVerifyModal();syncSignature();if(signatureState.signed)$('paperSignature').scrollIntoView({behavior:'smooth',block:'center'})}catch(e){status.textContent='Chưa xác thực được: '+e.message}finally{btn.disabled=false;$('signCCCD').value=''}
+ try{const r=await fetch(ASSIGNMENT_SIGN_BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({action:ASSIGNMENT_SIGN_VERIFY_ACTION,sessionToken:session().token,cccd})});const data=await r.json();if(!data.ok)throw Error(data.message||'Backend chưa hỗ trợ xác thực nghiệp vụ Phân công.');signatureState.proof=String(data.signProof||'');signatureState.verified=Boolean(signatureState.proof);signatureState.signed=false;signatureState.pendingPreview=false;closeVerifyModal();syncSignature();if(signatureState.verified)pcdkShowSuccess('XÁC THỰC CHỮ KÝ THÀNH CÔNG','Danh tính người ký đã được xác thực. Mời thầy/cô kiểm tra nội dung và bấm Ký xác nhận.');}catch(e){status.textContent='Chưa xác thực được: '+e.message}finally{btn.disabled=false;$('signCCCD').value=''}
 });
-$('confirmSign').addEventListener('click',()=>{if(!signatureState.verified||!signatureState.image||!actorName)return;signatureState.signed=true;syncSignature()});
+$('confirmSign').addEventListener('click',()=>{if(!signatureState.verified||!signatureState.image||!actorName)return;signatureState.signed=true;syncSignature();pcdkShowSuccess('ĐÃ KÝ SỐ THÀNH CÔNG','Mời thầy/cô kiểm tra lại nội dung phân công và thực hiện Phân công → TT Phát hành.');});
 $('previewSign').addEventListener('click',()=>{
  if(signatureState.signed){$('paperSignature').scrollIntoView({behavior:'smooth',block:'center'});return;}
  if(!signatureState.image){$('result').textContent='Vui lòng tải ảnh chữ ký cá nhân trước khi ký xác nhận.';$('previewPanel').hidden=true;document.querySelector('.identity-card').scrollIntoView({behavior:'smooth',block:'center'});return;}
  if(!signatureState.verified){signatureState.pendingPreview=true;$('signVerifyModal').hidden=false;$('signCCCD').value='';$('verifyStatus').textContent='';$('signCCCD').focus();return;}
  if(!actorName){$('result').textContent='Chưa xác định người ký từ hồ sơ nhân sự.';return;}
- signatureState.signed=true;syncSignature();$('paperSignature').scrollIntoView({behavior:'smooth',block:'center'});
+ signatureState.signed=true;syncSignature();$('paperSignature').scrollIntoView({behavior:'smooth',block:'center'});pcdkShowSuccess('ĐÃ KÝ SỐ THÀNH CÔNG','Mời thầy/cô kiểm tra lại nội dung phân công và thực hiện Phân công → TT Phát hành.');
 });
 function render(){const saved={};document.querySelectorAll('#assignments select,#assignments input').forEach(el=>saved[el.id]=el.value);const n=numberOfExams;const container=$('assignments');container.textContent='';for(let i=1;i<=n;i++){const title=document.createElement('h3');title.className='exam-heading';title.textContent=n===1?'Phân công các công đoạn':'Đề '+i;container.appendChild(title);stages.forEach((stage,j)=>{const box=document.createElement('div');box.className='step';const text=document.createElement('div');const strong=document.createElement('strong');strong.textContent=(j+1)+'. '+stage;const small=document.createElement('small');small.textContent=j===4?'TTCM kiểm tra và nghiệm thu':'Chỉ nộp liên kết Google Drive khi triển khai thật';text.append(strong,small);const sel=document.createElement('select');sel.id='person-'+i+'-'+j;sel.setAttribute('aria-label','Giáo viên đề '+i+', công đoạn '+stage);const empty=document.createElement('option');empty.value='';empty.textContent='Chọn giáo viên trong tổ';sel.appendChild(empty);const candidates=j===4?members.filter(m=>norm(m.username)===norm(actor)&&actorIsTTCM):
  members.filter(m=>!m.monDay||!$('subject').value||subjectMatches(m.monDay,$('subject').value));
