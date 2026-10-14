@@ -402,6 +402,14 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
  body.print-assignment .paper-table thead{display:table-header-group}
  body.print-assignment .paper-table tr{page-break-inside:avoid}
 }
+
+/* Giao diện kế thừa Báo cáo Chủ nhiệm: khoảng nhập, nhóm chữ ký, A4 */
+.panel{border-radius:18px!important;padding:20px 22px!important}
+.panel input,.panel select,.panel textarea{box-sizing:border-box;padding-left:18px!important;border-radius:10px!important}
+.assignment-sign-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:#e8f4ff;border:1px solid #79b9e8;border-radius:16px;padding:18px;margin:12px 0}
+.assignment-sign-tools strong{color:#06447f}
+.assignment-sign-tools button{border-radius:10px}
+@media screen and (max-width:700px){.panel{padding:14px!important}.assignment-sign-tools{padding:12px}}
 </style><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><script src="./HVA_Personnel.js"></script></head><body><header class="hva-pro-header">
   <div class="hva-pro-header-inner">
 
@@ -437,7 +445,7 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 <section class="panel"><h2>3. Phân công và thời hạn từng công đoạn</h2><p class="note">Mặc định một đề. Bấm “Thêm đề” khi thực sự cần. Ngày tháng hiển thị dd/MM/yyyy.</p><div id="assignments"></div><div class="actions" style="margin-top:10px"><button id="add" class="outline">＋ Thêm đề</button><button id="remove" class="outline" hidden>− Bỏ đề cuối</button><button id="check" class="outline">Kiểm tra</button><button id="preview" class="outline">Xem trước</button><button id="assign">Phân công → TT Phát hành</button></div><div id="result" class="banner" aria-live="polite">Kiểm tra dữ liệu trước khi xem trước. Ký số và phát hành chỉ hoạt động khi Backend hỗ trợ đúng nghiệp vụ.</div></section>
 <section class="panel preview-panel" id="previewPanel" hidden>
 <div class="preview-tools"><strong>BẢN XEM TRƯỚC A4 · PHÂN CÔNG ĐỀ KIỂM TRA</strong><div><button type="button" class="outline" id="backEdit">Chỉnh sửa</button><button type="button" class="outline" id="printPreview">In / Lưu PDF</button></div></div>
-<div class="assignment-sign-tools"><strong>CHỮ KÝ NGƯỜI LẬP</strong><button type="button" class="outline" id="uploadSign">Tải ảnh chữ ký</button><button type="button" class="outline" id="removeSign">Xóa chữ ký</button><button type="button" class="outline" id="verifySign">Xác thực CCCD</button><button type="button" class="outline" id="confirmSign" disabled>Ký xác nhận</button><input type="file" id="signatureFile" accept="image/png,image/jpeg,image/webp"><span class="sign-status" id="signStatus">Chưa xác thực, chưa ký.</span></div>
+<div class="assignment-sign-tools"><strong>CHỮ KÝ TỔ TRƯỞNG CHUYÊN MÔN</strong><button type="button" class="outline" id="uploadSign">Tải ảnh chữ ký</button><button type="button" class="outline" id="removeSign">Xóa chữ ký</button><button type="button" class="outline" id="verifySign">Xác thực CCCD</button><button type="button" class="outline" id="confirmSign" disabled>Ký xác nhận</button><input type="file" id="signatureFile" accept="image/png,image/jpeg,image/webp"><span class="sign-status" id="signStatus">Chưa xác thực, chưa ký.</span></div>
 <div class="paper-scroll-wrapper"><article class="official-paper" id="officialPaper">
 <div class="official-head"><div class="agency"><div class="agency-parent">SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div><div class="agency-unit-wrap"><div class="agency-unit">TRƯỜNG THPT HÒA VANG</div><span class="agency-line"></span></div></div><div class="nation"><div class="nation-title">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div><div class="nation-motto-wrap"><div class="nation-motto">Độc lập - Tự do - Hạnh phúc</div><span class="nation-line"></span></div></div></div>
 <div class="official-title">BẢNG PHÂN CÔNG</div><div class="official-subtitle">Xây dựng và phản biện đề kiểm tra</div><span class="title-decor-line"></span>
@@ -452,42 +460,76 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 const API='https://script.google.com/macros/s/AKfycbzTRkdqyYYI8LQo9MkiTjEIXkAC7BWK1MroUXPuvKMl9Yu_o9gXFS8QCcyQmq78-ikvvg/exec';
 const $=id=>document.getElementById(id);let members=[],team='',actor='',actorName='',actorIsTTCM=false,proposal=null,numberOfExams=1;
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').toLowerCase().trim();
-function session(){let u={};for(const k of ['hvaCurrentUser','hvaUser','nvsUser','user']){try{const v=JSON.parse(localStorage.getItem(k)||'null');if(v&&(v.username||v.tenDangNhap)){u=v;break}}catch(_){}}return {username:String(u.username||u.tenDangNhap||'').trim(),token:String(localStorage.getItem('hvaSessionToken')||sessionStorage.getItem('hvaSessionToken')||'').trim()}}
+function session(){
+  let u={};
+  for(const storage of [localStorage,sessionStorage]){
+    for(const k of ['user','hvaCurrentUser','hvaUser','nvsUser']){
+      try{const v=JSON.parse(storage.getItem(k)||'null');if(v&&(v.username||v.tenDangNhap)){u=v;break}}catch(_){}
+    }
+    if(u.username||u.tenDangNhap)break;
+  }
+  return {
+    username:String(u.username||u.tenDangNhap||'').trim(),
+    hoTen:String(u.hoTen||u.fullName||'').trim(),
+    to:String(u.toBoPhan||u.tenTo||u.to||'').trim(),
+    chucVu:String(u.chucVu||u.vaiTro||'').trim(),
+    token:String(localStorage.getItem('hvaSessionToken')||sessionStorage.getItem('hvaSessionToken')||u.sessionToken||'').trim()
+  };
+}
+function personnelJSONP(token){
+  return new Promise((resolve,reject)=>{
+    const cb='nvsAssignmentPeople_'+Date.now()+'_'+Math.floor(Math.random()*1e6);
+    const url=new URL(API);
+    url.searchParams.set('action','getNVSMeetingPersonnel');
+    url.searchParams.set('sessionToken',token);
+    url.searchParams.set('callback',cb);
+    const script=document.createElement('script');
+    let timer;
+    const clean=()=>{clearTimeout(timer);script.remove();try{delete window[cb]}catch(_){}};
+    window[cb]=data=>{clean();if(!data||data.success!==true){reject(Error(data?.message||'Phiên NVS không hợp lệ.'));return}resolve(data.groups||[])};
+    script.onerror=()=>{clean();reject(Error('Không kết nối được Backend nhân sự NVS.'))};
+    timer=setTimeout(()=>{clean();reject(Error('Quá thời gian tải nhân sự NVS.'))},20000);
+    script.src=url.toString();document.head.appendChild(script);
+  });
+}
 async function load(){
-  const s=session();
-  const core=window.HVAPersonnel;
-  const current=core&&typeof core.currentUser==='function'?core.currentUser():{};
-  const username=String(current.username||current.tenDangNhap||s.username||'').trim();
-  $('user').value=String(current.hoTen||current.hoten||current.fullName||username);
-  if(!username){$('msg').textContent='Chưa nhận diện được người đăng nhập NVS. Vui lòng đăng nhập từ trang chính.';return}
-  if(!core||typeof core.buildGroups!=='function'){$('msg').textContent='Chưa tải được HVA_Personnel.js.';return}
-  $('msg').textContent='Đang đồng bộ nhân sự tổ từ HVA Personnel...';
+  const me=session();
+  const username=me.username;
+  $('user').value=me.hoTen||username;
+  if(!username){$('msg').textContent='Không nhận diện được tài khoản. Vui lòng mở từ NVS sau khi đăng nhập.';return}
+  if(!me.token){$('msg').textContent='Chưa có mã phiên NVS. Vui lòng đăng nhập lại từ trang chính.';return}
+  $('msg').textContent='Đang tải danh sách giáo viên thuộc tổ chuyên môn...';
   try{
-    const groups=await core.buildGroups();
-    const teams=(Array.isArray(groups)?groups:Object.values(groups||{})).filter(g=>g&&typeof g==='object');
-    const own=teams.find(g=>{
-      const arr=g.members||g.nhanSu||g.people||[];
-      return Array.isArray(arr)&&arr.some(m=>norm(m.username||m.tenDangNhap)===norm(username))
-        && (g.kind==='TEAM'||g.type==='TEAM'||/tổ|to /i.test(String(g.tenTo||g.name||g.label||'')));
-    });
-    if(!own)throw Error('Chưa xác định được tổ chuyên môn của tài khoản từ HVA Personnel.');
-    const raw=own.members||own.nhanSu||own.people||[];
-    members=raw.map(m=>({
+    // Backend xác thực token. Không tự kết luận phiên hết hạn chỉ vì thiếu khóa thời gian trên trình duyệt.
+    const groups=await personnelJSONP(me.token);
+    const teams=groups.filter(g=>g&&String(g.kind||'').toUpperCase()==='TEAM');
+    const own=teams.find(g=>Array.isArray(g.members)&&g.members.some(m=>norm(m.username||m.tenDangNhap)===norm(username)))
+       ||teams.find(g=>me.to&&norm(g.tenTo)===norm(me.to)&&g.members?.some(m=>norm(m.username)===norm(username)));
+    if(!own)throw Error('Không tìm thấy tài khoản trong nhóm tổ chuyên môn của Backend NVS.');
+    members=(own.members||[]).map(m=>({
       username:String(m.username||m.tenDangNhap||'').trim(),
-      hoTen:String(m.hoTen||m.hoten||m.fullName||m.name||'').trim(),
-      monDay:String(m.monDay||m.mon||m.raw?.monDay||m.raw?.['Môn dạy']||'').trim(),
-      chucVu:String(m.chucVu||m.raw?.chucVu||'').trim()
-    })).filter(m=>m.username);
+      hoTen:String(m.hoTen||m.fullName||m.name||'').trim(),
+      monDay:String(m.monDay||m.mon||m.raw?.monDay||'').trim(),
+      chucVu:String(m.chucVu||m.vaiTro||'').trim()
+    })).filter(m=>m.username&&m.hoTen).sort((a,b)=>a.hoTen.localeCompare(b.hoTen,'vi'));
     const myself=members.find(m=>norm(m.username)===norm(username));
-    actorName=myself?.hoTen||String(current.hoTen||current.hoten||current.fullName||'').trim();
-    actorIsTTCM=/to truong|ttcm/.test(norm(myself?.chucVu||current.chucVu||''));
-    team=String(own.tenTo||own.name||own.label||'');
+    actorName=myself?.hoTen||me.hoTen;
+    actorIsTTCM=/to truong|ttcm/.test(norm(myself?.chucVu||me.chucVu));
+    team=String(own.tenTo||own.name||own.label||'').trim();
     if(actor!==username){signatureState.verified=false;signatureState.signed=false;}
-    actor=username; $('user').value=actorName||username;refreshSubjects();
-    $('team').value=team;$('count').value=members.length+' người';
-    $('msg').textContent='Đã đồng bộ '+members.length+' nhân sự thuộc '+team+'. '+(members.some(m=>m.monDay)?'Đã nhận trường môn dạy.':'API nhân sự chưa trả về môn dạy; cần bổ sung monDay ở Backend để lọc chính xác.')+' Quyền TTCM cần xác thực ở Backend.';
+    actor=username;
+    $('user').value=actorName||username;
+    $('team').value=team;
+    $('count').value=members.length+' người';
+    refreshSubjects();
+    const hasSubjects=members.some(m=>m.monDay);
+    $('msg').textContent='Đã tải '+members.length+' nhân sự thuộc '+team+'.'+
+      (hasSubjects?' Danh sách giáo viên được lọc thêm theo môn dạy.':' Backend hiện chưa trả về cột Môn dạy; danh sách đang giới hạn theo tổ, chưa thể xác minh môn dạy từng giáo viên.');
     render();
-  }catch(e){members=[];render();$('msg').textContent='Không tải được nhân sự: '+e.message}
+  }catch(e){
+    members=[];team='';$('team').value='';$('count').value='Chưa tải';refreshSubjects();render();
+    $('msg').textContent='Không tải được nhân sự: '+e.message;
+  }
 }
 const SUBJECT_BY_UNIT={
 'MATH_IT':['Toán','Tin học'],'LITERATURE':['Ngữ văn'],'ENGLISH':['Tiếng Anh'],
@@ -564,7 +606,7 @@ function resetSignedDocument(){
 // Chỉ dùng API xác thực của riêng nghiệp vụ Phân công, KHÔNG dùng nhầm action của Chủ nhiệm.
 // Backend hiện chưa có route này: nếu chưa triển khai, xác thực sẽ từ chối an toàn.
 const ASSIGNMENT_SIGN_VERIFY_ACTION='verifyPhanCongDeSigner';
-const ASSIGNMENT_SIGN_BACKEND=API; // Dùng chung điểm cuối Backend NVS; action phải được Backend hỗ trợ riêng.
+const ASSIGNMENT_SIGN_BACKEND=API; // Không thay Backend; chỉ xác thực nếu action hiện có được hỗ trợ.
 function syncSignature(){
  const box=$('paperSignature');if(!box)return;
  box.textContent='';if(signatureState.signed&&signatureState.image){const img=document.createElement('img');img.src=signatureState.image;img.alt='Chữ ký xác nhận';box.appendChild(img)}
@@ -585,11 +627,11 @@ $('doVerify').addEventListener('click',async()=>{
 });
 $('confirmSign').addEventListener('click',()=>{if(!signatureState.verified||!signatureState.image||!actorName)return;signatureState.signed=true;syncSignature()});
 function render(){const saved={};document.querySelectorAll('#assignments select,#assignments input').forEach(el=>saved[el.id]=el.value);const n=numberOfExams;const container=$('assignments');container.textContent='';for(let i=1;i<=n;i++){const title=document.createElement('h3');title.className='exam-heading';title.textContent=n===1?'Phân công các công đoạn':'Đề '+i;container.appendChild(title);stages.forEach((stage,j)=>{const box=document.createElement('div');box.className='step';const text=document.createElement('div');const strong=document.createElement('strong');strong.textContent=(j+1)+'. '+stage;const small=document.createElement('small');small.textContent=j===4?'TTCM kiểm tra và nghiệm thu':'Chỉ nộp liên kết Google Drive khi triển khai thật';text.append(strong,small);const sel=document.createElement('select');sel.id='person-'+i+'-'+j;sel.setAttribute('aria-label','Giáo viên đề '+i+', công đoạn '+stage);const empty=document.createElement('option');empty.value='';empty.textContent='Chọn giáo viên trong tổ';sel.appendChild(empty);const candidates=j===4?members.filter(m=>norm(m.username)===norm(actor)):
- members.filter(m=>m.monDay&&$('subject').value&&subjectMatches(m.monDay,$('subject').value));
- candidates.forEach(m=>{const opt=document.createElement('option');opt.value=m.username;opt.textContent=m.hoTen+(m.monDay?' ('+m.monDay+')':'');sel.appendChild(opt)});if(j===4&&actor&&members.some(m=>norm(m.username)===norm(actor)))sel.value=actor;const dateWrap=document.createElement('div');dateWrap.className='deadline-group';const date=document.createElement('input');date.type='text';date.inputMode='numeric';date.placeholder='dd/MM/yyyy';date.maxLength=10;date.id='deadline-'+i+'-'+j;date.setAttribute('aria-label','Hạn hoàn thành đề '+i+', công đoạn '+stage);const time=document.createElement('input');time.type='time';time.id='time-'+i+'-'+j;time.value='17:00';time.setAttribute('aria-label','Giờ hoàn thành đề '+i+', công đoạn '+stage);const dateEntry=document.createElement('div');dateEntry.className='date-entry';date.classList.add('date-text');const calendar=document.createElement('button');calendar.type='button';calendar.className='date-calendar';calendar.innerHTML='<i class="bi bi-calendar3" aria-hidden="true"></i>';calendar.setAttribute('aria-label','Mở lịch chọn ngày cho đề '+i+', công đoạn '+stage);const native=document.createElement('input');native.type='date';native.className='date-native';native.tabIndex=-1;native.setAttribute('aria-hidden','true');native.addEventListener('change',()=>{if(native.value){const [y,m,d]=native.value.split('-');date.value=d+'/'+m+'/'+y;date.dispatchEvent(new Event('input',{bubbles:true}));}});calendar.addEventListener('click',()=>{const match=date.value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(match)native.value=match[3]+'-'+match[2]+'-'+match[1];try{if(typeof native.showPicker==='function'){native.showPicker()}else{native.focus();native.click()}}catch(_){native.style.opacity='1';native.style.pointerEvents='auto';native.style.width='100%';native.style.height='44px';native.focus();native.click();native.addEventListener('blur',()=>{native.style.opacity='0';native.style.pointerEvents='none';native.style.width='1px';native.style.height='1px'},{once:true})}});dateEntry.append(date,calendar,native);dateWrap.append(dateEntry,time);box.append(text,sel,dateWrap);container.appendChild(box);[sel,date,time].forEach(el=>{if(Object.prototype.hasOwnProperty.call(saved,el.id)&&([...el.options||[]].length===0||el.tagName!=='SELECT'||[...el.options].some(o=>o.value===saved[el.id])))el.value=saved[el.id]})})}}
+ members.filter(m=>!m.monDay||!$('subject').value||subjectMatches(m.monDay,$('subject').value));
+ candidates.forEach(m=>{const opt=document.createElement('option');opt.value=m.username;opt.textContent=m.hoTen+(m.monDay?' ('+m.monDay+')':'');sel.appendChild(opt)});if(j===4&&actor&&members.some(m=>norm(m.username)===norm(actor)))sel.value=actor;const dateWrap=document.createElement('div');dateWrap.className='deadline-group';const date=document.createElement('input');date.type='text';date.inputMode='numeric';date.placeholder='dd/MM/yyyy';date.maxLength=10;date.id='deadline-'+i+'-'+j;date.setAttribute('aria-label','Hạn hoàn thành đề '+i+', công đoạn '+stage);const time=document.createElement('input');time.type='time';time.id='time-'+i+'-'+j;time.value='17:00';time.setAttribute('aria-label','Giờ hoàn thành đề '+i+', công đoạn '+stage);const dateEntry=document.createElement('div');dateEntry.className='date-entry';date.classList.add('date-text');const calendar=document.createElement('button');calendar.type='button';calendar.className='date-calendar';calendar.innerHTML='<i class="bi bi-calendar3" aria-hidden="true"></i>';calendar.setAttribute('aria-label','Mở lịch chọn ngày cho đề '+i+', công đoạn '+stage);const native=document.createElement('input');native.type='date';native.className='date-native';native.tabIndex=-1;native.setAttribute('aria-hidden','true');native.addEventListener('change',()=>{if(native.value){const [y,m,d]=native.value.split('-');date.value=d+'/'+m+'/'+y;date.dispatchEvent(new Event('input',{bubbles:true}));}});calendar.addEventListener('click',()=>{const match=date.value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(match)native.value=match[3]+'-'+match[2]+'-'+match[1];try{if(typeof native.showPicker==='function'){native.showPicker()}else{native.focus();native.click()}}catch(_){native.style.opacity='1';native.style.pointerEvents='auto';native.style.width='100%';native.style.height='44px';native.focus();native.click();native.addEventListener('blur',()=>{native.style.opacity='0';native.style.pointerEvents='none';native.style.width='1px';native.style.height='1px'},{once:true})}});dateEntry.append(date,calendar,native);dateWrap.append(dateEntry,time);box.append(text,sel,dateWrap);container.appendChild(box);[sel,date,time].forEach(el=>{if(Object.prototype.hasOwnProperty.call(saved,el.id)&&(el.tagName!=='SELECT'||Array.from(el.options).some(o=>o.value===saved[el.id])))el.value=saved[el.id]})})}}
 function validate(){const problems=[];const n=numberOfExams;for(let i=1;i<=n;i++){let previous='';for(let j=0;j<5;j++){const p=$('person-'+i+'-'+j).value;const d=$('deadline-'+i+'-'+j).value;if(!p)problems.push('Đề '+i+', bước '+(j+1)+': chưa chọn người phụ trách.');
  if(j===4&&p&&norm(p)!==norm(actor))problems.push('Đề '+i+': bước nghiệm thu phải là TTCM đăng nhập.');
- if(j<4&&p){const assigned=members.find(m=>m.username===p);if(assigned&&!subjectMatches(assigned.monDay,$('subject').value))problems.push('Đề '+i+', bước '+(j+1)+': giáo viên không đúng môn dạy.');}if(!d)problems.push('Đề '+i+', bước '+(j+1)+': chưa nhập hạn.');const iso=toISO(d,$('time-'+i+'-'+j).value);if(d&&!iso)problems.push('Đề '+i+', bước '+(j+1)+': ngày không hợp lệ (dd/MM/yyyy).');if(previous&&iso&&iso<previous)problems.push('Đề '+i+', bước '+(j+1)+': hạn trước bước liền kề.');if(iso)previous=iso}if($('person-'+i+'-1').value&&$('person-'+i+'-1').value===$('person-'+i+'-2').value)problems.push('Đề '+i+': người ra đề chính thức không được tự phản biện.')}return problems}
+ if(j<4&&p){const assigned=members.find(m=>m.username===p);if(assigned&&assigned.monDay&&!subjectMatches(assigned.monDay,$('subject').value))problems.push('Đề '+i+', bước '+(j+1)+': giáo viên không đúng môn dạy.');}if(!d)problems.push('Đề '+i+', bước '+(j+1)+': chưa nhập hạn.');const iso=toISO(d,$('time-'+i+'-'+j).value);if(d&&!iso)problems.push('Đề '+i+', bước '+(j+1)+': ngày không hợp lệ (dd/MM/yyyy).');if(previous&&iso&&iso<previous)problems.push('Đề '+i+', bước '+(j+1)+': hạn trước bước liền kề.');if(iso)previous=iso}if($('person-'+i+'-1').value&&$('person-'+i+'-1').value===$('person-'+i+'-2').value)problems.push('Đề '+i+': người ra đề chính thức không được tự phản biện.')}return problems}
 $('subject').addEventListener('change',()=>{resetSignedDocument();render()});
 $('grade').addEventListener('change',resetSignedDocument);
 $('exam').addEventListener('change',resetSignedDocument);
