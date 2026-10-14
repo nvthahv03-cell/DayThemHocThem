@@ -712,10 +712,10 @@ function showPaper(){
 }
 function toISO(value,time){const m=String(value||'').match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(!m)return '';const d=+m[1],mo=+m[2],y=+m[3],test=new Date(y,mo-1,d);if(test.getFullYear()!==y||test.getMonth()!==mo-1||test.getDate()!==d)return '';return m[3]+'-'+m[2]+'-'+m[1]+'T'+(time||'00:00')}
 const stages=['Ma trận – Đặc tả – Đề minh họa','Đề chính thức – Đáp án','Phản biện đề và đáp án','Chỉnh sửa – Hoàn thiện','Nghiệm thu (TTCM)'];
-const signatureState={image:'',verified:false,signed:false,pendingPreview:false};
+const signatureState={image:'',verified:false,signed:false,pendingPreview:false,proof:''};
 function resetSignedDocument(){
  if(signatureState.signed||signatureState.verified){
-   signatureState.signed=false;signatureState.verified=false;syncSignature();
+   signatureState.signed=false;signatureState.verified=false;signatureState.proof='';syncSignature();
  }
 }
 
@@ -746,7 +746,7 @@ $('doVerify').addEventListener('click',async()=>{
  const cccd=$('signCCCD').value.trim(),status=$('verifyStatus');
  if(!/^\d{12}$/.test(cccd)){status.textContent='CCCD phải đủ 12 chữ số.';return}
  const btn=$('doVerify');btn.disabled=true;status.textContent='Đang đối chiếu với Backend...';
- try{const r=await fetch(ASSIGNMENT_SIGN_BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({action:ASSIGNMENT_SIGN_VERIFY_ACTION,sessionToken:session().token,cccd})});const data=await r.json();if(!data.ok)throw Error(data.message||'Backend chưa hỗ trợ xác thực nghiệp vụ Phân công.');signatureState.verified=true;signatureState.signed=Boolean(signatureState.pendingPreview&&signatureState.image&&actorName);signatureState.pendingPreview=false;closeVerifyModal();syncSignature();if(signatureState.signed)$('paperSignature').scrollIntoView({behavior:'smooth',block:'center'})}catch(e){status.textContent='Chưa xác thực được: '+e.message}finally{btn.disabled=false;$('signCCCD').value=''}
+ try{const r=await fetch(ASSIGNMENT_SIGN_BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({action:ASSIGNMENT_SIGN_VERIFY_ACTION,sessionToken:session().token,cccd})});const data=await r.json();if(!data.ok)throw Error(data.message||'Backend chưa hỗ trợ xác thực nghiệp vụ Phân công.');signatureState.proof=String(data.signProof||'');signatureState.verified=Boolean(signatureState.proof);signatureState.signed=Boolean(signatureState.pendingPreview&&signatureState.image&&actorName);signatureState.pendingPreview=false;closeVerifyModal();syncSignature();if(signatureState.signed)$('paperSignature').scrollIntoView({behavior:'smooth',block:'center'})}catch(e){status.textContent='Chưa xác thực được: '+e.message}finally{btn.disabled=false;$('signCCCD').value=''}
 });
 $('confirmSign').addEventListener('click',()=>{if(!signatureState.verified||!signatureState.image||!actorName)return;signatureState.signed=true;syncSignature()});
 $('previewSign').addEventListener('click',()=>{
@@ -771,5 +771,28 @@ $('reviewRows').addEventListener('input',resetSignedDocument);
 $('reviewRows').addEventListener('change',resetSignedDocument);
 $('assignments').addEventListener('input',resetSignedDocument);
 $('assignments').addEventListener('change',resetSignedDocument);
-$('add').addEventListener('click',()=>{resetSignedDocument();if(numberOfExams>=8){$('result').textContent='Tối đa 8 đề trong bản mẫu.';return;}numberOfExams++;render();$('remove').hidden=numberOfExams===1});$('remove').addEventListener('click',()=>{resetSignedDocument();if(numberOfExams<=1)return;numberOfExams--;render();$('remove').hidden=numberOfExams===1});$('reload').addEventListener('click',load);$('check').addEventListener('click',()=>{const p=validate();$('result').textContent=p.length?'CẦN HOÀN THIỆN:\n'+p.join('\n'):'Hợp lệ về dữ liệu giao diện. Chưa lưu, chưa phân công thật và chưa kiểm tra quyền ở Backend.'});$('preview').addEventListener('click',showPaper);$('assign').addEventListener('click',()=>{const p=validate();if(p.length){$('result').textContent='Cần hoàn thiện trước khi chuyển TT Phát hành:\n'+p.join('\n');return;}const assignees=new Set();const lines=[];for(let i=1;i<=numberOfExams;i++){lines.push('ĐỀ '+i);stages.forEach((st,j)=>{const u=$('person-'+i+'-'+j).value;assignees.add(u);const m=members.find(x=>x.username===u);lines.push(st+' — '+(m?m.hoTen:u)+' — Hạn '+$('deadline-'+i+'-'+j).value+' '+$('time-'+i+'-'+j).value)})}if(reviewActive()){reviewLines().forEach(x=>lines.unshift(x));for(let j=0;j<2;j++)assignees.add($('reviewPerson'+j).value)}proposal={type:'PHAN_CONG_DE_KIEM_TRA',team,createdBy:actor,subject:$('subject').value,grade:$('grade').value,exam:$('exam').value,recipients:[...assignees],includeBGH:true,lines};$('result').textContent='BẢN CHUẨN BỊ CHUYỂN TT PHÁT HÀNH (CHƯA GỬI):\nNgười nhận dự kiến: toàn bộ BGH + '+assignees.size+' tài khoản được phân công.\n\n'+lines.join('\n')+'\n\nCẦN TÍCH HỢP: TT Phát hành hiện chưa hỗ trợ phát hành loại hồ sơ này. Không tự gửi hoặc điều hướng để tránh mất dữ liệu.';});$('backEdit').addEventListener('click',()=>{$('previewPanel').hidden=true;document.querySelector('#assignments').scrollIntoView({behavior:'smooth'})});$('printPreview').addEventListener('click',()=>{if($('previewPanel').hidden)return;document.body.classList.add('print-assignment');window.print()});window.addEventListener('afterprint',()=>document.body.classList.remove('print-assignment'));render();renderReview();load();
+$('add').addEventListener('click',()=>{resetSignedDocument();if(numberOfExams>=8){$('result').textContent='Tối đa 8 đề trong bản mẫu.';return;}numberOfExams++;render();$('remove').hidden=numberOfExams===1});$('remove').addEventListener('click',()=>{resetSignedDocument();if(numberOfExams<=1)return;numberOfExams--;render();$('remove').hidden=numberOfExams===1});$('reload').addEventListener('click',load);$('check').addEventListener('click',()=>{const p=validate();$('result').textContent=p.length?'CẦN HOÀN THIỆN:\n'+p.join('\n'):'Hợp lệ về dữ liệu giao diện. Chưa lưu, chưa phân công thật và chưa kiểm tra quyền ở Backend.'});$('preview').addEventListener('click',showPaper);$('assign').addEventListener('click',async()=>{
+ const problems=validate();
+ if(problems.length){$('result').textContent='Cần hoàn thiện trước khi chuyển TT Phát hành:\n'+problems.join('\n');return;}
+ if(!actorIsTTCM||!signatureState.signed||!signatureState.verified||!signatureState.proof||!signatureState.image){$('result').textContent='TTCM phải xác thực CCCD và ký xác nhận trước khi chuyển phát hành.';return;}
+ const tasks=[];
+ for(let i=1;i<=numberOfExams;i++) stages.forEach((stage,j)=>tasks.push({examIndex:i,stageIndex:j,stage,username:$('person-'+i+'-'+j).value,deadline:$('deadline-'+i+'-'+j).value,time:$('time-'+i+'-'+j).value}));
+ const assignees=[...new Set(tasks.map(x=>x.username))];
+ if(reviewActive()) for(let j=0;j<2;j++){const u=$('reviewPerson'+j)?.value;if(u&&!assignees.includes(u))assignees.push(u);}
+ const btn=$('assign');btn.disabled=true;
+ try{
+  $('result').textContent='Đang trích xuất BGH và giáo viên từ Backend...';
+  const url=new URL(API);url.searchParams.set('action','getPhanCongDeRecipients');url.searchParams.set('sessionToken',session().token);url.searchParams.set('assignees',JSON.stringify(assignees));
+  const response=await new Promise((resolve,reject)=>{const cb='nvsPCDKR_'+Date.now();url.searchParams.set('callback',cb);const script=document.createElement('script');const timer=setTimeout(()=>{cleanup();reject(Error('Quá thời gian trích xuất BGH.'))},20000);function cleanup(){clearTimeout(timer);script.remove();delete window[cb]};window[cb]=v=>{cleanup();v?.ok?resolve(v):reject(Error(v?.message||'Không lấy được danh sách người nhận.'))};script.onerror=()=>{cleanup();reject(Error('Không kết nối được Backend.'))};script.src=url.toString();document.head.appendChild(script)});
+  const recipients=response.recipients||[];
+  if(!recipients.some(x=>x.nhom==='BGH'))throw Error('Danh sách BGH trống. Không thể chuyển phát hành.');
+  const docId='PCDK-'+crypto.randomUUID();
+  const document={docId,moduleSource:'PhanCongDeKiemTra',type:'PHÂN CÔNG KTĐG',title:'Phân công đề kiểm tra '+$('subject').value+' – '+$('grade').value+' – '+$('exam').value,author:actorName,
+    data:{team,createdBy:actor,subject:$('subject').value,grade:$('grade').value,exam:$('exam').value,tasks,reviewers:reviewActive()?[0,1].map(j=>$('reviewPerson'+j)?.value).filter(Boolean):[],signed:true,signatureImage:signatureState.image,signProof:signatureState.proof}};
+  const handoff={...document,recipients,signProof:signatureState.proof,sourceModule:'PhanCongDeKiemTra'};
+  localStorage.setItem('TTDHS_CURRENT_DOC',JSON.stringify(handoff));
+  $('result').textContent='Đã chuẩn bị '+recipients.length+' người nhận ('+recipients.filter(x=>x.nhom==='BGH').length+' BGH). Đang mở TT Phát hành; CHƯA PHÁT HÀNH.';
+  location.href=new URL('TTPhatHanh.html',location.href).href;
+ }catch(e){$('result').textContent='CHƯA CHUYỂN PHÁT HÀNH: '+e.message;}finally{btn.disabled=false;}
+});$('backEdit').addEventListener('click',()=>{$('previewPanel').hidden=true;document.querySelector('#assignments').scrollIntoView({behavior:'smooth'})});$('printPreview').addEventListener('click',()=>{if($('previewPanel').hidden)return;document.body.classList.add('print-assignment');window.print()});window.addEventListener('afterprint',()=>document.body.classList.remove('print-assignment'));render();renderReview();load();
 </script></body></html>
