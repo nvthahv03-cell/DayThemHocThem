@@ -23,7 +23,7 @@
         })();
     </script>
 
-    <title>Nghiệp vụ số THPT Hòa Vang - Phát hành cuộc họp</title>
+    <title>Trung tâm Điều phối Phát hành số HVA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -64,6 +64,22 @@ body.hva-receiver-mode #hva-publication-viewer {
 body.hva-receiver-mode #hva-module-content-viewer {
     z-index: 100000;
 }
+        /* HVA Publishing Gateway – presentation-only skin */
+        body { background: #edf3f9; }
+        .hva-gateway-head { background: linear-gradient(110deg,#071d3a 0%,#103a61 57%,#086e73 100%); box-shadow:0 8px 28px rgba(9,34,68,.17); }
+        .hva-gateway-head .hva-brand-mark { background:linear-gradient(145deg,#24d4c5,#1787c3); box-shadow:0 0 0 5px rgba(255,255,255,.08); }
+        .hva-metrics { padding:8px 0; }
+        .hva-metrics .grid > div { padding:7px 10px; border-radius:10px; }
+        .hva-main { padding-top:14px; padding-bottom:18px; }
+        .hva-main > div:first-child { padding:13px 18px; }
+        .hva-main .lg\:col-span-2 > div, .hva-main .lg\:grid-cols-3 > div { box-shadow:0 8px 25px rgba(15,45,75,.045); }
+        .hva-dest-tile { min-height:88px; position:relative; background:linear-gradient(160deg,#fff,#f5f9fd); border:1px solid #dce7f1; box-shadow:0 3px 9px rgba(15,43,74,.04); }
+        .hva-dest-tile:hover { transform:translateY(-2px); border-color:#5aa6c7; box-shadow:0 9px 22px rgba(15,43,74,.1); }
+        .hva-dest-tile.is-selected { background:linear-gradient(155deg,#e8fbf5,#e9f7ff); border:2px solid #0d9f91; color:#075e64; }
+        .hva-dest-tile.is-selected:after { content:'✓'; position:absolute;right:8px;top:6px;font-size:12px;font-weight:900;color:#078b7c; }
+        .hva-dest-tile.is-archive { cursor:default; background:linear-gradient(150deg,#f0f5ff,#e9f8f5);border-color:#b7d6df; }
+        .hva-section-card { padding:14px 16px; }
+        @media (max-width:640px) { .hva-gateway-head .hva-head-row { height:auto;min-height:70px;padding-top:9px;padding-bottom:9px;align-items:flex-start;gap:8px; } .hva-head-actions { flex-wrap:wrap;justify-content:flex-end; } .hva-gateway-title { font-size:12px; } .hva-main { padding-top:10px; } }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
@@ -76,18 +92,18 @@ body.hva-receiver-mode #hva-module-content-viewer {
     </div>
 
     <!-- HEADER HỆ THỐNG -->
-    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <header class="hva-gateway-head text-white sticky top-0 z-50 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 hva-head-row flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-lg">
-                    <i class="bi bi-diagram-3-fill text-xl"></i>
+                <div class="hva-brand-mark w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <i class="bi bi-broadcast-pin text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-base font-extrabold tracking-wide uppercase text-slate-100">NGHIỆP VỤ SỐ - PHÁT HÀNH <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono">v2.2 Engine</span></h1>
-                    <p class="text-[11px] text-slate-400">Cổng Nghiệp vụ số Trường THPT Hòa Vang</p>
+                    <h1 class="hva-gateway-title text-base font-extrabold tracking-wide uppercase text-white">TRUNG TÂM ĐIỀU PHỐI PHÁT HÀNH SỐ <span class="text-[10px] px-2 py-0.5 rounded-full bg-teal-300/15 text-teal-200 font-mono">HVA GATEWAY</span></h1>
+                    <p class="text-[11px] text-slate-400">TRƯỜNG THPT HÒA VANG · TRUNG TÂM QUẢN TRỊ SỐ HVA</p>
                 </div>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="hva-head-actions flex items-center gap-3">
                 <span id="module-origin-badge" class="px-3 py-1 bg-slate-800 border border-slate-700 text-teal-300 text-xs font-semibold rounded-full flex items-center gap-1.5">
                     <i class="bi bi-layers-fill"></i> Nguồn: <span id="source-module-name">Đang tải...</span>
                 </span>
@@ -99,7 +115,7 @@ body.hva-receiver-mode #hva-module-content-viewer {
     </header>
 
     <!-- METRICS DASHBOARD STATUS BAR -->
-    <section class="bg-white border-b border-slate-200 py-3 shadow-sm">
+    <section class="hva-metrics bg-white border-b border-slate-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
                 <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl">
@@ -127,7 +143,7 @@ body.hva-receiver-mode #hva-module-content-viewer {
     </section>
 
     <!-- THÔNG TIN TÀI LIỆU CẦN ĐIỀU PHỐI -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow space-y-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hva-main py-6 flex-grow space-y-4">
         
         <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="space-y-1">
@@ -146,21 +162,21 @@ body.hva-receiver-mode #hva-module-content-viewer {
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
             <!-- CỘT TRÁI (2 COLS): ĐIỂM ĐẾN & WORKFLOW & TÀI LIỆU LIÊN QUAN -->
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-2 space-y-4">
 
                 <!-- CARD 1: ĐIỂM ĐẾN PHÁT HÀNH (DESTINATION MATRIX) -->
                 <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <h3 class="text-sm font-extrabold uppercase text-slate-800 tracking-wide flex items-center gap-2">
-                            <i class="bi bi-geo-alt-fill text-emerald-600"></i> 1. Chọn điểm đến phát hành (Destination Engine)
+                            <i class="bi bi-geo-alt-fill text-emerald-600"></i> 1. ĐIỂM ĐẾN PHÁT HÀNH
                         </h3>
-                        <span class="text-[11px] text-slate-400">Có thể chọn nhiều điểm đến</span>
+                        <span class="text-[11px] text-slate-400">6 kênh điều phối · chọn theo nghiệp vụ</span>
                     </div>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="destination-matrix-container">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="destination-matrix-container">
                         <!-- Dynamic content rendered by Controller & RenderEngine -->
                     </div>
                 </div>
@@ -216,7 +232,7 @@ body.hva-receiver-mode #hva-module-content-viewer {
             </div>
 
             <!-- CỘT PHẢI (1 COL): KIỂM TRA ĐIỀU KIỆN & PHÂN QUYỀN & LƯU VÀ PHÁT HÀNH -->
-            <div class="space-y-6">
+            <div class="space-y-4">
 
                 <!-- CHECKLIST TRƯỚC PHÁT HÀNH (PRE-PUBLISH CHECK MATRIX) -->
                 <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
@@ -1908,13 +1924,23 @@ ContentViewerRouter.register(
 
         renderDestinations: (destinations) => {
             const container = document.getElementById('destination-matrix-container');
-            container.innerHTML = destinations.map(d => `
-                <div onclick="Controller.toggleDestination('${d.id}')" 
-                     class="cursor-pointer p-3 rounded-xl border text-center transition flex flex-col items-center justify-center gap-1.5 ${d.selected ? 'bg-emerald-50 border-emerald-500 text-emerald-900 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}">
-                    <i class="bi ${d.icon} text-lg ${d.selected ? 'text-emerald-600' : 'text-slate-400'}"></i>
-                    <span class="text-xs font-bold">${d.name}</span>
-                </div>
-            `).join('');
+            // Chỉ hiển thị 5 điểm đến hiện có + thẻ lưu trữ trạng thái.
+            // Không sửa mảng nghiệp vụ, không gửi destination mới khi Backend chưa hỗ trợ.
+            const allowed = ['ThongBao','ViecCuaToi','LichCongTac','KhoVanBan','KhaoSatBinhChon'];
+            const visible = allowed.map(id => destinations.find(d => d.id === id)).filter(Boolean);
+            container.innerHTML = visible.map(d => `
+                <button type="button" onclick="Controller.toggleDestination('${d.id}')"
+                     aria-pressed="${!!d.selected}"
+                     class="hva-dest-tile ${d.selected ? 'is-selected' : ''} cursor-pointer p-3 rounded-xl text-center transition flex flex-col items-center justify-center gap-1.5">
+                    <i class="bi ${d.icon} text-xl ${d.selected ? 'text-teal-700' : 'text-sky-700'}"></i>
+                    <span class="text-xs font-extrabold">${d.name}</span>
+                </button>
+            `).join('') + `
+                <div class="hva-dest-tile is-archive p-3 rounded-xl text-center flex flex-col items-center justify-center gap-1.5" title="Lưu vết phát hành hiện có; chức năng kho lưu trữ độc lập cần Backend hỗ trợ">
+                    <i class="bi bi-archive-fill text-xl text-indigo-700"></i>
+                    <span class="text-xs font-extrabold text-slate-800">Hồ sơ lưu trữ</span>
+                    <span class="text-[10px] text-slate-500">Lưu vết tự động</span>
+                </div>`;
         },
 
         toggleWorkflowCard: (destinations) => {
