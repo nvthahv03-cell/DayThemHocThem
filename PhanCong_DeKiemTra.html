@@ -427,6 +427,22 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 .signer-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .signer-buttons button{font-size:12px}
 @media(max-width:900px){.identity-card{grid-template-columns:1fr}.identity-col{border-right:0;border-bottom:1px solid #9bc9ea}.identity-col:last-child{border-bottom:0}}
+
+.verify-box{width:min(430px,100%);padding:26px;border:1px solid #d7e7f7;border-radius:20px;box-shadow:0 24px 65px #082a4b38}
+.pcdk-verify-header{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.pcdk-verify-header h3{margin:0 0 4px;color:#0b4176;font-size:19px}
+.pcdk-verify-header p{margin:0;color:#61758b;font-size:12px}
+.pcdk-shield{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#e4f3ff;color:#087ac2;font-size:23px;font-weight:800;flex-shrink:0}
+.pcdk-close{margin-left:auto;border:0;background:transparent;color:#607b92;font-size:27px;padding:0 5px;line-height:1}
+.pcdk-verify-label{display:block;color:#183b5c;font-size:13px;font-weight:700;margin-bottom:8px}
+.pcdk-verify-label span{color:#e11d48}
+.pcdk-cccd-wrap{display:flex;align-items:center;border:1px solid #bfd7ef;border-radius:11px;background:#f9fcff;overflow:hidden;min-height:47px}
+.pcdk-cccd-wrap:focus-within{border-color:#1784d3;box-shadow:0 0 0 3px #1784d31a}
+.verify-box .pcdk-cccd-wrap input{flex:1;min-width:0;border:0;outline:0;background:transparent;margin:0;padding:12px 14px;box-shadow:none}
+.pcdk-cccd-wrap button{border:0;background:transparent;color:#467394;min-width:46px;height:44px;font-size:18px}
+.pcdk-privacy{font-size:12px;color:#64748b;margin:9px 0 12px}
+.verify-box #verifyStatus{min-height:18px;margin-bottom:12px;overflow-wrap:anywhere}
+.verify-box .actions{display:flex;justify-content:flex-end;gap:10px}
 </style><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><script src="./HVA_Personnel.js"></script></head><body><header class="hva-pro-header">
   <div class="hva-pro-header-inner">
 
@@ -490,7 +506,12 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 </article></div><p class="note">Bản xem trước để kiểm tra nội dung; dùng In / Lưu PDF để xuất PDF từ trình duyệt. Chưa phát hành.</p>
 </section>
 <section class="panel" hidden><h2>4. Quy tắc nghiệp vụ</h2><p class="note">Mỗi đề có chuỗi: ma trận – đặc tả – đề minh họa → đề chính thức và đáp án → phản biện → chỉnh sửa → TTCM nghiệm thu. Người phản biện phải khác người ra đề chính thức của cùng đề. TTCM nhập thời hạn từng bước; khi kết nối Backend mới có chuyển giao, thông báo và lưu liên kết Google Drive.</p><p class="note warning">Lưu ý: API nhân sự của Cuộc họp hiện trả về các nhóm tổ chuyên môn. Việc giới hạn quyền TTCM theo tổ ở Backend phân công phải được bổ sung và kiểm thử trước khi đưa vào vận hành; bộ lọc trên giao diện chưa phải cơ chế bảo mật.</p></section></div>
-<div class="verify-modal" id="signVerifyModal" hidden><div class="verify-box"><h3>Xác thực người ký</h3><p>Đối chiếu CCCD với hồ sơ nhân sự. Không lưu CCCD trong trình duyệt.</p><input id="signCCCD" type="password" maxlength="12" inputmode="numeric" placeholder="Nhập 12 chữ số CCCD"><div id="verifyStatus" class="note"></div><div class="actions"><button type="button" class="outline" id="closeVerify">Hủy</button><button type="button" id="doVerify">Xác thực</button></div></div></div>
+<div class="verify-modal" id="signVerifyModal" hidden><div class="verify-box" role="dialog" aria-modal="true" aria-labelledby="verifyTitle">
+<div class="pcdk-verify-header"><span class="pcdk-shield" aria-hidden="true">✓</span><div><h3 id="verifyTitle">Xác thực người ký</h3><p>Đối chiếu CCCD với hồ sơ nhân sự NVS</p></div><button type="button" class="pcdk-close" id="closeVerifyTop" aria-label="Đóng">×</button></div>
+<label class="pcdk-verify-label" for="signCCCD">CCCD cá nhân <span aria-hidden="true">*</span></label>
+<div class="pcdk-cccd-wrap"><input id="signCCCD" type="password" maxlength="12" inputmode="numeric" autocomplete="off" placeholder="Nhập 12 chữ số CCCD"><button type="button" id="toggleCCCD" aria-label="Hiện CCCD" aria-pressed="false" title="Hiện hoặc ẩn CCCD"><i class="bi bi-eye" aria-hidden="true"></i></button></div>
+<p class="pcdk-privacy">CCCD chỉ dùng để đối chiếu, không lưu trong trình duyệt.</p><div id="verifyStatus" class="note" role="status" aria-live="polite"></div>
+<div class="actions"><button type="button" class="outline" id="closeVerify">Hủy</button><button type="button" id="doVerify">Xác thực</button></div></div></div>
 <script>
 'use strict';
 const API='https://script.google.com/macros/s/AKfycbzTRkdqyYYI8LQo9MkiTjEIXkAC7BWK1MroUXPuvKMl9Yu_o9gXFS8QCcyQmq78-ikvvg/exec';
@@ -538,13 +559,13 @@ async function load(){
   $('msg').textContent='Đang tải danh sách giáo viên thuộc tổ chuyên môn...';
   try{
 
-    let payload;
-    try{payload=await personnelJSONP(me.token,'getPhanCongDePersonnel')}catch(_){payload=await personnelJSONP(me.token)}
+    const payload=await personnelJSONP(me.token,'getPhanCongDePersonnel');
+    if(!Array.isArray(payload.danhSach))throw Error('API Phân công chưa trả về danh sách nhân sự.');
     const groups=payload.groups||[];
     const teams=groups.filter(g=>g&&String(g.kind||'').toUpperCase()==='TEAM');
     const own=teams.find(g=>Array.isArray(g.members)&&g.members.some(m=>norm(m.username||m.tenDangNhap)===norm(username)))
        ||teams.find(g=>me.to&&norm(g.tenTo)===norm(me.to)&&g.members?.some(m=>norm(m.username)===norm(username)));
-    if(!own&&!Array.isArray(payload.danhSach))throw Error('Không tìm thấy tài khoản trong nhóm tổ chuyên môn của Backend NVS.');
+    if(!payload.danhSach.some(m=>norm(m.username||m.tenDangNhap)===norm(username)))throw Error('Tài khoản không thuộc tổ được Backend cấp quyền.');
     members=(Array.isArray(payload.danhSach)?payload.danhSach:(own.members||[])).map(m=>({
       username:String(m.username||m.tenDangNhap||'').trim(),
       hoTen:String(m.hoTen||m.fullName||m.name||'').trim(),
@@ -565,7 +586,7 @@ async function load(){
     $('identityTeam').textContent=team;
     $('identityCount').textContent=members.length+' người';
     refreshSubjects();
-    const hasSubjects=members.every(m=>m.monDay);
+    const hasSubjects=members.length>0&&members.every(m=>m.monDay);
     $('msg').textContent=hasSubjects?'Đã tải '+members.length+' nhân sự tổ '+team+'.':'Đã tải '+members.length+' nhân sự tổ '+team+'. Chưa có đầy đủ môn dạy từ Backend.';
     render();
   }catch(e){
@@ -666,12 +687,15 @@ $('uploadSign').addEventListener('click',()=>$('signatureFile').click());
 $('signatureFile').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(!['image/png','image/jpeg','image/webp'].includes(f.type)||f.size>1024*1024){$('signStatus').textContent='Chỉ nhận PNG/JPG/WebP tối đa 1 MB.';return}const reader=new FileReader();reader.onload=()=>{signatureState.image=reader.result;signatureState.verified=false;signatureState.signed=false;syncSignature()};reader.readAsDataURL(f)});
 $('removeSign').addEventListener('click',()=>{signatureState.image='';signatureState.signed=false;signatureState.verified=false;$('signatureFile').value='';syncSignature()});
 $('verifySign').addEventListener('click',()=>{$('signVerifyModal').hidden=false;$('signCCCD').value='';$('verifyStatus').textContent=''});
-$('closeVerify').addEventListener('click',()=>$('signVerifyModal').hidden=true);
+function closeVerifyModal(){ $('signVerifyModal').hidden=true; $('signCCCD').value=''; $('signCCCD').type='password'; $('toggleCCCD').setAttribute('aria-pressed','false'); $('toggleCCCD').setAttribute('aria-label','Hiện CCCD'); $('toggleCCCD').innerHTML='<i class="bi bi-eye" aria-hidden="true"></i>'; }
+$('closeVerify').addEventListener('click',closeVerifyModal);
+$('closeVerifyTop').addEventListener('click',closeVerifyModal);
+$('toggleCCCD').addEventListener('click',()=>{const show=$('signCCCD').type==='password';$('signCCCD').type=show?'text':'password';$('toggleCCCD').setAttribute('aria-pressed',String(show));$('toggleCCCD').setAttribute('aria-label',show?'Ẩn CCCD':'Hiện CCCD');$('toggleCCCD').innerHTML=show?'<i class="bi bi-eye-slash" aria-hidden="true"></i>':'<i class="bi bi-eye" aria-hidden="true"></i>';});
 $('doVerify').addEventListener('click',async()=>{
  const cccd=$('signCCCD').value.trim(),status=$('verifyStatus');
  if(!/^\d{12}$/.test(cccd)){status.textContent='CCCD phải đủ 12 chữ số.';return}
  const btn=$('doVerify');btn.disabled=true;status.textContent='Đang đối chiếu với Backend...';
- try{const r=await fetch(ASSIGNMENT_SIGN_BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({action:ASSIGNMENT_SIGN_VERIFY_ACTION,username:actor,cccd})});const data=await r.json();if(!data.ok)throw Error(data.message||'Backend chưa hỗ trợ xác thực nghiệp vụ Phân công.');signatureState.verified=true;signatureState.signed=false;$('signVerifyModal').hidden=true;syncSignature()}catch(e){status.textContent='Chưa xác thực được: '+e.message}finally{btn.disabled=false;$('signCCCD').value=''}
+ try{const r=await fetch(ASSIGNMENT_SIGN_BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({action:ASSIGNMENT_SIGN_VERIFY_ACTION,sessionToken:session().token,cccd})});const data=await r.json();if(!data.ok)throw Error(data.message||'Backend chưa hỗ trợ xác thực nghiệp vụ Phân công.');signatureState.verified=true;signatureState.signed=false;closeVerifyModal();syncSignature()}catch(e){status.textContent='Chưa xác thực được: '+e.message}finally{btn.disabled=false;$('signCCCD').value=''}
 });
 $('confirmSign').addEventListener('click',()=>{if(!signatureState.verified||!signatureState.image||!actorName)return;signatureState.signed=true;syncSignature()});
 function render(){const saved={};document.querySelectorAll('#assignments select,#assignments input').forEach(el=>saved[el.id]=el.value);const n=numberOfExams;const container=$('assignments');container.textContent='';for(let i=1;i<=n;i++){const title=document.createElement('h3');title.className='exam-heading';title.textContent=n===1?'Phân công các công đoạn':'Đề '+i;container.appendChild(title);stages.forEach((stage,j)=>{const box=document.createElement('div');box.className='step';const text=document.createElement('div');const strong=document.createElement('strong');strong.textContent=(j+1)+'. '+stage;const small=document.createElement('small');small.textContent=j===4?'TTCM kiểm tra và nghiệm thu':'Chỉ nộp liên kết Google Drive khi triển khai thật';text.append(strong,small);const sel=document.createElement('select');sel.id='person-'+i+'-'+j;sel.setAttribute('aria-label','Giáo viên đề '+i+', công đoạn '+stage);const empty=document.createElement('option');empty.value='';empty.textContent='Chọn giáo viên trong tổ';sel.appendChild(empty);const candidates=j===4?members.filter(m=>norm(m.username)===norm(actor)&&actorIsTTCM):
