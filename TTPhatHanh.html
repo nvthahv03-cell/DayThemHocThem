@@ -1884,6 +1884,13 @@ ContentViewerRouter.register(
                 return;
             }
 
+            if(String(state?.document?.moduleSource||'')==='PhanCongDeKiemTra'){
+                const esc=v=>String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');
+                const list=Array.isArray(recipients)?recipients:[];
+                const group=(label,items)=>'<div class=\"font-bold text-xs text-blue-900 mt-2\">'+label+' ('+items.length+')</div>'+items.map(r=>'<div class=\"text-xs border rounded-lg p-2 bg-blue-50\">✓ '+esc(r.hoTen)+' — '+esc(r.chucVu)+' · '+(r.nhom==='BGH'?'Theo dõi':'Thực hiện')+'</div>').join('');
+                container.innerHTML=group('BAN GIÁM HIỆU',list.filter(r=>r.nhom==='BGH'))+group('GIÁO VIÊN ĐƯỢC PHÂN CÔNG',list.filter(r=>r.nhom!=='BGH'));
+                return;
+            }
             if (!recipients || recipients.length === 0) {
                 container.innerHTML = '<p class="text-xs text-rose-600 font-semibold">Chưa có đối tượng nhận từ module nguồn.</p>';
                 return;
@@ -2313,7 +2320,9 @@ return;
                              documentType === 'POLL' ||
                              documentType === 'SURVEY';
 
-        if (isSurveyPoll) {
+        if(srcName==='phancongdekiemtra'){
+            selectDestination('ThongBao');selectDestination('ViecCuaToi');selectWorkflow('CONFIRM_READ');
+        } else if (isSurveyPoll) {
             // Khảo sát/Bình chọn chỉ đến đúng hộp tiếp nhận chuyên biệt trên Home.
             selectDestination('KhaoSatBinhChon');
         } else if (isMeeting) {
@@ -2513,7 +2522,13 @@ return;
             const payload = PublishEngine.preparePayload(TTDHS_State);
             const isMeeting = /cuochop/i.test(String(TTDHS_State.document?.moduleSource || TTDHS_State.rawSource?.moduleSource || ''));
             let result;
-            if (isMeeting) {
+            if(String(TTDHS_State.document?.moduleSource||'')==='PhanCongDeKiemTra'){
+                const raw=TTDHS_State.rawSource||{};
+                const token=String(localStorage.getItem('hvaSessionToken')||sessionStorage.getItem('hvaSessionToken')||'').trim();
+                if(!token)throw new Error('Phiên NVS hết hạn. Đăng nhập lại.');
+                if(!Array.isArray(raw.recipients)||!raw.recipients.length)throw new Error('Chưa có danh sách BGH và GV.');
+                result=await PublishEngine.postToBackend({action:'publishPhanCongDe',sessionToken:token,document:TTDHS_State.document,recipients:raw.recipients,signProof:raw.signProof});
+            } else if (isMeeting) {
                 const raw = TTDHS_State.rawSource || {};
                 const data = raw.data || TTDHS_State.document?.data || {};
                 const token = String(localStorage.getItem('hvaSessionToken') || sessionStorage.getItem('hvaSessionToken') || '').trim();
