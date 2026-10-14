@@ -410,6 +410,23 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 .assignment-sign-tools strong{color:#06447f}
 .assignment-sign-tools button{border-radius:10px}
 @media screen and (max-width:700px){.panel{padding:14px!important}.assignment-sign-tools{padding:12px}}
+
+/* Khối danh tính - chữ ký kế thừa bố cục Báo cáo Chủ nhiệm; không thay cấu trúc nghiệp vụ */
+.identity-card{display:grid;grid-template-columns:1.35fr .9fr .85fr;overflow:hidden;border:1px solid #79b9e8;border-radius:16px;background:#e8f4ff;margin-top:14px}
+.identity-col{min-width:0;padding:20px 22px;border-right:1px solid #9bc9ea}
+.identity-col:last-child{border-right:0}
+.identity-person{display:flex;align-items:center;gap:14px}
+.identity-avatar{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border-radius:14px;background:#c5e7fb;color:#0569b6;font-size:25px}
+.identity-section-title{font-size:11px;font-weight:900;letter-spacing:.06em;color:#376a91;margin-bottom:8px}
+.identity-name{font-size:20px;font-weight:900;color:#06447f;margin:3px 0 7px}
+.identity-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:#365f7f}
+.signature-preview{height:64px;display:flex;align-items:center;justify-content:center;border:1.8px dashed #38bdf8;border-radius:12px;background:#fff;overflow:hidden}
+.signature-preview img{max-width:170px;max-height:56px;object-fit:contain}
+.signature-empty{font-size:11.5px;color:#64748b;text-align:center}
+.signer-status{font-size:12px;color:#475569;line-height:1.4;min-height:32px}
+.signer-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.signer-buttons button{font-size:12px}
+@media(max-width:900px){.identity-card{grid-template-columns:1fr}.identity-col{border-right:0;border-bottom:1px solid #9bc9ea}.identity-col:last-child{border-bottom:0}}
 </style><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><script src="./HVA_Personnel.js"></script></head><body><header class="hva-pro-header">
   <div class="hva-pro-header-inner">
 
@@ -440,12 +457,31 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 
   </div>
 </header><div class="shell">
-<section class="panel"><h2>1. Thông tin người đăng nhập và tổ chuyên môn</h2><div id="msg" class="banner">Đang kiểm tra phiên NVS...</div><div class="grid"><label class="field">Giáo viên đăng nhập<input id="user" readonly placeholder="Đọc từ phiên NVS"></label><label class="field">Tổ chuyên môn<input id="team" readonly placeholder="Tự xác định từ nhân sự"></label><label class="field">Số nhân sự tổ<input id="count" readonly placeholder="Chưa tải"></label></div><p class="note">Sử dụng HVA_Personnel.js chung với Cuộc họp. Nhân sự lọc theo tổ của người đăng nhập; Backend phải xác thực quyền TTCM trước khi phân công thật.</p><button id="reload" class="outline">Tải lại nhân sự tổ</button></section>
+<section class="panel"><h2>1. Thông tin người đăng nhập và tổ chuyên môn</h2>
+<div class="identity-card">
+ <div class="identity-col">
+  <div class="identity-person"><div class="identity-avatar">♙</div><div><div class="identity-section-title">NGƯỜI PHÂN CÔNG</div><div class="identity-name" id="identityName">Đang nhận diện...</div><div class="identity-meta"><span>Tổ: <b id="identityTeam">—</b></span><span>Nhân sự: <b id="identityCount">—</b></span><span>Năm học: <b>2026–2027</b></span></div></div></div>
+ </div>
+ <div class="identity-col">
+  <div class="identity-section-title">CHỮ KÝ CÁ NHÂN</div>
+  <div class="signature-preview" id="signaturePreview"><span class="signature-empty">Chưa có ảnh chữ ký.</span></div>
+  <div class="signer-buttons"><button type="button" class="outline" id="uploadSign">Tải chữ ký</button><button type="button" class="outline" id="removeSign">Xóa</button><input type="file" id="signatureFile" accept="image/png,image/jpeg,image/webp" hidden></div>
+ </div>
+ <div class="identity-col">
+  <div class="identity-section-title">XÁC THỰC CCCD & KÝ DUYỆT</div>
+  <div class="signer-status" id="signStatus">Chưa xác thực CCCD.</div>
+  <div class="signer-buttons"><button type="button" class="outline" id="verifySign">Xác thực CCCD</button><button type="button" class="outline" id="confirmSign" disabled>Ký xác nhận</button></div>
+ </div>
+</div>
+<div id="msg" class="banner" style="margin-top:14px">Đang kiểm tra phiên NVS...</div>
+<div class="grid" style="display:none"><label>Giáo viên đăng nhập<input id="user" readonly></label><label>Tổ chuyên môn<input id="team" readonly></label><label>Số nhân sự tổ<input id="count" readonly></label></div>
+<p class="note">Danh sách giáo viên được lấy từ tổ chuyên môn tương ứng với tài khoản đăng nhập.</p>
+<button id="reload" class="outline">Tải lại nhân sự tổ</button></section>
 <section class="panel"><h2>2. Thông tin đợt kiểm tra</h2><div class="grid"><label class="field">Môn kiểm tra <span style="color:#c22">*</span><select id="subject"><option value="">Chọn môn theo tổ chuyên môn</option></select></label><label class="field">Khối<select id="grade"><option value="">Chọn khối</option><option>10</option><option>11</option><option>12</option></select></label><label class="field">Kỳ kiểm tra<select id="exam"><option>Giữa kỳ I</option><option>Cuối kỳ I</option><option>Giữa kỳ II</option><option>Cuối kỳ II</option></select></label><label class="field">Năm học<input value="2026–2027" readonly></label></div><div class="plan-ref" id="planRef">Căn cứ kế hoạch kiểm tra: Chưa liên kết kế hoạch từ Điều hành. Có thể lập bản nháp.</div></section>
 <section class="panel"><h2>3. Phân công và thời hạn từng công đoạn</h2><p class="note">Mặc định một đề. Bấm “Thêm đề” khi thực sự cần. Ngày tháng hiển thị dd/MM/yyyy.</p><div id="assignments"></div><div class="actions" style="margin-top:10px"><button id="add" class="outline">＋ Thêm đề</button><button id="remove" class="outline" hidden>− Bỏ đề cuối</button><button id="check" class="outline">Kiểm tra</button><button id="preview" class="outline">Xem trước</button><button id="assign">Phân công → TT Phát hành</button></div><div id="result" class="banner" aria-live="polite">Kiểm tra dữ liệu trước khi xem trước. Ký số và phát hành chỉ hoạt động khi Backend hỗ trợ đúng nghiệp vụ.</div></section>
 <section class="panel preview-panel" id="previewPanel" hidden>
 <div class="preview-tools"><strong>BẢN XEM TRƯỚC A4 · PHÂN CÔNG ĐỀ KIỂM TRA</strong><div><button type="button" class="outline" id="backEdit">Chỉnh sửa</button><button type="button" class="outline" id="printPreview">In / Lưu PDF</button></div></div>
-<div class="assignment-sign-tools"><strong>CHỮ KÝ TỔ TRƯỞNG CHUYÊN MÔN</strong><button type="button" class="outline" id="uploadSign">Tải ảnh chữ ký</button><button type="button" class="outline" id="removeSign">Xóa chữ ký</button><button type="button" class="outline" id="verifySign">Xác thực CCCD</button><button type="button" class="outline" id="confirmSign" disabled>Ký xác nhận</button><input type="file" id="signatureFile" accept="image/png,image/jpeg,image/webp"><span class="sign-status" id="signStatus">Chưa xác thực, chưa ký.</span></div>
+
 <div class="paper-scroll-wrapper"><article class="official-paper" id="officialPaper">
 <div class="official-head"><div class="agency"><div class="agency-parent">SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div><div class="agency-unit-wrap"><div class="agency-unit">TRƯỜNG THPT HÒA VANG</div><span class="agency-line"></span></div></div><div class="nation"><div class="nation-title">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div><div class="nation-motto-wrap"><div class="nation-motto">Độc lập - Tự do - Hạnh phúc</div><span class="nation-line"></span></div></div></div>
 <div class="official-title">BẢNG PHÂN CÔNG</div><div class="official-subtitle">Xây dựng và phản biện đề kiểm tra</div><span class="title-decor-line"></span>
@@ -496,6 +532,7 @@ async function load(){
   const me=session();
   const username=me.username;
   $('user').value=me.hoTen||username;
+  $('identityName').textContent=me.hoTen||username||'Chưa đăng nhập';
   if(!username){$('msg').textContent='Không nhận diện được tài khoản. Vui lòng mở từ NVS sau khi đăng nhập.';return}
   if(!me.token){$('msg').textContent='Chưa có mã phiên NVS. Vui lòng đăng nhập lại từ trang chính.';return}
   $('msg').textContent='Đang tải danh sách giáo viên thuộc tổ chuyên môn...';
@@ -521,13 +558,18 @@ async function load(){
     $('user').value=actorName||username;
     $('team').value=team;
     $('count').value=members.length+' người';
+    $('identityName').textContent=actorName||username;
+    $('identityTeam').textContent=team;
+    $('identityCount').textContent=members.length+' người';
     refreshSubjects();
     const hasSubjects=members.some(m=>m.monDay);
     $('msg').textContent='Đã tải '+members.length+' nhân sự thuộc '+team+'.'+
       (hasSubjects?' Danh sách giáo viên được lọc thêm theo môn dạy.':' Backend hiện chưa trả về cột Môn dạy; danh sách đang giới hạn theo tổ, chưa thể xác minh môn dạy từng giáo viên.');
     render();
   }catch(e){
-    members=[];team='';$('team').value='';$('count').value='Chưa tải';refreshSubjects();render();
+    members=[];team='';$('team').value='';$('count').value='Chưa tải';
+    $('identityTeam').textContent='Chưa tải';$('identityCount').textContent='—';
+    refreshSubjects();render();
     $('msg').textContent='Không tải được nhân sự: '+e.message;
   }
 }
@@ -612,7 +654,11 @@ function syncSignature(){
  box.textContent='';if(signatureState.signed&&signatureState.image){const img=document.createElement('img');img.src=signatureState.image;img.alt='Chữ ký xác nhận';box.appendChild(img)}
  $('signGuide').style.display=signatureState.signed?'none':'';
  $('confirmSign').disabled=!(signatureState.verified&&signatureState.image);
- $('signStatus').textContent=signatureState.signed?'Đã ký xác nhận (chưa phát hành)':signatureState.verified?'Đã xác thực CCCD, chờ ký':signatureState.image?'Đã tải chữ ký, cần xác thực CCCD':'Chưa xác thực, chưa ký.';
+ $('signStatus').textContent=signatureState.signed?'✓ Đã xác thực CCCD · Đã ký duyệt':signatureState.verified?'✓ Đã xác thực CCCD. Mời ký xác nhận.':signatureState.image?'Đã tải chữ ký. Chưa xác thực CCCD.':'Chưa xác thực CCCD.';
+ const preview=$('signaturePreview');preview.textContent='';
+ if(signatureState.image){const img=document.createElement('img');img.src=signatureState.image;img.alt='Ảnh chữ ký';preview.appendChild(img)}
+ else{const t=document.createElement('span');t.className='signature-empty';t.textContent='Chưa có ảnh chữ ký.';preview.appendChild(t)}
+ $('removeSign').disabled=!signatureState.image;
 }
 $('uploadSign').addEventListener('click',()=>$('signatureFile').click());
 $('signatureFile').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(!['image/png','image/jpeg','image/webp'].includes(f.type)||f.size>1024*1024){$('signStatus').textContent='Chỉ nhận PNG/JPG/WebP tối đa 1 MB.';return}const reader=new FileReader();reader.onload=()=>{signatureState.image=reader.result;signatureState.verified=false;signatureState.signed=false;syncSignature()};reader.readAsDataURL(f)});
