@@ -1,4 +1,4 @@
-<!doctype html><html lang="vi-VN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NVS | Phân công đề kiểm tra - Bản xem trước</title><style>
+<!doctype html><html lang="vi-VN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NVS | Phân công nhiệm vụ kiểm tra, đánh giá</title><style>
 :root{font-family:Arial,sans-serif;color:#163d65;background:#f1f7fc}*{box-sizing:border-box}body{margin:0}.shell{max-width:1180px;margin:25px auto;padding:0 15px}header{padding:16px;border-radius:18px;background:linear-gradient(110deg,#063d84,#06afd0);color:white}header h1{font-size:24px;margin:7px 0}header p{margin:0;opacity:.92}.panel{background:white;border:1px solid #cde3f5;border-radius:16px;padding:15px;margin-top:10px;box-shadow:0 5px 15px #063b7810}h2{font-size:17px;margin:0 0 10px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.field{display:flex;flex-direction:column;gap:7px;font-weight:bold;font-size:13px}input,select{height:38px;width:100%;border:1px solid #b6cfe4;border-radius:9px;padding:0 12px;color:#193e60;font-size:14px;background:white}input:focus,select:focus{outline:2px solid #5ac5ef}button{border:0;background:#0876c1;color:white;padding:10px 14px;border-radius:10px;font-weight:bold;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}.note{font-size:13px;color:#55748c;line-height:1.6}.banner{white-space:pre-line;padding:12px 15px;background:#eaf6ff;border:1px solid #b8dffc;border-radius:10px;margin:13px 0}.warning{color:#a43b18}.steps{display:grid;gap:7px}.step{border:1px solid #d8e7f3;border-radius:12px;padding:9px 11px;display:grid;grid-template-columns:1.35fr 1.2fr 1fr;gap:12px;align-items:center}.step strong{font-size:14px}.step small{display:block;margin-top:6px;color:#647d91}#msg{white-space:pre-wrap}.actions{display:flex;gap:10px;flex-wrap:wrap}.outline{background:#e9f5fd;color:#0869aa;border:1px solid #b2d9f4}@media(max-width:760px){.grid{grid-template-columns:1fr}.step{grid-template-columns:1fr}header h1{font-size:20px}}.deadline-group{display:grid;grid-template-columns:minmax(0,1fr) 105px;gap:6px}.deadline-group input{min-width:0;padding:0 8px}.exam-heading{font-size:15px;color:#075cad;background:#eaf6ff;border-radius:9px;padding:8px 11px;margin:10px 0 7px}.step small{margin-top:3px}.step strong{font-size:12.5px}.shell{margin-top:12px}.panel .note{margin:7px 0}.actions button{padding:9px 12px}@media(max-width:760px){.deadline-group{grid-template-columns:1fr 100px}} :root{
   --hva-h-navy:#073b78;
   --hva-h-blue:#075cad;
@@ -320,7 +320,7 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 
 .plan-ref{margin-top:13px;padding:10px 14px;border-radius:10px;background:#f1f8ff;color:#315c80;font-size:13px;font-weight:600}
 .preview-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-.preview-tools>div{display:flex;gap:8px}.paper-scroll{overflow-x:auto;padding:12px;background:#edf3f9;border-radius:12px}
+.preview-tools>div{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.paper-scroll{overflow-x:auto;padding:12px;background:#edf3f9;border-radius:12px}
 .official-paper{box-sizing:border-box;width:794px;min-width:794px;margin:auto;padding:53px 57px 58px;background:#fff;color:#111;box-shadow:0 10px 30px #24446122;font:13pt/1.4 "Times New Roman",Times,serif}
 .official-head{display:grid;grid-template-columns:46% 54%;gap:6px;text-align:center;font-size:10pt;line-height:1.5}
 .official-head b{font-size:10.5pt}.short-rule{width:44%;border-top:1px solid #111;margin:4px auto 0}
@@ -349,18 +349,18 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 .agency-unit-wrap{display:inline-block;margin-top:2px}
 .agency-unit{font-size:11pt!important;text-transform:uppercase!important;font-weight:bold!important;white-space:nowrap!important}
 
-.agency-line{display:block!important;width:45%!important;border-top:1px solid #111!important;margin:3px auto 0!important}
+.agency-line{display:block!important;width:45%!important;border-top:1px solid #111!important;margin:0 auto!important}
 
 .nation{display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
 .nation-title{font-size:10pt!important;text-transform:uppercase!important;font-weight:bold!important;white-space:nowrap!important}
 .nation-motto-wrap{display:inline-block;margin-top:2px}
 .nation-motto{font-size:11pt!important;font-weight:bold!important;white-space:nowrap!important}
 
-.nation-line{display:block!important;width:100%!important;border-top:1px solid #111!important;margin:3px auto 0!important}
+.nation-line{display:block!important;width:100%!important;border-top:1px solid #111!important;margin:0 auto!important}
 
 .official-title{text-align:center!important;font-size:18pt!important;font-weight:bold!important;margin-top:8px!important;text-transform:uppercase!important}
 .official-subtitle{text-align:center!important;font-size:14pt!important;font-weight:bold!important;margin:0!important}
-.title-decor-line{display:block!important;width:140px!important;border-top:1px solid #111!important;margin:4px auto 24px!important}
+.title-decor-line{display:block!important;width:140px!important;border-top:1px solid #111!important;margin:0 auto 24px!important}
 
 .official-paper p{margin:9px 0!important;text-align:justify!important}
 .official-paper .indent{text-indent:24px!important;display:block}
@@ -443,6 +443,14 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 .pcdk-privacy{font-size:12px;color:#64748b;margin:9px 0 12px}
 .verify-box #verifyStatus{min-height:18px;margin-bottom:12px;overflow-wrap:anywhere}
 .verify-box .actions{display:flex;justify-content:flex-end;gap:10px}
+
+.preview-sign-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:43px;padding:10px 18px;border:1px solid #05b4d7;border-radius:12px;color:#fff;background:linear-gradient(110deg,#0654ac,#079bd3);box-shadow:0 5px 15px #0878bd35;font-size:13px;letter-spacing:.02em;transition:transform .15s,box-shadow .15s,filter .15s}
+.preview-sign-btn:hover{transform:translateY(-1px);filter:brightness(1.08);box-shadow:0 8px 18px #0878bd50}
+.preview-sign-btn:active{transform:translateY(0)}
+.preview-sign-btn i{font-size:18px}
+.preview-sign-btn.is-signed{background:linear-gradient(110deg,#087c70,#12a890);border-color:#12a890}
+@media(max-width:620px){.preview-tools>div{width:100%}.preview-tools>div button{flex:1}.preview-sign-btn{padding:9px 11px}}
+.agency-unit-wrap,.nation-motto-wrap{line-height:1.1!important}.agency-line,.nation-line{position:relative;top:-1px!important;margin-top:0!important}.title-decor-line{position:relative;top:-3px!important;margin-top:0!important}.review-choice{display:flex;align-items:center;gap:9px;color:#164a7d;font-size:13px;font-weight:700;margin:8px 0 14px}.review-choice input{width:18px!important;height:18px!important;min-height:18px!important;accent-color:#0876c1}.review-rows{display:grid;gap:9px}.review-row{display:grid;grid-template-columns:minmax(180px,1.3fr) minmax(180px,1.2fr) minmax(210px,1fr);gap:12px;align-items:center;padding:11px;border:1px solid #d7e7f6;border-radius:12px;background:#f7fbff}.review-row strong{font-size:13px;color:#154c82}.review-row .deadline-group{grid-template-columns:minmax(0,1fr) 94px}@media(max-width:760px){.review-row{grid-template-columns:1fr}}
 </style><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><script src="./HVA_Personnel.js"></script></head><body><header class="hva-pro-header">
   <div class="hva-pro-header-inner">
 
@@ -494,14 +502,15 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 
 <button id="reload" class="outline">Tải lại nhân sự tổ</button></section>
 <section class="panel"><h2>2. Thông tin đợt kiểm tra</h2><div class="grid"><label class="field">Môn kiểm tra <span style="color:#c22">*</span><select id="subject"><option value="">Chọn môn theo tổ chuyên môn</option></select></label><label class="field">Khối<select id="grade"><option value="">Chọn khối</option><option>10</option><option>11</option><option>12</option></select></label><label class="field">Kỳ kiểm tra<select id="exam"><option>Giữa kỳ I</option><option>Cuối kỳ I</option><option>Giữa kỳ II</option><option>Cuối kỳ II</option></select></label><label class="field">Năm học<input value="2026–2027" readonly></label></div><div class="plan-ref" id="planRef">Căn cứ kế hoạch kiểm tra: Chưa liên kết kế hoạch từ Điều hành. Có thể lập bản nháp.</div></section>
-<section class="panel"><h2>3. Phân công và thời hạn từng công đoạn</h2><p class="note">Mặc định một đề. Bấm “Thêm đề” khi thực sự cần. Ngày tháng hiển thị dd/MM/yyyy.</p><div id="assignments"></div><div class="actions" style="margin-top:10px"><button id="add" class="outline">＋ Thêm đề</button><button id="remove" class="outline" hidden>− Bỏ đề cuối</button><button id="check" class="outline">Kiểm tra</button><button id="preview" class="outline">Xem trước</button><button id="assign">Phân công → TT Phát hành</button></div><div id="result" class="banner" aria-live="polite">Kiểm tra dữ liệu trước khi xem trước. Ký số và phát hành chỉ hoạt động khi Backend hỗ trợ đúng nghiệp vụ.</div></section>
+<section class="panel" id="reviewSection" hidden><h2>3. Phân công xây dựng đề cương ôn tập cuối kỳ</h2><label class="review-choice"><input type="checkbox" id="reviewEnabled" checked> Áp dụng đề cương ôn tập cho môn kiểm tra này</label><div id="reviewRows"></div><p class="note">Giáo viên biên soạn và phản biện phải khác nhau; thời hạn phản biện không được sớm hơn thời hạn biên soạn.</p></section>
+<section class="panel"><h2>4. Phân công và thời hạn từng công đoạn</h2><p class="note">Mặc định một đề. Bấm “Thêm đề” khi thực sự cần. Ngày tháng hiển thị dd/MM/yyyy.</p><div id="assignments"></div><div class="actions" style="margin-top:10px"><button id="add" class="outline">＋ Thêm đề</button><button id="remove" class="outline" hidden>− Bỏ đề cuối</button><button id="check" class="outline">Kiểm tra</button><button id="preview" class="outline">Xem trước</button><button id="assign">Phân công → TT Phát hành</button></div><div id="result" class="banner" aria-live="polite">Kiểm tra dữ liệu trước khi xem trước. Ký số và phát hành chỉ hoạt động khi Backend hỗ trợ đúng nghiệp vụ.</div></section>
 <section class="panel preview-panel" id="previewPanel" hidden>
-<div class="preview-tools"><strong>BẢN XEM TRƯỚC A4 · PHÂN CÔNG ĐỀ KIỂM TRA</strong><div><button type="button" class="outline" id="backEdit">Chỉnh sửa</button><button type="button" class="outline" id="printPreview">In / Lưu PDF</button></div></div>
+<div class="preview-tools"><strong>BẢN XEM TRƯỚC A4 · PHÂN CÔNG NHIỆM VỤ KTĐG</strong><div><button type="button" class="outline" id="backEdit">Chỉnh sửa</button><button type="button" class="preview-sign-btn" id="previewSign" title="Xác thực và ký xác nhận bản phân công"><i class="bi bi-pen" aria-hidden="true"></i><span id="previewSignLabel">Ký xác nhận</span></button><button type="button" class="outline" id="printPreview">In / Lưu PDF</button></div></div>
 
 <div class="paper-scroll-wrapper"><article class="official-paper" id="officialPaper">
 <div class="official-head"><div class="agency"><div class="agency-parent">SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐÀ NẴNG</div><div class="agency-unit-wrap"><div class="agency-unit">TRƯỜNG THPT HÒA VANG</div><span class="agency-line"></span></div></div><div class="nation"><div class="nation-title">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div><div class="nation-motto-wrap"><div class="nation-motto">Độc lập - Tự do - Hạnh phúc</div><span class="nation-line"></span></div></div></div>
-<div class="official-title">BẢNG PHÂN CÔNG</div><div class="official-subtitle">Xây dựng và phản biện đề kiểm tra</div><span class="title-decor-line"></span>
-<div class="paper-meta" id="paperMeta"></div><div id="paperTables"></div>
+<div class="official-title">BẢNG PHÂN CÔNG NHIỆM VỤ</div><div class="official-subtitle">Kiểm tra, đánh giá</div><span class="title-decor-line"></span>
+<div class="paper-meta" id="paperMeta"></div><div id="paperReview"></div><div id="paperTables"></div>
 <div class="official-sign"><div class="sign-date">Cẩm Lệ, ngày …… tháng …… năm 2026</div><div class="sign-role">TỔ TRƯỞNG CHUYÊN MÔN</div><div id="signGuide" class="sign-guide">(Ký và ghi rõ họ tên)</div><div id="paperSignature" class="signature-on-paper"></div><div class="sign-name" id="paperSigner"></div></div>
 </article></div><p class="note">Bản xem trước để kiểm tra nội dung; dùng In / Lưu PDF để xuất PDF từ trình duyệt. Chưa phát hành.</p>
 </section>
@@ -635,6 +644,41 @@ function refreshSubjects(){
  render();
 }
 function escHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function isFinalExam(){return /^Cuối kỳ (I|II)$/.test($('exam').value)}
+function reviewActive(){return isFinalExam()&&$('reviewEnabled').checked}
+function renderReview(){
+ const section=$('reviewSection');section.hidden=!isFinalExam();
+ const root=$('reviewRows'),old={};root.querySelectorAll('select,input').forEach(el=>old[el.id]=el.value);
+ root.textContent='';if(!reviewActive())return;
+ const rows=document.createElement('div');rows.className='review-rows';
+ ['Biên soạn đề cương ôn tập','Phản biện đề cương ôn tập'].forEach((label,j)=>{
+  const row=document.createElement('div');row.className='review-row';
+  const strong=document.createElement('strong');strong.textContent=(j+1)+'. '+label;
+  const select=document.createElement('select');select.id='reviewPerson'+j;select.setAttribute('aria-label',label);
+  const empty=document.createElement('option');empty.value='';empty.textContent='Chọn giáo viên đúng môn';select.appendChild(empty);
+  members.filter(m=>m.monDay&&$('subject').value&&subjectMatches(m.monDay,$('subject').value)).forEach(m=>{const o=document.createElement('option');o.value=m.username;o.textContent=m.hoTen+' ('+m.monDay+')';select.appendChild(o)});
+  const deadline=document.createElement('div');deadline.className='deadline-group';
+  const date=document.createElement('input');date.type='text';date.id='reviewDate'+j;date.placeholder='dd/MM/yyyy';date.maxLength=10;date.inputMode='numeric';date.setAttribute('aria-label','Hạn '+label);
+  const time=document.createElement('input');time.type='time';time.id='reviewTime'+j;time.value='17:00';time.setAttribute('aria-label','Giờ '+label);
+  deadline.append(date,time);row.append(strong,select,deadline);rows.appendChild(row);
+  [select,date,time].forEach(el=>{if(old[el.id]!==undefined&&(el.tagName!=='SELECT'||[...el.options].some(o=>o.value===old[el.id])))el.value=old[el.id]});
+ });root.appendChild(rows);
+}
+function reviewIssues(){
+ if(!reviewActive())return [];
+ const errors=[];let previous='';
+ for(let j=0;j<2;j++){
+  const u=$('reviewPerson'+j).value,d=$('reviewDate'+j).value,t=$('reviewTime'+j).value;
+  if(!u)errors.push('Đề cương, bước '+(j+1)+': chưa chọn giáo viên.');
+  if(!d)errors.push('Đề cương, bước '+(j+1)+': chưa nhập thời hạn.');
+  const iso=toISO(d,t);if(d&&!iso)errors.push('Đề cương, bước '+(j+1)+': ngày không hợp lệ.');
+  if(previous&&iso&&iso<previous)errors.push('Thời hạn phản biện đề cương sớm hơn thời hạn biên soạn.');
+  if(iso)previous=iso;
+ }
+ if($('reviewPerson0').value&&$('reviewPerson0').value===$('reviewPerson1').value)errors.push('Người phản biện đề cương phải khác người biên soạn.');
+ return errors;
+}
+function reviewLines(){if(!reviewActive())return [];return ['Biên soạn đề cương ôn tập','Phản biện đề cương ôn tập'].map((label,j)=>{const m=members.find(x=>x.username===$('reviewPerson'+j).value);return label+' — '+(m?.hoTen||'')+' — Hạn '+$('reviewDate'+j).value+' '+$('reviewTime'+j).value})}
 function showPaper(){
  const issues=validate();
  if(!$('subject').value)issues.unshift('Chưa chọn môn kiểm tra.');
@@ -647,7 +691,13 @@ function showPaper(){
  const now=new Date();
  document.querySelector('.sign-date').textContent='Cẩm Lệ, ngày '+now.getDate()+' tháng '+(now.getMonth()+1)+' năm '+now.getFullYear();
  syncSignature();
+ const reviewPaper=$('paperReview');reviewPaper.innerHTML='';
+ if(reviewActive()){
+  const rows=['Biên soạn đề cương ôn tập','Phản biện đề cương ôn tập'];
+  reviewPaper.innerHTML='<div class="paper-exam">I. PHÂN CÔNG ĐỀ CƯƠNG ÔN TẬP</div><table class="paper-table"><thead><tr><th>TT</th><th>Nội dung công việc</th><th>Giáo viên phụ trách</th><th>Thời hạn hoàn thành</th></tr></thead><tbody>'+rows.map((label,j)=>{const m=members.find(x=>x.username===$('reviewPerson'+j).value);return '<tr><td>'+(j+1)+'</td><td>'+escHtml(label)+'</td><td>'+escHtml(m?.hoTen||'')+'</td><td>'+escHtml($('reviewDate'+j).value)+'<br>'+escHtml($('reviewTime'+j).value)+'</td></tr>'}).join('')+'</tbody></table>';
+ }
  const out=[];
+ if(reviewActive())out.push('<div class="paper-exam">II. PHÂN CÔNG XÂY DỰNG VÀ PHẢN BIỆN ĐỀ KIỂM TRA</div>');
  for(let i=1;i<=numberOfExams;i++){
   out.push((numberOfExams>1?'<div class="paper-exam">ĐỀ '+i+'</div>':'')+'<table class="paper-table"><colgroup><col style="width:8%"><col style="width:38%"><col style="width:31%"><col style="width:23%"></colgroup><thead><tr><th>TT</th><th>Nội dung công việc</th><th>Giáo viên phụ trách</th><th>Thời hạn hoàn thành</th></tr></thead><tbody>');
   stages.forEach((stage,j)=>{
@@ -662,7 +712,7 @@ function showPaper(){
 }
 function toISO(value,time){const m=String(value||'').match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(!m)return '';const d=+m[1],mo=+m[2],y=+m[3],test=new Date(y,mo-1,d);if(test.getFullYear()!==y||test.getMonth()!==mo-1||test.getDate()!==d)return '';return m[3]+'-'+m[2]+'-'+m[1]+'T'+(time||'00:00')}
 const stages=['Ma trận – Đặc tả – Đề minh họa','Đề chính thức – Đáp án','Phản biện đề và đáp án','Chỉnh sửa – Hoàn thiện','Nghiệm thu (TTCM)'];
-const signatureState={image:'',verified:false,signed:false};
+const signatureState={image:'',verified:false,signed:false,pendingPreview:false};
 function resetSignedDocument(){
  if(signatureState.signed||signatureState.verified){
    signatureState.signed=false;signatureState.verified=false;syncSignature();
@@ -677,6 +727,7 @@ function syncSignature(){
  box.textContent='';if(signatureState.signed&&signatureState.image){const img=document.createElement('img');img.src=signatureState.image;img.alt='Chữ ký xác nhận';box.appendChild(img)}
  $('signGuide').style.display=signatureState.signed?'none':'';
  $('confirmSign').disabled=!(signatureState.verified&&signatureState.image);
+ if($('previewSign')){$('previewSign').classList.toggle('is-signed',signatureState.signed);$('previewSignLabel').textContent=signatureState.signed?'Đã ký xác nhận':'Ký xác nhận';}
  $('signStatus').textContent=signatureState.signed?'✓ Đã xác thực CCCD · Đã ký duyệt':signatureState.verified?'✓ Đã xác thực CCCD. Mời ký xác nhận.':signatureState.image?'Đã tải chữ ký. Chưa xác thực CCCD.':'Chưa xác thực CCCD.';
  const preview=$('signaturePreview');preview.textContent='';
  if(signatureState.image){const img=document.createElement('img');img.src=signatureState.image;img.alt='Ảnh chữ ký';preview.appendChild(img)}
@@ -688,26 +739,37 @@ $('signatureFile').addEventListener('change',e=>{const f=e.target.files?.[0];if(
 $('removeSign').addEventListener('click',()=>{signatureState.image='';signatureState.signed=false;signatureState.verified=false;$('signatureFile').value='';syncSignature()});
 $('verifySign').addEventListener('click',()=>{$('signVerifyModal').hidden=false;$('signCCCD').value='';$('verifyStatus').textContent=''});
 function closeVerifyModal(){ $('signVerifyModal').hidden=true; $('signCCCD').value=''; $('signCCCD').type='password'; $('toggleCCCD').setAttribute('aria-pressed','false'); $('toggleCCCD').setAttribute('aria-label','Hiện CCCD'); $('toggleCCCD').innerHTML='<i class="bi bi-eye" aria-hidden="true"></i>'; }
-$('closeVerify').addEventListener('click',closeVerifyModal);
-$('closeVerifyTop').addEventListener('click',closeVerifyModal);
+$('closeVerify').addEventListener('click',()=>{signatureState.pendingPreview=false;closeVerifyModal()});
+$('closeVerifyTop').addEventListener('click',()=>{signatureState.pendingPreview=false;closeVerifyModal()});
 $('toggleCCCD').addEventListener('click',()=>{const show=$('signCCCD').type==='password';$('signCCCD').type=show?'text':'password';$('toggleCCCD').setAttribute('aria-pressed',String(show));$('toggleCCCD').setAttribute('aria-label',show?'Ẩn CCCD':'Hiện CCCD');$('toggleCCCD').innerHTML=show?'<i class="bi bi-eye-slash" aria-hidden="true"></i>':'<i class="bi bi-eye" aria-hidden="true"></i>';});
 $('doVerify').addEventListener('click',async()=>{
  const cccd=$('signCCCD').value.trim(),status=$('verifyStatus');
  if(!/^\d{12}$/.test(cccd)){status.textContent='CCCD phải đủ 12 chữ số.';return}
  const btn=$('doVerify');btn.disabled=true;status.textContent='Đang đối chiếu với Backend...';
- try{const r=await fetch(ASSIGNMENT_SIGN_BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({action:ASSIGNMENT_SIGN_VERIFY_ACTION,sessionToken:session().token,cccd})});const data=await r.json();if(!data.ok)throw Error(data.message||'Backend chưa hỗ trợ xác thực nghiệp vụ Phân công.');signatureState.verified=true;signatureState.signed=false;closeVerifyModal();syncSignature()}catch(e){status.textContent='Chưa xác thực được: '+e.message}finally{btn.disabled=false;$('signCCCD').value=''}
+ try{const r=await fetch(ASSIGNMENT_SIGN_BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({action:ASSIGNMENT_SIGN_VERIFY_ACTION,sessionToken:session().token,cccd})});const data=await r.json();if(!data.ok)throw Error(data.message||'Backend chưa hỗ trợ xác thực nghiệp vụ Phân công.');signatureState.verified=true;signatureState.signed=Boolean(signatureState.pendingPreview&&signatureState.image&&actorName);signatureState.pendingPreview=false;closeVerifyModal();syncSignature();if(signatureState.signed)$('paperSignature').scrollIntoView({behavior:'smooth',block:'center'})}catch(e){status.textContent='Chưa xác thực được: '+e.message}finally{btn.disabled=false;$('signCCCD').value=''}
 });
 $('confirmSign').addEventListener('click',()=>{if(!signatureState.verified||!signatureState.image||!actorName)return;signatureState.signed=true;syncSignature()});
+$('previewSign').addEventListener('click',()=>{
+ if(signatureState.signed){$('paperSignature').scrollIntoView({behavior:'smooth',block:'center'});return;}
+ if(!signatureState.image){$('result').textContent='Vui lòng tải ảnh chữ ký cá nhân trước khi ký xác nhận.';$('previewPanel').hidden=true;document.querySelector('.identity-card').scrollIntoView({behavior:'smooth',block:'center'});return;}
+ if(!signatureState.verified){signatureState.pendingPreview=true;$('signVerifyModal').hidden=false;$('signCCCD').value='';$('verifyStatus').textContent='';$('signCCCD').focus();return;}
+ if(!actorName){$('result').textContent='Chưa xác định người ký từ hồ sơ nhân sự.';return;}
+ signatureState.signed=true;syncSignature();$('paperSignature').scrollIntoView({behavior:'smooth',block:'center'});
+});
 function render(){const saved={};document.querySelectorAll('#assignments select,#assignments input').forEach(el=>saved[el.id]=el.value);const n=numberOfExams;const container=$('assignments');container.textContent='';for(let i=1;i<=n;i++){const title=document.createElement('h3');title.className='exam-heading';title.textContent=n===1?'Phân công các công đoạn':'Đề '+i;container.appendChild(title);stages.forEach((stage,j)=>{const box=document.createElement('div');box.className='step';const text=document.createElement('div');const strong=document.createElement('strong');strong.textContent=(j+1)+'. '+stage;const small=document.createElement('small');small.textContent=j===4?'TTCM kiểm tra và nghiệm thu':'Chỉ nộp liên kết Google Drive khi triển khai thật';text.append(strong,small);const sel=document.createElement('select');sel.id='person-'+i+'-'+j;sel.setAttribute('aria-label','Giáo viên đề '+i+', công đoạn '+stage);const empty=document.createElement('option');empty.value='';empty.textContent='Chọn giáo viên trong tổ';sel.appendChild(empty);const candidates=j===4?members.filter(m=>norm(m.username)===norm(actor)&&actorIsTTCM):
  members.filter(m=>!m.monDay||!$('subject').value||subjectMatches(m.monDay,$('subject').value));
  candidates.forEach(m=>{const opt=document.createElement('option');opt.value=m.username;opt.textContent=m.hoTen+(m.monDay?' ('+m.monDay+')':'');sel.appendChild(opt)});if(j===4&&actorIsTTCM&&actor&&members.some(m=>norm(m.username)===norm(actor)))sel.value=actor;const dateWrap=document.createElement('div');dateWrap.className='deadline-group';const date=document.createElement('input');date.type='text';date.inputMode='numeric';date.placeholder='dd/MM/yyyy';date.maxLength=10;date.id='deadline-'+i+'-'+j;date.setAttribute('aria-label','Hạn hoàn thành đề '+i+', công đoạn '+stage);const time=document.createElement('input');time.type='time';time.id='time-'+i+'-'+j;time.value='17:00';time.setAttribute('aria-label','Giờ hoàn thành đề '+i+', công đoạn '+stage);const dateEntry=document.createElement('div');dateEntry.className='date-entry';date.classList.add('date-text');const calendar=document.createElement('button');calendar.type='button';calendar.className='date-calendar';calendar.innerHTML='<i class="bi bi-calendar3" aria-hidden="true"></i>';calendar.setAttribute('aria-label','Mở lịch chọn ngày cho đề '+i+', công đoạn '+stage);const native=document.createElement('input');native.type='date';native.className='date-native';native.tabIndex=-1;native.setAttribute('aria-hidden','true');native.addEventListener('change',()=>{if(native.value){const [y,m,d]=native.value.split('-');date.value=d+'/'+m+'/'+y;date.dispatchEvent(new Event('input',{bubbles:true}));}});calendar.addEventListener('click',()=>{const match=date.value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(match)native.value=match[3]+'-'+match[2]+'-'+match[1];try{if(typeof native.showPicker==='function'){native.showPicker()}else{native.focus();native.click()}}catch(_){native.style.opacity='1';native.style.pointerEvents='auto';native.style.width='100%';native.style.height='44px';native.focus();native.click();native.addEventListener('blur',()=>{native.style.opacity='0';native.style.pointerEvents='none';native.style.width='1px';native.style.height='1px'},{once:true})}});dateEntry.append(date,calendar,native);dateWrap.append(dateEntry,time);box.append(text,sel,dateWrap);container.appendChild(box);[sel,date,time].forEach(el=>{if(Object.prototype.hasOwnProperty.call(saved,el.id)&&(el.tagName!=='SELECT'||Array.from(el.options).some(o=>o.value===saved[el.id])))el.value=saved[el.id]})})}}
-function validate(){const problems=[];const n=numberOfExams;for(let i=1;i<=n;i++){let previous='';for(let j=0;j<5;j++){const p=$('person-'+i+'-'+j).value;const d=$('deadline-'+i+'-'+j).value;if(!p)problems.push('Đề '+i+', bước '+(j+1)+': chưa chọn người phụ trách.');
+function validate(){const problems=reviewIssues();const n=numberOfExams;for(let i=1;i<=n;i++){let previous='';for(let j=0;j<5;j++){const p=$('person-'+i+'-'+j).value;const d=$('deadline-'+i+'-'+j).value;if(!p)problems.push('Đề '+i+', bước '+(j+1)+': chưa chọn người phụ trách.');
  if(j===4&&!actorIsTTCM)problems.push('Chỉ TTCM được nghiệm thu đề.');
  if(j===4&&p&&norm(p)!==norm(actor))problems.push('Đề '+i+': bước nghiệm thu phải là TTCM đăng nhập.');
  if(j<4&&p){const assigned=members.find(m=>m.username===p);if(assigned&&assigned.monDay&&!subjectMatches(assigned.monDay,$('subject').value))problems.push('Đề '+i+', bước '+(j+1)+': giáo viên không đúng môn dạy.');}if(!d)problems.push('Đề '+i+', bước '+(j+1)+': chưa nhập hạn.');const iso=toISO(d,$('time-'+i+'-'+j).value);if(d&&!iso)problems.push('Đề '+i+', bước '+(j+1)+': ngày không hợp lệ (dd/MM/yyyy).');if(previous&&iso&&iso<previous)problems.push('Đề '+i+', bước '+(j+1)+': hạn trước bước liền kề.');if(iso)previous=iso}if($('person-'+i+'-1').value&&$('person-'+i+'-1').value===$('person-'+i+'-2').value)problems.push('Đề '+i+': người ra đề chính thức không được tự phản biện.')}return problems}
-$('subject').addEventListener('change',()=>{resetSignedDocument();render()});
+$('subject').addEventListener('change',()=>{resetSignedDocument();render();renderReview()});
 $('grade').addEventListener('change',resetSignedDocument);
-$('exam').addEventListener('change',resetSignedDocument);
+$('exam').addEventListener('change',()=>{resetSignedDocument();renderReview()});
+$('reviewEnabled').addEventListener('change',()=>{resetSignedDocument();renderReview()});
+$('reviewRows').addEventListener('input',resetSignedDocument);
+$('reviewRows').addEventListener('change',resetSignedDocument);
+$('assignments').addEventListener('input',resetSignedDocument);
 $('assignments').addEventListener('change',resetSignedDocument);
-$('add').addEventListener('click',()=>{resetSignedDocument();if(numberOfExams>=8){$('result').textContent='Tối đa 8 đề trong bản mẫu.';return;}numberOfExams++;render();$('remove').hidden=numberOfExams===1});$('remove').addEventListener('click',()=>{resetSignedDocument();if(numberOfExams<=1)return;numberOfExams--;render();$('remove').hidden=numberOfExams===1});$('reload').addEventListener('click',load);$('check').addEventListener('click',()=>{const p=validate();$('result').textContent=p.length?'CẦN HOÀN THIỆN:\n'+p.join('\n'):'Hợp lệ về dữ liệu giao diện. Chưa lưu, chưa phân công thật và chưa kiểm tra quyền ở Backend.'});$('preview').addEventListener('click',showPaper);$('assign').addEventListener('click',()=>{const p=validate();if(p.length){$('result').textContent='Cần hoàn thiện trước khi chuyển TT Phát hành:\n'+p.join('\n');return;}const assignees=new Set();const lines=[];for(let i=1;i<=numberOfExams;i++){lines.push('ĐỀ '+i);stages.forEach((st,j)=>{const u=$('person-'+i+'-'+j).value;assignees.add(u);const m=members.find(x=>x.username===u);lines.push(st+' — '+(m?m.hoTen:u)+' — Hạn '+$('deadline-'+i+'-'+j).value+' '+$('time-'+i+'-'+j).value)})}proposal={type:'PHAN_CONG_DE_KIEM_TRA',team,createdBy:actor,subject:$('subject').value,grade:$('grade').value,exam:$('exam').value,recipients:[...assignees],includeBGH:true,lines};$('result').textContent='BẢN CHUẨN BỊ CHUYỂN TT PHÁT HÀNH (CHƯA GỬI):\nNgười nhận dự kiến: toàn bộ BGH + '+assignees.size+' tài khoản được phân công.\n\n'+lines.join('\n')+'\n\nCẦN TÍCH HỢP: TT Phát hành hiện chưa hỗ trợ phát hành loại hồ sơ này. Không tự gửi hoặc điều hướng để tránh mất dữ liệu.';});$('backEdit').addEventListener('click',()=>{$('previewPanel').hidden=true;document.querySelector('#assignments').scrollIntoView({behavior:'smooth'})});$('printPreview').addEventListener('click',()=>{if($('previewPanel').hidden)return;document.body.classList.add('print-assignment');window.print()});window.addEventListener('afterprint',()=>document.body.classList.remove('print-assignment'));render();load();
+$('add').addEventListener('click',()=>{resetSignedDocument();if(numberOfExams>=8){$('result').textContent='Tối đa 8 đề trong bản mẫu.';return;}numberOfExams++;render();$('remove').hidden=numberOfExams===1});$('remove').addEventListener('click',()=>{resetSignedDocument();if(numberOfExams<=1)return;numberOfExams--;render();$('remove').hidden=numberOfExams===1});$('reload').addEventListener('click',load);$('check').addEventListener('click',()=>{const p=validate();$('result').textContent=p.length?'CẦN HOÀN THIỆN:\n'+p.join('\n'):'Hợp lệ về dữ liệu giao diện. Chưa lưu, chưa phân công thật và chưa kiểm tra quyền ở Backend.'});$('preview').addEventListener('click',showPaper);$('assign').addEventListener('click',()=>{const p=validate();if(p.length){$('result').textContent='Cần hoàn thiện trước khi chuyển TT Phát hành:\n'+p.join('\n');return;}const assignees=new Set();const lines=[];for(let i=1;i<=numberOfExams;i++){lines.push('ĐỀ '+i);stages.forEach((st,j)=>{const u=$('person-'+i+'-'+j).value;assignees.add(u);const m=members.find(x=>x.username===u);lines.push(st+' — '+(m?m.hoTen:u)+' — Hạn '+$('deadline-'+i+'-'+j).value+' '+$('time-'+i+'-'+j).value)})}if(reviewActive()){reviewLines().forEach(x=>lines.unshift(x));for(let j=0;j<2;j++)assignees.add($('reviewPerson'+j).value)}proposal={type:'PHAN_CONG_DE_KIEM_TRA',team,createdBy:actor,subject:$('subject').value,grade:$('grade').value,exam:$('exam').value,recipients:[...assignees],includeBGH:true,lines};$('result').textContent='BẢN CHUẨN BỊ CHUYỂN TT PHÁT HÀNH (CHƯA GỬI):\nNgười nhận dự kiến: toàn bộ BGH + '+assignees.size+' tài khoản được phân công.\n\n'+lines.join('\n')+'\n\nCẦN TÍCH HỢP: TT Phát hành hiện chưa hỗ trợ phát hành loại hồ sơ này. Không tự gửi hoặc điều hướng để tránh mất dữ liệu.';});$('backEdit').addEventListener('click',()=>{$('previewPanel').hidden=true;document.querySelector('#assignments').scrollIntoView({behavior:'smooth'})});$('printPreview').addEventListener('click',()=>{if($('previewPanel').hidden)return;document.body.classList.add('print-assignment');window.print()});window.addEventListener('afterprint',()=>document.body.classList.remove('print-assignment'));render();renderReview();load();
 </script></body></html>
