@@ -603,12 +603,13 @@ document.addEventListener('DOMContentLoaded', initPortal);
   if(workError)html+='<p class="nvs-quick-note" role="alert" style="color:#b42332">'+esc(workError)+'</p>';
   else if(!workLoaded)html+='<p class="nvs-quick-note">Đang tải nhiệm vụ...</p>';
   else {
-   html+='<div class="nvs-work-status"><div><b>'+myTasks.length+'</b>Việc được giao</div><div><b>'+inProgress+'</b>Đang thực hiện</div><div><b>'+overdue+'</b>Quá hạn</div><div><b>'+complete+'</b>Hoàn thành</div></div>';
+   html+='<div class="nvs-work-status"><div><b>'+count('ĐƯỢC GIAO')+'</b>Việc được giao</div><div><b>'+inProgress+'</b>Đang thực hiện</div><div><b>'+overdue+'</b>Quá hạn</div><div><b>'+complete+'</b>Hoàn thành</div></div>';
    if(!myTasks.length)html+='<p class="nvs-quick-note">Chưa có nhiệm vụ KTĐG được giao cho tài khoản này.</p>';
    else html+=myTasks.map(t=>'<article style="padding:13px 2px;border-top:1px solid #e1ebf3">'+
      '<strong style="color:#074b88">'+esc(t.stage||'Công đoạn KTĐG')+'</strong>'+
      '<div class="nvs-quick-note">'+esc([t.subject,t.grade,t.exam].filter(Boolean).join(' • '))+'</div>'+
      '<div class="nvs-quick-note">Hạn: '+esc(t.deadline||'Chưa xác định')+' '+esc(t.time||'')+' • Trạng thái: '+esc(t.status||'ĐƯỢC GIAO')+'</div>'+
+     (String(t.status||'').trim().toUpperCase()==='ĐƯỢC GIAO'?'<div style="margin-top:10px"><button type="button" data-nvs-accept="'+esc(t.id)+'" style="padding:9px 14px;border-radius:9px;background:#0876c9;color:#fff;border:0;cursor:pointer;font-weight:700">Tiếp nhận nhiệm vụ</button></div>':'')+
      (t.productUrl?'<a href="'+esc(t.productUrl)+'" target="_blank" rel="noopener noreferrer">Xem sản phẩm</a>':'')+'</article>').join('');
   }
   detail.innerHTML=html;
@@ -691,6 +692,28 @@ document.addEventListener('DOMContentLoaded', initPortal);
    await loadNotices(true);
   }catch(e){btn.disabled=false;btn.textContent='Đánh dấu đã đọc';noticeError='Không cập nhật trạng thái: '+(e.message||'Lỗi kết nối.');renderNotice();}
  }
+ async function acceptTask(taskId,btn){
+  const id=identity();if(!id.token||!taskId)return;
+  btn.disabled=true;btn.textContent='Đang tiếp nhận...';
+  try{
+   // Apps Script chuyển hướng sang googleusercontent; POST có thể bị chặn đọc CORS.
+   // Chỉ xác nhận thành công khi GET trả lại đúng trạng thái từ Backend.
+   await fetch(DTHT_STANDALONE_BACKEND,{method:'POST',mode:'no-cors',
+    headers:{'Content-Type':'text/plain;charset=UTF-8'},
+    body:JSON.stringify({action:'acceptMyTask',sessionToken:id.token,taskId})});
+   await loadWork(true);
+   const updated=myTasks.find(t=>String(t.id)===taskId);
+   if(!workLoaded||!updated||String(updated.status||'').toUpperCase()!=='ĐANG THỰC HIỆN')
+     throw new Error('Chưa xác nhận được trạng thái từ máy chủ. Vui lòng tải lại để kiểm tra, không bấm liên tục.');
+  }catch(e){
+   workError='Chưa xác nhận tiếp nhận: '+(e.message||'Lỗi kết nối.');
+   if(!detail.hidden&&detail.dataset.current==='work')renderWork();
+  }
+ }
+ detail.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-nvs-accept]');
+  if(btn&&detail.contains(btn))acceptTask(btn.getAttribute('data-nvs-accept'),btn);
+ });
  detail.addEventListener('click',e=>{
   const btn=e.target.closest('[data-nvs-read]');
   if(btn&&detail.contains(btn))markRead(btn.getAttribute('data-nvs-read'),btn);
