@@ -787,9 +787,9 @@ $('add').addEventListener('click',()=>{resetSignedDocument();if(numberOfExams>=8
   const recipients=response.recipients||[];
   if(!recipients.some(x=>x.nhom==='BGH'))throw Error('Danh sách BGH trống. Không thể chuyển phát hành.');
   const docId='PCDK-'+crypto.randomUUID();
-  const document={docId,moduleSource:'PhanCongDeKiemTra',type:'PHÂN CÔNG KTĐG',title:'Phân công đề kiểm tra '+$('subject').value+' – '+$('grade').value+' – '+$('exam').value,author:actorName,
+  const publicationDoc={docId,moduleSource:'PhanCongDeKiemTra',type:'PHÂN CÔNG KTĐG',title:'Phân công đề kiểm tra '+$('subject').value+' – '+$('grade').value+' – '+$('exam').value,author:actorName,
     data:{team,createdBy:actor,subject:$('subject').value,grade:$('grade').value,exam:$('exam').value,tasks,reviewers:reviewActive()?[0,1].map(j=>$('reviewPerson'+j)?.value).filter(Boolean):[],signed:true,signatureImage:signatureState.image,signProof:signatureState.proof}};
-  const handoff={...document,recipients,signProof:signatureState.proof,sourceModule:'PhanCongDeKiemTra'};
+  const handoff={...publicationDoc,recipients,signProof:signatureState.proof,sourceModule:'PhanCongDeKiemTra'};
   localStorage.setItem('TTDHS_CURRENT_DOC',JSON.stringify(handoff));
   $('result').textContent='Đã chuẩn bị '+recipients.length+' người nhận ('+recipients.filter(x=>x.nhom==='BGH').length+' BGH). Đang mở TT Phát hành; CHƯA PHÁT HÀNH.';
   location.href=new URL('TTPhatHanh.html',location.href).href;
