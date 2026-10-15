@@ -465,6 +465,20 @@ body>.shell>.nvs-chooser{flex:0 0 auto!important;justify-content:flex-start!impo
 body>.shell{padding-bottom:10px!important}
 }
 </style>
+<style id="nvs-v10-final-minimal-fix">
+/* Chỉ sửa nút thứ tư, không tạo nút mới hay can thiệp JS. */
+#nvsQuickRoleSlot{display:flex!important;align-items:stretch!important}
+#nvsQuickRoleSlot>.nvs-v7-circle{all:unset!important;box-sizing:border-box!important;position:relative!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:9px!important;width:100%!important;min-height:112px!important;padding:12px 8px!important;border:1px solid #b9def5!important;border-radius:16px!important;background:linear-gradient(125deg,#eff8ff,#fff)!important;color:#07518d!important;text-align:center!important;cursor:pointer!important;font:900 13px/1.25 Inter,Arial,sans-serif!important;box-shadow:0 4px 13px #075cad0e!important}
+#nvsQuickRoleSlot>.nvs-v7-circle[hidden]{display:none!important}
+#nvsQuickRoleSlot>.nvs-v7-circle::after{content:none!important;display:none!important}
+#nvsQuickRoleSlot>.nvs-v7-circle::before{content:'\f4a3'!important;position:static!important;inset:auto!important;transform:none!important;display:grid!important;place-items:center!important;width:52px!important;height:52px!important;min-width:52px!important;min-height:52px!important;margin:0!important;padding:0!important;border:0!important;border-radius:13px!important;background:linear-gradient(135deg,#ed8332,#cf4530)!important;color:white!important;font:normal 30px/1 'bootstrap-icons'!important;box-shadow:none!important}
+#nvsQuickRoleSlot>#nvsOpenLibrary::before{content:'\f3d1'!important;background:linear-gradient(135deg,#0d63bd,#03bad3)!important}
+#nvsQuickRoleSlot>.nvs-v7-circle span{display:block!important;position:static!important;transform:none!important;width:auto!important;height:auto!important;padding:0!important;margin:0!important;border:0!important;background:none!important;box-shadow:none!important;color:#07518d!important;font:900 13px/1.25 Inter,Arial,sans-serif!important;text-shadow:none!important}
+/* Thanh điều hướng cố định không được che cổng Digital khi cuộn cuối trang. */
+body>.shell{padding-bottom:calc(125px + env(safe-area-inset-bottom,0px))!important}
+.nvs-chooser{margin-bottom:0!important}
+@media(max-width:720px){#nvsQuickRoleSlot>.nvs-v7-circle{min-height:112px!important}}
+</style>
 </head>
 <body>
 
