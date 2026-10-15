@@ -479,7 +479,16 @@ body>.shell{padding-bottom:calc(125px + env(safe-area-inset-bottom,0px))!importa
 .nvs-chooser{margin-bottom:0!important}
 @media(max-width:720px){#nvsQuickRoleSlot>.nvs-v7-circle{min-height:112px!important}}
 </style>
-</head>
+<style id="nvs-v11-role-slot-single-icon">
+/* Chỉ vá biểu tượng thứ tư: bỏ pseudo-icon cũ, dùng đúng icon HTML đã có. */
+.nvs-quick-role-slot #nvsOpenRemind::before,
+.nvs-quick-role-slot #nvsOpenLibrary::before{content:none!important;display:none!important}
+.nvs-quick-role-slot .nvs-quick-icon{display:grid!important;place-items:center!important;width:52px!important;height:52px!important;min-width:52px!important;border-radius:13px!important;background:linear-gradient(135deg,#e98131,#d24d34)!important;color:#fff!important}
+.nvs-quick-role-slot #nvsOpenLibrary .nvs-quick-icon{background:linear-gradient(135deg,#0b78d7,#13b6db)!important}
+.nvs-quick-role-slot .nvs-quick-icon i{display:block!important;width:auto!important;height:auto!important;font-size:29px!important;line-height:1!important;color:inherit!important}
+.nvs-quick-role-slot .nvs-v7-circle strong{font-weight:850!important;font-size:inherit!important;line-height:1.22!important}
+.nvs-quick-role-slot [hidden]{display:none!important;visibility:hidden!important}
+</style></head>
 <body>
 
 <div id="hvaLogoutModal" class="hva-logout-overlay" role="dialog" aria-modal="true" aria-labelledby="hvaLogoutTitle">
