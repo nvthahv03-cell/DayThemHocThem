@@ -276,7 +276,34 @@ body{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))!important}
 .nvs-premium-nav button:hover i,.nvs-premium-nav a:hover i{transform:translateY(-3px)}
 .nvs-premium-nav .nvs-nav-current{background:transparent!important;box-shadow:none!important}
 @media(max-width:720px){.nvs-chooser{padding-top:clamp(83px,16vw,125px)!important}.nvs-gate-wrap{padding-top:10px}.nvs-gate-wrap>.nvs-gate{min-height:137px}.nvs-corner-action{right:1px!important;min-width:48px!important}.nvs-corner-action i{width:33px!important;height:33px!important;font-size:16px!important}.nvs-corner-action small{font-size:7px!important}.nvs-premium-nav button i,.nvs-premium-nav a i{width:45px!important;height:45px!important;font-size:20px!important}.nvs-premium-nav button,.nvs-premium-nav a{min-height:69px!important;font-size:9px!important}}
-</style></head>
+</style>
+<style id="nvs-v4-typography-actions-only">
+/* V4: chỉ tăng độ rõ chữ và chuyển hai biểu tượng ra dưới hai thẻ. */
+.nvs-v4-actions{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin:18px 8px 0;position:relative;z-index:2}
+.nvs-v4-action{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-width:118px;max-width:155px;color:#073d75;font-size:13px;font-weight:800;text-align:center;line-height:1.3;text-shadow:0 1px 0 #ffffff9e;cursor:default;user-select:none}
+.nvs-v4-action i{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;font-size:30px;color:white;border:2px solid #b9faff;box-shadow:0 8px 20px #07549e66,0 0 0 4px #ffffff80}
+.nvs-v4-remind i{background:linear-gradient(145deg,#ff3549,#c60d2b)}
+.nvs-v4-library i{background:linear-gradient(145deg,#16c8ff,#006fc9)}
+.nvs-v4-action small{font:inherit;font-size:13px}
+.nvs-chooser .nvs-gate-wrap{padding-top:0!important}
+.nvs-chooser .nvs-gate{padding:22px 20px!important;min-height:235px!important;justify-content:center;gap:13px!important}
+.nvs-chooser .nvs-gate strong{font-size:clamp(22px,2.3vw,30px)!important;line-height:1.2!important;font-weight:900!important;letter-spacing:.1px!important;max-width:none!important;text-shadow:0 2px 4px #00336a66!important}
+.nvs-chooser .nvs-gate>span:not(.nvs-gate-icon):not(.nvs-gate-enter){font-size:clamp(14px,1.25vw,17px)!important;line-height:1.6!important;font-weight:600!important;text-shadow:0 1px 2px #00336655!important}
+.nvs-chooser .nvs-gate-enter{font-size:clamp(14px,1.15vw,16px)!important;font-weight:800!important;padding:10px 20px!important}
+.nvs-chooser .nvs-process{margin-top:0!important}
+@media(max-width:720px){
+ .nvs-chooser .nvs-gate{padding:18px 10px!important;min-height:200px!important;gap:9px!important}
+ .nvs-chooser .nvs-gate strong{font-size:clamp(16px,3.5vw,22px)!important}
+ .nvs-chooser .nvs-gate>span:not(.nvs-gate-icon):not(.nvs-gate-enter){font-size:clamp(11px,2.2vw,14px)!important;line-height:1.45!important}
+ .nvs-chooser .nvs-gate-enter{font-size:12px!important;padding:8px 10px!important}
+ .nvs-v4-actions{margin:16px 0 0;gap:10px}
+ .nvs-v4-action{min-width:84px;max-width:115px}
+ .nvs-v4-action i{width:50px;height:50px;font-size:24px}
+ .nvs-v4-action small{font-size:11px}
+}
+@media(max-width:420px){.nvs-chooser .nvs-two-gates{grid-template-columns:1fr!important}.nvs-chooser .nvs-gate{min-height:185px!important}.nvs-chooser .nvs-gate strong{font-size:22px!important}.nvs-chooser .nvs-gate>span:not(.nvs-gate-icon):not(.nvs-gate-enter){font-size:14px!important}}
+</style>
+</head>
 <body>
 
 <div id="hvaLogoutModal" class="hva-logout-overlay" role="dialog" aria-modal="true" aria-labelledby="hvaLogoutTitle">
@@ -378,8 +405,12 @@ body{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))!important}
   <section class="nvs-chooser" aria-labelledby="nvs-choose-title">
     <div class="nvs-choose-heading"><span class="nvs-emblem"><i class="bi bi-buildings"></i></span><h2 id="nvs-choose-title">CỔNG NGHIỆP VỤ SỐ</h2><p>Đăng nhập chung · Chọn không gian làm việc phù hợp</p></div>
     <div class="nvs-two-gates">
-      <div class="nvs-gate-wrap"><a class="nvs-gate nvs-gate-admin" id="nvsAdminGate" href="./DieuHanh.html" aria-label="Vào BGH – Điều hành"><span class="nvs-gate-icon"><i class="bi bi-shield-check"></i></span><strong>BGH – Điều hành</strong><span>Thông báo – Phát hành · Lịch công tác · Cuộc họp · Theo dõi và xử lý</span><span class="nvs-gate-enter">Vào Điều hành <i class="bi bi-arrow-right"></i></span></a><span class="nvs-corner-action nvs-corner-remind" role="presentation"><i class="bi bi-clipboard2-pulse"></i><small>Nhắc nhở<br>công vụ</small></span></div>
-      <div class="nvs-gate-wrap"><a class="nvs-gate nvs-gate-work" id="nvsWorkGate" href="./NghiepVu.html" aria-label="Vào Tác nghiệp số"><span class="nvs-gate-icon"><i class="bi bi-clipboard2-check"></i></span><strong>Tác nghiệp số</strong><span>TTCM · TPCM · GV · NV<br>Nhận nhiệm vụ · Lập báo cáo · Nộp sản phẩm · Tra cứu công việc</span><span class="nvs-gate-enter">Vào Tác nghiệp <i class="bi bi-arrow-right"></i></span></a><span class="nvs-corner-action nvs-corner-library" role="presentation"><i class="bi bi-bookshelf"></i><small>Kho văn bản</small></span></div>
+      <div class="nvs-gate-wrap"><a class="nvs-gate nvs-gate-admin" id="nvsAdminGate" href="./DieuHanh.html" aria-label="Vào BGH – Điều hành"><span class="nvs-gate-icon"><i class="bi bi-shield-check"></i></span><strong>BGH – Điều hành</strong><span>Thông báo – Phát hành · Lịch công tác · Cuộc họp · Theo dõi và xử lý</span><span class="nvs-gate-enter">Vào Điều hành <i class="bi bi-arrow-right"></i></span></a></div>
+      <div class="nvs-gate-wrap"><a class="nvs-gate nvs-gate-work" id="nvsWorkGate" href="./NghiepVu.html" aria-label="Vào Tác nghiệp số"><span class="nvs-gate-icon"><i class="bi bi-clipboard2-check"></i></span><strong>Tác nghiệp số</strong><span>TTCM · TPCM · GV · NV<br>Nhận nhiệm vụ · Lập báo cáo · Nộp sản phẩm · Tra cứu công việc</span><span class="nvs-gate-enter">Vào Tác nghiệp <i class="bi bi-arrow-right"></i></span></a></div>
+    </div>
+    <div class="nvs-v4-actions" aria-label="Lối vào dự kiến (chưa kích hoạt)">
+      <span class="nvs-v4-action nvs-v4-remind" role="img" aria-label="Nhắc nhở công vụ - đang chờ triển khai"><i class="bi bi-clipboard2-pulse" aria-hidden="true"></i><small>Nhắc nhở công vụ</small></span>
+      <span class="nvs-v4-action nvs-v4-library" role="img" aria-label="Kho văn bản - đang chờ kết nối"><i class="bi bi-bookshelf" aria-hidden="true"></i><small>Kho văn bản</small></span>
     </div>
     <div class="nvs-process"><i class="bi bi-arrow-left-right"></i><strong>XỬ LÝ – THEO DÕI KẾT QUẢ</strong><p>Tiếp nhận → Rà soát → Bổ sung (nếu có) → Hoàn thành</p></div>
   </section>
