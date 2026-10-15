@@ -328,6 +328,38 @@ body{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))!important}
 .nvs-v7-library-item:focus-visible,.nvs-v7-library-close:focus-visible{outline:3px solid #ffcd43;outline-offset:2px}
 @media(max-width:480px){.nvs-v7-library-grid{grid-template-columns:1fr}.nvs-v7-library-head{padding:16px}.nvs-v7-library-body{padding:15px}.nvs-v7-library-head h2{font-size:16px}}
 </style>
+
+<style id="nvs-v8-compact-four-quick">
+/* Chỉ bố cục mobile, không thay đổi API, liên kết, sự kiện nghiệp vụ. */
+@media(max-width:720px){
+ .shell>.hero{display:none!important}
+ .nvs-quick{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}
+ .nvs-quick-card{min-width:0!important;padding:8px 2px!important;min-height:76px!important;gap:5px!important;align-items:center!important;justify-content:center!important}
+ .nvs-quick-card>strong{font-size:clamp(9px,2.25vw,11px)!important;line-height:1.2!important;text-align:center!important;overflow-wrap:normal!important}
+ .nvs-quick-card .nvs-quick-icon>i{width:32px!important;height:32px!important;font-size:17px!important}
+ .nvs-quick-role-slot{min-width:0;display:flex;align-items:stretch}
+ .nvs-quick-role-slot>.nvs-quick-card{width:100%}
+ .nvs-quick-role-slot>[hidden]{display:none!important}
+ .nvs-chooser{padding:15px 10px!important;margin-top:10px!important}
+ .nvs-choose-heading{display:none!important}
+ .nvs-two-gates{grid-template-columns:repeat(2,minmax(0,1fr))!important;margin-top:0!important;gap:8px!important}
+ .nvs-chooser .nvs-gate{min-height:98px!important;padding:10px 5px!important;gap:5px!important}
+ .nvs-chooser .nvs-gate strong{font-size:clamp(12px,3.3vw,16px)!important;max-width:none!important}
+ .nvs-chooser .nvs-gate-icon{width:32px!important;height:32px!important;font-size:18px!important}
+ .nvs-chooser .nvs-gate>span:not(.nvs-gate-icon):not(.nvs-gate-enter),.nvs-chooser .nvs-gate-enter{display:none!important}
+ .nvs-chooser .nvs-process{padding-top:10px!important}
+ .nvs-chooser .nvs-process p{display:none!important}
+ .nvs-chooser .nvs-process strong{font-size:10px!important}
+ .nvs-chooser .nvs-v4-actions{display:none!important}
+}
+/* Các nút di chuyển lên ô thứ tư giữ nguyên ID và listener gốc. */
+.nvs-quick-role-slot .nvs-v7-circle{all:unset;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:5px!important;width:100%!important;min-width:0!important;min-height:76px!important;height:auto!important;max-width:none!important;padding:8px 2px!important;border:1px solid #b9def5!important;border-radius:12px!important;background:linear-gradient(125deg,#eff8ff,#fff)!important;box-shadow:0 4px 13px #075cad0e!important;cursor:pointer!important;color:#07518d!important;font:900 10px/1.2 Inter,Arial,sans-serif!important;text-align:center!important}
+.nvs-quick-role-slot .nvs-v7-circle span{font:inherit!important;line-height:1.2!important;color:inherit!important;text-shadow:none!important}
+.nvs-quick-role-slot .nvs-v7-circle::before{font-family:'bootstrap-icons'!important;font-size:19px!important;width:32px;height:32px;display:grid;place-items:center;border-radius:9px;color:white;background:linear-gradient(135deg,#0d63bd,#03bad3)}
+.nvs-quick-role-slot #nvsOpenRemind::before{content:'\f4a3';background:linear-gradient(135deg,#ed8332,#cf4530)}
+.nvs-quick-role-slot #nvsOpenLibrary::before{content:'\f3d1'}
+.nvs-quick-role-slot #nvsOpenRemind[hidden],.nvs-quick-role-slot #nvsOpenLibrary[hidden]{display:none!important;visibility:hidden!important}
+</style>
 </head>
 <body>
 
@@ -423,6 +455,7 @@ body{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))!important}
     <button class="nvs-quick-card" type="button" data-nvs-quick="work" aria-expanded="false"><span class="nvs-quick-icon"><i class="bi bi-person-check-fill"></i><span class="nvs-quick-badge" data-nvs-count="work" hidden></span></span><strong>Việc của tôi</strong></button>
     <button class="nvs-quick-card" type="button" data-nvs-quick="notice" aria-expanded="false"><span class="nvs-quick-icon"><i class="bi bi-bell-fill"></i><span class="nvs-quick-badge" data-nvs-count="notice" hidden></span></span><strong>Thông báo</strong></button>
     <button class="nvs-quick-card" type="button" data-nvs-quick="survey" aria-expanded="false"><span class="nvs-quick-icon"><i class="bi bi-clipboard-data-fill"></i><span class="nvs-quick-badge" data-nvs-count="survey" hidden></span></span><strong>Khảo sát/Bình chọn</strong></button>
+    <div id="nvsQuickRoleSlot" class="nvs-quick-role-slot" aria-label="Tiện ích theo phân quyền"></div>
   </section>
   <section id="nvsQuickDetail" class="nvs-quick-detail" hidden aria-live="polite"></section>
 
@@ -911,5 +944,29 @@ syncVisibility();window.NVS_syncRemindBGH=syncVisibility;
  </section>
 </div>
 <script id="nvs-v7-library-script">(function(){'use strict';var trigger=document.getElementById('nvsOpenLibrary'),overlay=document.getElementById('nvsLibraryOverlay'),closeBtn=document.getElementById('nvsLibraryClose');if(!trigger||!overlay||!closeBtn)return;function close(){overlay.classList.remove('is-open');overlay.setAttribute('aria-hidden','true');document.body.style.overflow='';trigger.focus()}trigger.addEventListener('click',function(){overlay.classList.add('is-open');overlay.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';closeBtn.focus()});closeBtn.addEventListener('click',close);overlay.addEventListener('click',function(e){if(e.target===overlay)close()});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&overlay.classList.contains('is-open'))close();if(e.key==='Tab'&&overlay.classList.contains('is-open')){var nodes=Array.from(overlay.querySelectorAll('button,a[href]'));var first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}})})();</script>
+
+<script id="nvs-v8-role-slot-script">(function(){'use strict';
+ const slot=document.getElementById('nvsQuickRoleSlot'),remind=document.getElementById('nvsOpenRemind'),library=document.getElementById('nvsOpenLibrary');
+ if(!slot||!remind||!library)return;
+ // Di chuyển node hiện có, giữ nguyên ID và toàn bộ event listener của V7.
+ slot.appendChild(remind);slot.appendChild(library);
+ remind.innerHTML='<span>Nhắc nhở</span>';
+ library.innerHTML='<span>Kho VB</span>';
+ function fold(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').toLowerCase();}
+ function refresh(){
+  let u={};try{u=JSON.parse(localStorage.getItem('user')||sessionStorage.getItem('user')||'{}')||{}}catch(_){}
+  const role=fold(u.vaiTro||u.role),job=fold(u.chucVu||u.viTriViecLam||u['Vị trí việc làm']);
+  const token=String(localStorage.getItem('hvaSessionToken')||sessionStorage.getItem('hvaSessionToken')||'').trim();
+  const exp=Number(localStorage.getItem('hvaSessionExpiresAt')||sessionStorage.getItem('hvaSessionExpiresAt')||0);
+  const bgh=!!token&&exp>Date.now()&&(/hieu truong|pho hieu truong|ban giam hieu/.test(job)||/^(bgh|hieu_truong|pho_hieu_truong)$/.test(role));
+  if(typeof window.NVS_syncRemindBGH==='function')window.NVS_syncRemindBGH();
+  remind.hidden=!bgh;library.hidden=bgh;
+  library.style.setProperty('display',bgh?'none':'flex','important');
+  remind.style.setProperty('display',bgh?'flex':'none','important');
+ }
+ refresh();window.addEventListener('storage',refresh);document.addEventListener('visibilitychange',refresh);
+ const auth=document.getElementById('dthtAuth');if(auth)new MutationObserver(refresh).observe(auth,{attributes:true,attributeFilter:['class','hidden']});
+ window.NVS_refreshRoleQuickSlot=refresh;
+})();</script>
 </body>
 </html>
