@@ -81,6 +81,7 @@ pre{white-space:pre-wrap;word-break:break-word;font:inherit;margin:0}.list-row{b
   Không tin isBGH từ frontend; đây chỉ là điều khiển giao diện.
 */
 const BRIDGE=window.NVS_REMINDER_BRIDGE||{};
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&window.parent!==window)window.parent.postMessage({type:'NVS_REMIND_CLOSE'},location.origin);});
 const scenarios=[
 ['NN-CC01','Không tham dự chào cờ theo lịch, chưa xác nhận việc xin phép'],
 ['NN-CC02','Vắng lễ khai giảng, tổng kết, kỷ niệm hoặc sự kiện bắt buộc'],
