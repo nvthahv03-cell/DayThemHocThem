@@ -303,7 +303,15 @@ body{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))!important}
 }
 @media(max-width:420px){.nvs-chooser .nvs-two-gates{grid-template-columns:1fr!important}.nvs-chooser .nvs-gate{min-height:185px!important}.nvs-chooser .nvs-gate strong{font-size:22px!important}.nvs-chooser .nvs-gate>span:not(.nvs-gate-icon):not(.nvs-gate-enter){font-size:14px!important}}
 </style>
-</head>
+<style id="nvs-remind-v5-only">
+.nvs-v4-actions .nvs-remind-v5{display:flex!important;align-items:center;justify-content:center;gap:10px;text-decoration:none!important;color:white!important;background:linear-gradient(110deg,#a90e39,#e8294d 65%,#fa4557)!important;border:1.5px solid #ffe29b!important;border-radius:16px!important;padding:9px 13px!important;box-shadow:0 9px 22px #a90e3955!important;min-height:61px;cursor:pointer;transition:transform .18s,box-shadow .18s}
+.nvs-v4-actions .nvs-remind-icon{display:grid;place-items:center;flex:none;width:43px;height:43px;background:linear-gradient(135deg,#fff5b7,#ffcf57);color:#9f103b;border-radius:12px;font-size:23px}
+.nvs-v4-actions .nvs-remind-label{display:flex;flex-direction:column;text-align:left;gap:2px}.nvs-v4-actions .nvs-remind-label strong{font-size:13px;font-weight:900;line-height:1.15;white-space:nowrap}.nvs-v4-actions .nvs-remind-label small{font-size:9px;font-weight:650;color:#ffedc6;line-height:1.2;white-space:nowrap}.nvs-v4-actions .nvs-remind-arrow{font-size:18px;margin-left:2px}
+.nvs-v4-actions .nvs-remind-v5:hover{transform:translateY(-2px);box-shadow:0 13px 26px #a90e3977!important}.nvs-v4-actions .nvs-remind-v5:hover .nvs-remind-icon i{animation:nvs-remind-wiggle .55s ease-in-out}.nvs-v4-actions .nvs-remind-v5:focus-visible{outline:3px solid #ffd54a;outline-offset:3px}
+@keyframes nvs-remind-wiggle{0%,100%{transform:rotate(0)}25%,75%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+@media(max-width:600px){.nvs-v4-actions .nvs-remind-v5{gap:5px;padding:7px 8px!important;min-height:49px}.nvs-v4-actions .nvs-remind-icon{width:30px;height:30px;font-size:17px;border-radius:9px}.nvs-v4-actions .nvs-remind-label strong{font-size:10px}.nvs-v4-actions .nvs-remind-label small{font-size:7px;white-space:normal}.nvs-v4-actions .nvs-remind-arrow{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.nvs-v4-actions .nvs-remind-v5:hover .nvs-remind-icon i{animation:none}}
+</style></head>
 <body>
 
 <div id="hvaLogoutModal" class="hva-logout-overlay" role="dialog" aria-modal="true" aria-labelledby="hvaLogoutTitle">
@@ -409,7 +417,7 @@ body{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))!important}
       <div class="nvs-gate-wrap"><a class="nvs-gate nvs-gate-work" id="nvsWorkGate" href="./NghiepVu.html" aria-label="Vào Tác nghiệp số"><span class="nvs-gate-icon"><i class="bi bi-clipboard2-check"></i></span><strong>Tác nghiệp số</strong><span>TTCM · TPCM · GV · NV<br>Nhận nhiệm vụ · Lập báo cáo · Nộp sản phẩm · Tra cứu công việc</span><span class="nvs-gate-enter">Vào Tác nghiệp <i class="bi bi-arrow-right"></i></span></a></div>
     </div>
     <div class="nvs-v4-actions" aria-label="Lối vào dự kiến (chưa kích hoạt)">
-      <span class="nvs-v4-action nvs-v4-remind" role="img" aria-label="Nhắc nhở công vụ - đang chờ triển khai"><i class="bi bi-clipboard2-pulse" aria-hidden="true"></i><small>Nhắc nhở công vụ</small></span>
+      <a class="nvs-v4-action nvs-v4-remind nvs-remind-v5" href="./NhacNho.html" aria-label="Mở Nhắc nhở công vụ"><span class="nvs-remind-icon"><i class="bi bi-bell-ring-fill" aria-hidden="true"></i></span><span class="nvs-remind-label"><strong>Nhắc nhở công vụ</strong><small>Nhắc việc · Tiếp nhận · Phản hồi</small></span><i class="bi bi-chevron-right nvs-remind-arrow" aria-hidden="true"></i></a>
       <span class="nvs-v4-action nvs-v4-library" role="img" aria-label="Kho văn bản - đang chờ kết nối"><i class="bi bi-bookshelf" aria-hidden="true"></i><small>Kho văn bản</small></span>
     </div>
     <div class="nvs-process"><i class="bi bi-arrow-left-right"></i><strong>XỬ LÝ – THEO DÕI KẾT QUẢ</strong><p>Tiếp nhận → Rà soát → Bổ sung (nếu có) → Hoàn thành</p></div>
