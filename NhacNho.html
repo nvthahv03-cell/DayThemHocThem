@@ -109,6 +109,20 @@ const scenarios=[
 ['NN-DK02','Đăng ký chưa đầy đủ thông tin hoặc chưa xác nhận đăng ký'],
 ['NN-OTHER','Khác – BGH tự mô tả tình huống cụ thể']
 ];
+function nvsReminderBGHGuard(){
+  let user={};try{user=JSON.parse(localStorage.getItem('user')||sessionStorage.getItem('user')||'{}')||{};}catch(_){}
+  const token=localStorage.getItem('hvaSessionToken')||sessionStorage.getItem('hvaSessionToken');
+  const expiry=Number(localStorage.getItem('hvaSessionExpiresAt')||sessionStorage.getItem('hvaSessionExpiresAt')||0);
+  const foldRole=x=>String(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  const job=foldRole(user.chucVu||user.viTriViecLam||user['Vị trí việc làm']);
+  const role=foldRole(user.vaiTro||user.role);
+  if(!token||!Number.isFinite(expiry)||expiry<=Date.now()){location.replace('./index.html');return false;}
+  if(!(/hieu truong|pho hieu truong|ban giam hieu/.test(job)||/^(bgh|hieu_truong|pho_hieu_truong|admin|quantri)$/.test(role))){
+    document.body.innerHTML='<main style="font:16px Arial;max-width:520px;margin:12vh auto;padding:28px;text-align:center"><h2>Không có quyền truy cập</h2><p>Chức năng quản lý Nhắc nhở công vụ chỉ dành cho Ban Giám hiệu.</p><a href="./index.html">Quay về NVS</a></main>';
+    return false;
+  }
+  return true;
+}
 const $=id=>document.getElementById(id), state={session:null,people:[],groups:[],selected:new Set(),inbox:[]};
 const fold=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase();
 function visiblePeople(){const q=fold($('search').value.trim()),t=$('team').value;return state.people.filter(p=>(!t||p.to===t)&&(!q||fold([p.hoTen,p.username,p.to,p.chucVu].join(' ')).includes(q)));}
@@ -211,7 +225,7 @@ if(b.dataset.accept!==undefined){b.disabled=true;try{const r=await call('acceptR
 if(b.dataset.submitReply!==undefined){const value=$('reply_'+i).querySelector('textarea').value.trim();if(!value)return alert('Vui lòng nhập nội dung phản hồi.');b.disabled=true;try{const r=await call('replyReminder',{sessionToken:state.session.sessionToken,id:m.id,content:value});if(!r?.success)throw Error(r?.message||'Không gửi được phản hồi.');await loadInbox();}catch(ex){alert(err(ex));b.disabled=false;}}
 });
 $('refreshInbox').onclick=loadInbox;
-initialize();
+if(nvsReminderBGHGuard()) initialize();
 })();
 </script>
 </body></html>
