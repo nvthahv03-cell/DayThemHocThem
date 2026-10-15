@@ -448,6 +448,23 @@ body>.shell>.nvs-chooser{flex:0 0 auto!important;justify-content:flex-start!impo
 }
 @media(prefers-reduced-motion:reduce){#nvsV10TickerText{animation:none;padding-left:0}}
 </style>
+<style id="nvs-v10-role-nav-patch">
+/* Vá giao diện: giữ nguyên node, ID, listener và phân quyền. */
+#nvsQuickRoleSlot{min-width:0!important;display:flex!important}
+#nvsQuickRoleSlot>.nvs-quick-card{width:100%!important;min-height:98px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:8px!important;padding:10px 6px!important;border-radius:16px!important}
+#nvsQuickRoleSlot>.nvs-quick-card[hidden]{display:none!important}
+#nvsQuickRoleSlot>.nvs-quick-card .nvs-quick-icon{display:inline-flex!important;position:relative!important}
+#nvsQuickRoleSlot>.nvs-quick-card .nvs-quick-icon>i{width:52px!important;height:52px!important;font-size:30px!important;display:grid!important;place-items:center!important;border-radius:13px!important;color:#fff!important;background:linear-gradient(135deg,#e87b2b,#d9542c)!important}
+#nvsQuickRoleSlot>#nvsOpenLibrary .nvs-quick-icon>i{background:linear-gradient(135deg,#0d63bd,#03bad3)!important}
+#nvsQuickRoleSlot>.nvs-quick-card strong{font:900 13px/1.2 Inter,Arial,sans-serif!important;text-align:center!important;color:#07518d!important}
+@media(max-width:720px){
+.nvs-quick-card .nvs-quick-icon>i{width:52px!important;height:52px!important;font-size:30px!important}
+.nvs-quick-card{min-height:112px!important}
+#nvsQuickRoleSlot>.nvs-quick-card{min-height:112px!important}
+.nvs-chooser{margin-bottom:112px!important}
+body>.shell{padding-bottom:10px!important}
+}
+</style>
 </head>
 <body>
 
@@ -1039,8 +1056,8 @@ syncVisibility();window.NVS_syncRemindBGH=syncVisibility;
  if(!slot||!remind||!library)return;
  // Di chuyển node hiện có, giữ nguyên ID và toàn bộ event listener của V7.
  slot.appendChild(remind);slot.appendChild(library);
- remind.innerHTML='<span>Nhắc nhở</span>';
- library.innerHTML='<span>Kho VB</span>';
+ remind.innerHTML='<span class="nvs-quick-icon"><i class="bi bi-bell-fill" aria-hidden="true"></i></span><strong>Nhắc nhở<br>công vụ</strong>';
+ library.innerHTML='<span class="nvs-quick-icon"><i class="bi bi-folder2-open" aria-hidden="true"></i></span><strong>Kho VB</strong>';
  function fold(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').toLowerCase();}
  function refresh(){
   let u={};try{u=JSON.parse(localStorage.getItem('user')||sessionStorage.getItem('user')||'{}')||{}}catch(_){}
