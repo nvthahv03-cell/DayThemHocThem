@@ -613,6 +613,29 @@ function currentUser(){
   catch(e){ return {}; }
 }
 
+/* NVS: xưng hô theo hồ sơ đã xác thực, hoạt động cả Safari/PWA iOS. */
+function nvsHonorific(user){
+  const u = user || {};
+  const gender = String(u.gioiTinh || u.gioitinh || '').trim().toLowerCase();
+  const position = String(u.viTriViecLam || u.chucVu || '').toLowerCase();
+  const duty = String(u.vaiTro || '').toLowerCase();
+  const female = /^(nữ|nu|female|f)$/.test(gender);
+  const male = /^(nam|male|m)$/.test(gender);
+  if(!female && !male) return '';
+  const teacher = /giáo viên|giáo vụ giảng dạy|hiệu trưởng|hiệu phó|phó hiệu trưởng/.test(position)
+    || /^(gv|ttcm|tpcm)$/.test(duty.trim());
+  return teacher ? (female ? 'Cô' : 'Thầy') : (female ? 'Chị' : 'Anh');
+}
+function nvsRenderIdentity(user, username){
+  const name = String(user.hoTen || user.fullName || username || '').trim();
+  const title = nvsHonorific(user);
+  $('userNameLabel').textContent = (title ? title + ' ' : '') + name;
+  const position = String(user.viTriViecLam || user.chucVu || '').trim();
+  const manager = /hiệu trưởng|hiệu phó|phó hiệu trưởng/i.test(position);
+  $('userTeamLabel').textContent = manager ? 'Ban Giám hiệu' : (user.toBoPhan || user.tenTo || '—');
+  $('userRoleLabel').textContent = position || '—';
+}
+
 function authToken(){
   const token = String(localStorage.getItem('hvaSessionToken') || sessionStorage.getItem('hvaSessionToken') || '').trim();
   const expiry = Number(localStorage.getItem('hvaSessionExpiresAt') || sessionStorage.getItem('hvaSessionExpiresAt') || 0);
@@ -766,7 +789,10 @@ function fetchProfileFromSheet(username){
             // Chỉ lấy lớp ở W của đúng tài khoản O; không dò ô khác.
             if(!/^(10|11|12)\/\d{1,2}$/.test(lopCN)) lopCN = '';
 
-            finish({ toBoPhan, lopCN });
+            finish({ toBoPhan, lopCN,
+              gioiTinh: cellsText[5] || '',
+              viTriViecLam: cellsText[9] || '',
+              vaiTro: cellsText[16] || '' });
             return;
           }
         }
@@ -800,9 +826,7 @@ async function initPortal(){
   }
 
   // 1. Hiển thị ngay lập tức thông tin cơ bản
-  $('userNameLabel').textContent = user.hoTen || user.fullName || username;
-  $('userTeamLabel').textContent = user.toBoPhan || user.tenTo || 'Ban Giám hiệu';
-  $('userRoleLabel').textContent = user.chucVu || user.viTriViecLam || 'Giáo viên';
+  nvsRenderIdentity(user, username);
   
   // Không hiển thị lớp lưu cũ trước khi xác minh tài khoản từ Sheet.
   const cnBadge = $('userClassLabel').closest('span');
@@ -813,8 +837,12 @@ async function initPortal(){
   try {
     const profile = await fetchProfileFromSheet(username);
     if(profile){
-      if(profile.toBoPhan) $('userTeamLabel').textContent = profile.toBoPhan;
-      
+      if(profile.gioiTinh) user.gioiTinh = profile.gioiTinh;
+      if(profile.viTriViecLam) user.viTriViecLam = profile.viTriViecLam;
+      if(profile.vaiTro) user.vaiTro = profile.vaiTro;
+      if(profile.toBoPhan) user.toBoPhan = profile.toBoPhan;
+      nvsRenderIdentity(user, username);
+
       const lop = /^(10|11|12)\/\d{1,2}$/.test(profile.lopCN || '') ? profile.lopCN : '';
       $('userClassLabel').textContent = lop;
       cnBadge.hidden = !lop;
