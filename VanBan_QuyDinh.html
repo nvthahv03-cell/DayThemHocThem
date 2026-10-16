@@ -12,7 +12,64 @@ dialog select {
   font: inherit;
   min-height: 42px;
 }
-</style></head><body><header><a href="./DanhMucNghiepVu.html">← Danh mục nghiệp vụ</a><h1>KHO VĂN BẢN ĐIỆN TỬ</h1><p>Trường THPT Hòa Vang · Tra cứu văn bản theo phân quyền</p></header><main><section class="panel"><div class="tabs" role="tablist" aria-label="Nhóm văn bản"><button type="button" role="tab" data-group="DEN" aria-selected="true">Văn bản đến</button><button type="button" role="tab" data-group="DI" aria-selected="false">Văn bản đi</button><button type="button" role="tab" data-group="NOIBO" aria-selected="false" class="hidden" id="privateTab">Nội bộ CBQL</button></div><div class="toolbar"><input type="search" id="search" placeholder="Tìm số hiệu, loại VB, trích yếu..." aria-label="Tìm văn bản"><select id="year" aria-label="Lọc năm"><option value="">Tất cả thời gian</option></select><button type="button" id="refresh">Làm mới</button></div><div class="actions hidden" id="adminActions"><button type="button" id="sync">Đồng bộ Google Drive</button><span class="muted">CBQL: đối chiếu PDF, chọn Loại VB và cập nhật Trích yếu trước khi lưu.</span></div><div id="status" role="status">Đang chờ tải danh mục...</div><div class="tablewrap"><table><thead><tr><th>STT</th><th>Số hiệu VB</th><th>Ngày ban hành</th><th>Loại VB</th><th>Trích yếu</th><th>PDF</th></tr></thead><tbody id="rows"><tr><td colspan="6">Chưa có dữ liệu.</td></tr></tbody></table></div><p class="muted">Văn bản có ngày ban hành mới nhất xếp trước; văn bản chưa xác định ngày xếp sau. Quyền mở PDF được Google Drive kiểm tra thêm; tài liệu nội bộ không xuất hiện với giáo viên.</p></section><footer>© 2026 Trường THPT Hòa Vang</footer></main><dialog id="editDialog"><form method="dialog" id="editForm"><h2>Hiệu chỉnh thông tin văn bản</h2><label>Số hiệu VB<input id="editSo" required maxlength="120"></label><label>Ngày ban hành<input type="date" id="editNgay"></label><label>   Loại VB   <select id="editLoai" required>     <option value="">-- Chọn loại văn bản --</option>     <option value="Công văn">Công văn</option>     <option value="Kế hoạch">Kế hoạch</option>     <option value="Quyết định">Quyết định</option>     <option value="Thông báo">Thông báo</option>     <option value="Báo cáo">Báo cáo</option>     <option value="Tờ trình">Tờ trình</option>     <option value="Hướng dẫn">Hướng dẫn</option>     <option value="Quy định">Quy định</option>     <option value="Quy chế">Quy chế</option>     <option value="Nghị quyết">Nghị quyết</option>     <option value="Biên bản">Biên bản</option>     <option value="Giấy mời">Giấy mời</option>     <option value="Chương trình">Chương trình</option>     <option value="Khác">Khác</option>   </select> </label><label>Trích yếu<input id="editTrich" required maxlength="700"></label><menu><button type="button" id="cancelEdit">Hủy</button><button type="submit">Lưu</button></menu></form></dialog><script>
+
+/* V9.6 - phan hoi nut va can doi bang; giu nguyen giao dien dang chay */
+button{transition:transform .13s ease,box-shadow .16s ease,background-color .16s ease,filter .16s ease;touch-action:manipulation}
+button:not(:disabled):hover{filter:brightness(1.055);box-shadow:0 3px 9px rgba(4,69,131,.17)}
+button:not(:disabled):active{transform:translateY(2px) scale(.975);box-shadow:inset 0 2px 5px rgba(0,35,83,.2)}
+button:focus-visible,a:focus-visible{outline:3px solid #ffb54a;outline-offset:3px}
+button:disabled{opacity:.72;cursor:wait}
+#refresh.is-working,#sync.is-working{background:#607c96}
+#refresh.is-done{background:#167b57}
+.tablewrap table{table-layout:fixed;min-width:930px}
+.tablewrap th,.tablewrap td{overflow-wrap:anywhere}
+.tablewrap th:nth-child(1){width:5%}
+.tablewrap th:nth-child(2){width:17%}
+.tablewrap th:nth-child(3){width:15%;white-space:nowrap}
+.tablewrap th:nth-child(4){width:12%}
+.tablewrap th:nth-child(5){width:43%}
+.tablewrap th:nth-child(6){width:8%}
+.tablewrap td:nth-child(2){min-width:0;overflow-wrap:anywhere}
+.tablewrap td:nth-child(3){min-width:0;white-space:nowrap}
+.tablewrap td:nth-child(4){min-width:0}
+.tablewrap td:nth-child(5){min-width:0}
+.edit-button{display:block;margin:6px auto 0;border:0;background:#e8f3ff;color:#075a9f;border-radius:7px;cursor:pointer;padding:5px 9px;font:inherit}
+#editDialog[open]{animation:nvs-pop .16s ease-out}
+@keyframes nvs-pop{from{opacity:.5;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+#feedback{min-height:0;font-size:13px;font-weight:650;color:#176c54}
+#feedback.is-error{color:#b42336}
+@media(max-width:600px){.tablewrap table{min-width:930px}}
+
+/* V9.7: Bộ lọc nâng cao - chỉ giao diện, không thay đổi API */
+.advanced-toggle{background:#eef6ff!important;color:#14588c!important;border:1px solid #c6d8ea!important}
+.advanced-toggle[aria-expanded=true]{background:#d9ebfc!important}
+.advanced-panel{border:1px solid #d3e3f2;background:#f8fbff;border-radius:12px;padding:15px;margin:-3px 0 15px}
+.advanced-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.advanced-grid label{font-weight:650;color:#214f77;font-size:13px;display:flex;flex-direction:column;gap:6px}
+.advanced-grid input,.advanced-grid select{width:100%;min-width:0;border:1px solid #c6d8ea;border-radius:9px;background:#fff;padding:10px 12px;font:inherit;color:#173956}
+.advanced-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:13px;flex-wrap:wrap}
+.advanced-footer button{border:1px solid #c6d8ea;border-radius:9px;background:#fff;color:#14588c;font-weight:700;padding:9px 13px;cursor:pointer}
+.advanced-check{display:flex;align-items:center;gap:8px;font-size:13px;color:#214f77}
+@media(max-width:650px){.advanced-grid{grid-template-columns:1fr 1fr}.advanced-grid label:first-child{grid-column:1/-1}}
+@media(max-width:420px){.advanced-grid{grid-template-columns:1fr}.advanced-grid label:first-child{grid-column:auto}}
+
+/* V9.7.1 - cải thiện typography, tab và bảng; không thay đổi phân quyền */
+:root{font-family:"Segoe UI",Arial,sans-serif}
+.tabs{gap:12px;align-items:stretch}
+.tabs button{font-family:inherit;font-size:16px;line-height:1.35;letter-spacing:0;font-weight:700;
+  padding:13px 20px;border-radius:12px;white-space:nowrap;transition:transform .14s ease,box-shadow .14s ease,background .14s ease}
+.tabs button:hover{box-shadow:0 5px 13px #164e8326;transform:translateY(-1px)}
+.tabs button:active{transform:translateY(1px) scale(.985)}
+table{table-layout:auto;min-width:930px}
+th{font-size:14px;line-height:1.35;font-weight:700;white-space:nowrap}
+th:first-child,td:first-child{width:66px;min-width:66px;white-space:nowrap;text-align:center}
+th:nth-child(2),td:nth-child(2){min-width:155px}
+th:nth-child(3),td:nth-child(3){min-width:150px;white-space:nowrap}
+th:nth-child(4),td:nth-child(4){min-width:115px}
+th:nth-child(5),td:nth-child(5){min-width:260px}
+th:last-child,td:last-child{min-width:76px}
+@media(max-width:600px){.tabs button{flex:0 0 auto;font-size:14px;padding:11px 13px}.tabs{overflow-x:auto;flex-wrap:nowrap}}
+</style></head><body><header><a href="./DanhMucNghiepVu.html">← Danh mục nghiệp vụ</a><h1>KHO VĂN BẢN ĐIỆN TỬ</h1><p>Trường THPT Hòa Vang · Tra cứu văn bản theo phân quyền</p></header><main><section class="panel"><div class="tabs" role="tablist" aria-label="Nhóm văn bản"><button type="button" role="tab" data-group="DEN" aria-selected="true">Văn bản đến</button><button type="button" role="tab" data-group="DI" aria-selected="false">Văn bản đi</button><button type="button" role="tab" data-group="NOIBO" aria-selected="false" class="hidden" id="privateTab">Văn bản nội bộ</button></div><div class="toolbar"><input type="search" id="search" placeholder="Tìm số hiệu, loại VB, trích yếu..." aria-label="Tìm văn bản"><select id="year" aria-label="Lọc năm"><option value="">Tất cả thời gian</option></select><button type="button" id="refresh">Làm mới</button><button type="button" id="advancedToggle" class="advanced-toggle" aria-expanded="false" aria-controls="advancedPanel">⚙ Tìm nâng cao</button></div><div id="advancedPanel" class="advanced-panel hidden"><div class="advanced-grid"><label>Từ khóa riêng<input id="advancedKeyword" type="search" placeholder="Số, ký hiệu, trích yếu..."></label><label>Loại văn bản<select id="advancedType"><option value="">Tất cả loại văn bản</option><option>Công văn</option><option>Kế hoạch</option><option>Quyết định</option><option>Thông báo</option><option>Báo cáo</option><option>Tờ trình</option><option>Hướng dẫn</option><option>Quy định</option><option>Quy chế</option><option>Nghị quyết</option><option>Biên bản</option><option>Giấy mời</option><option>Chương trình</option><option>Khác</option><option>Chưa xác định</option></select></label><label>Từ ngày ban hành<input id="advancedFrom" type="date"></label><label>Đến ngày ban hành<input id="advancedTo" type="date"></label></div><div class="advanced-footer"><label class="advanced-check"><input id="advancedMissing" type="checkbox"> Chỉ văn bản thiếu ngày ban hành</label><button type="button" id="advancedClear">Xóa bộ lọc nâng cao</button></div></div><div class="actions hidden" id="adminActions"><button type="button" id="sync">Đồng bộ Google Drive</button><span class="muted">CBQL: đối chiếu PDF, chọn Loại VB và cập nhật Trích yếu trước khi lưu.</span></div><div id="feedback" role="status" aria-live="polite"></div><div id="status" role="status">Đang chờ tải danh mục...</div><div class="tablewrap"><table><thead><tr><th>STT</th><th>Số, ký hiệu VB</th><th>Ngày ban hành</th><th>Loại VB</th><th>Trích yếu</th><th>PDF</th></tr></thead><tbody id="rows"><tr><td colspan="6">Chưa có dữ liệu.</td></tr></tbody></table></div><p class="muted">Văn bản có ngày ban hành mới nhất xếp trước; văn bản chưa xác định ngày xếp sau. Quyền mở PDF được Google Drive kiểm tra thêm; tài liệu nội bộ không xuất hiện với giáo viên.</p></section><footer>© 2026 Trường THPT Hòa Vang</footer></main><dialog id="editDialog"><form method="dialog" id="editForm"><h2>Hiệu chỉnh thông tin văn bản</h2><label>Số, ký hiệu VB<input id="editSo" required maxlength="120"></label><label>Ngày ban hành<input type="date" id="editNgay"></label><label>   Loại VB   <select id="editLoai" required>     <option value="">-- Chọn loại văn bản --</option>     <option value="Công văn">Công văn</option>     <option value="Kế hoạch">Kế hoạch</option>     <option value="Quyết định">Quyết định</option>     <option value="Thông báo">Thông báo</option>     <option value="Báo cáo">Báo cáo</option>     <option value="Tờ trình">Tờ trình</option>     <option value="Hướng dẫn">Hướng dẫn</option>     <option value="Quy định">Quy định</option>     <option value="Quy chế">Quy chế</option>     <option value="Nghị quyết">Nghị quyết</option>     <option value="Biên bản">Biên bản</option>     <option value="Giấy mời">Giấy mời</option>     <option value="Chương trình">Chương trình</option>     <option value="Khác">Khác</option>   </select> </label><label>Trích yếu<input id="editTrich" required maxlength="700"></label><menu><button type="button" id="cancelEdit">Hủy</button><button type="submit">Lưu</button></menu></form></dialog><script>
 'use strict';
   
 // Cập nhật bằng URL Web App của đúng bản Backend NVS sau khi triển khai.
@@ -22,10 +79,41 @@ const pdfIcon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 function token(){return String(sessionStorage.getItem('hvaSessionToken')||localStorage.getItem('hvaSessionToken')||'');}
 function setStatus(t){$('status').textContent=t;}
 function norm(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').toLowerCase();}
-function draw(){const q=norm($('search').value.trim()),y=$('year').value;const filtered=docs.filter(d=>(!y||String(d.ngayBanHanh||'').slice(0,4)===y)&&norm([d.soHieu,d.ngayBanHanh,d.loai,d.trichYeu,d.name].join(' ')).includes(q));const tbody=$('rows');tbody.replaceChildren();filtered.forEach((d,i)=>{const tr=document.createElement('tr');[String(i+1),d.soHieu||'—',d.ngayBanHanh?d.ngayBanHanh.split('-').reverse().join('/'):'—',d.loai||'—',d.trichYeu||'—'].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td)});const td=document.createElement('td'),a=document.createElement('a');a.href=d.url;a.target='_blank';a.rel='noopener noreferrer';a.className='pdf';a.innerHTML=pdfIcon;a.title='Mở PDF';a.setAttribute('aria-label','Mở PDF: '+(d.soHieu||d.trichYeu));td.append(a);if(isAdmin){const edit=document.createElement('button');edit.type='button';edit.textContent='Sửa';edit.style.cssText='display:block;margin:5px auto;border:0;background:#e8f3ff;color:#075a9f;border-radius:6px;cursor:pointer';edit.addEventListener('click',()=>openEdit(d));td.append(edit)}tr.append(td);tbody.append(tr)});if(!filtered.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=6;td.textContent='Không có văn bản phù hợp.';tr.append(td);tbody.append(tr)}setStatus('Hiển thị '+filtered.length+' / '+docs.length+' văn bản.');}
+function draw(){const q=norm($('search').value.trim()),y=$('year').value,aq=norm($('advancedKeyword').value.trim()),typ=$('advancedType').value,from=$('advancedFrom').value,to=$('advancedTo').value,missing=$('advancedMissing').checked;const filtered=docs.filter(d=>{const date=String(d.ngayBanHanh||'').slice(0,10),all=norm([d.soHieu,d.ngayBanHanh,d.loai,d.trichYeu,d.name].join(' '));return (!y||date.slice(0,4)===y)&&all.includes(q)&&all.includes(aq)&&(!typ||norm(d.loai)===norm(typ))&&(!missing||!date)&&(!from||(date&&date>=from))&&(!to||(date&&date<=to));});const tbody=$('rows');tbody.replaceChildren();filtered.forEach((d,i)=>{const tr=document.createElement('tr');[String(i+1),d.soHieu||'—',d.ngayBanHanh?d.ngayBanHanh.split('-').reverse().join('/'):'—',d.loai||'—',d.trichYeu||'—'].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td)});const td=document.createElement('td'),a=document.createElement('a');a.href=d.url;a.target='_blank';a.rel='noopener noreferrer';a.className='pdf';a.innerHTML=pdfIcon;a.title='Mở PDF';a.setAttribute('aria-label','Mở PDF: '+(d.soHieu||d.trichYeu));td.append(a);if(isAdmin){const edit=document.createElement('button');edit.type='button';edit.textContent='Sửa';edit.className='edit-button';edit.addEventListener('click',()=>openEdit(d));td.append(edit)}tr.append(td);tbody.append(tr)});if(!filtered.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=6;td.textContent='Không có văn bản phù hợp.';tr.append(td);tbody.append(tr)}setStatus('Hiển thị '+filtered.length+' / '+docs.length+' văn bản.');}
 function updateYears(){const years=[...new Set(docs.map(d=>String(d.ngayBanHanh||'').slice(0,4)).filter(x=>/^\d{4}$/.test(x)))].sort().reverse();const sel=$('year');sel.replaceChildren(new Option('Tất cả thời gian',''));years.forEach(y=>sel.add(new Option(y,y)));}
-async function load(){const t=token();if(!t){setStatus('Chưa tìm thấy phiên đăng nhập NVS. Vui lòng đăng nhập lại từ trang chính.');return}setStatus('Đang tải danh mục...');try{const url=new URL(API_URL);url.searchParams.set('action','listKhoVanBan');url.searchParams.set('group',group);url.searchParams.set('sessionToken',t);const r=await fetch(url.toString(),{cache:'no-store'}),data=await r.json();if(!data.success)throw Error(data.message||'Không thể tải');docs=Array.isArray(data.documents)?data.documents:[];isAdmin=!!data.isAdmin;$('privateTab').classList.toggle('hidden',!isAdmin);$('adminActions').classList.toggle('hidden',!isAdmin);updateYears();draw()}catch(e){docs=[];$('rows').replaceChildren();setStatus('Lỗi tải danh mục: '+e.message)}}
+async function load(throwOnError=false){const t=token();if(!t){setStatus('Chưa tìm thấy phiên đăng nhập NVS. Vui lòng đăng nhập lại từ trang chính.');return}setStatus('Đang tải danh mục...');try{const url=new URL(API_URL);url.searchParams.set('action','listKhoVanBan');url.searchParams.set('group',group);url.searchParams.set('sessionToken',t);const r=await fetch(url.toString(),{cache:'no-store'}),data=await r.json();if(!data.success)throw Error(data.message||'Không thể tải');docs=Array.isArray(data.documents)?data.documents:[];isAdmin=!!data.isAdmin;$('privateTab').classList.toggle('hidden',!isAdmin);$('adminActions').classList.toggle('hidden',!isAdmin);updateYears();draw()}catch(e){docs=[];$('rows').replaceChildren();setStatus('Lỗi tải danh mục: '+e.message);if(throwOnError)throw e}}
 async function post(action,extra){const t=token();if(!t)throw Error('Phiên đăng nhập đã hết hạn.');const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({action,sessionToken:t},extra||{}))});const data=await res.json();if(!data.success)throw Error(data.message||'Không thực hiện được');return data;}
-document.querySelectorAll('[data-group]').forEach(b=>b.addEventListener('click',()=>{group=b.dataset.group;document.querySelectorAll('[data-group]').forEach(x=>x.setAttribute('aria-selected',String(x===b)));$('search').value='';load()}));$('search').addEventListener('input',draw);$('year').addEventListener('change',draw);$('refresh').addEventListener('click',load);$('sync').addEventListener('click',async()=>{setStatus('Đang đồng bộ Google Drive...');try{const data=await post('syncKhoVanBan');setStatus(data.message+' Thêm '+data.created+', cập nhật '+data.updated+'.');await load()}catch(e){setStatus('Đồng bộ thất bại: '+e.message)}});
-function openEdit(d){editId=d.id;$('editSo').value=d.soHieu;$('editNgay').value=d.ngayBanHanh||'';const loai = String(d.loai || '').trim(); const select = $('editLoai');  if ([...select.options].some(o => o.value === loai)) {   select.value = loai; } else {   select.value = ''; }$('editTrich').value=(d.trichYeu==='Chưa cập nhật'? '': d.trichYeu);$('editDialog').showModal()}$('cancelEdit').addEventListener('click',()=>$('editDialog').close());$('editForm').addEventListener('submit',async e=>{e.preventDefault();try{await post('updateKhoVanBan',{fileId:editId,soHieu:$('editSo').value,ngayBanHanh:$('editNgay').value,loai:$('editLoai').value,trichYeu:$('editTrich').value});$('editDialog').close();await load()}catch(err){alert('Không lưu được: '+err.message)}});load();
+document.querySelectorAll('[data-group]').forEach(b=>b.addEventListener('click',()=>{group=b.dataset.group;document.querySelectorAll('[data-group]').forEach(x=>x.setAttribute('aria-selected',String(x===b)));$('search').value='';load()}));$('search').addEventListener('input',draw);$('year').addEventListener('change',draw);
+$('advancedToggle').addEventListener('click',()=>{const open=$('advancedPanel').classList.toggle('hidden')===false;$('advancedToggle').setAttribute('aria-expanded',String(open));});
+['advancedKeyword','advancedType','advancedFrom','advancedTo','advancedMissing'].forEach(id=>$(id).addEventListener(id==='advancedKeyword'?'input':'change',draw));
+$('advancedClear').addEventListener('click',()=>{['advancedKeyword','advancedFrom','advancedTo'].forEach(id=>$(id).value='');$('advancedType').value='';$('advancedMissing').checked=false;draw();});
+// V9.6: thong bao thao tac khong phu thuoc vao setStatus cua ham draw/load.
+let feedbackTimer;
+function feedback(message,error=false){const el=$('feedback');el.textContent=message;el.classList.toggle('is-error',error);clearTimeout(feedbackTimer);if(!error)feedbackTimer=setTimeout(()=>{if(el.textContent===message)el.textContent='';},5500);}
+async function runButton(btn,working,done,fn){
+ if(btn.disabled)return;
+ const original=btn.textContent;
+ btn.disabled=true;btn.classList.remove('is-done');btn.classList.add('is-working');btn.textContent=working;
+ try{const result=await fn();btn.classList.remove('is-working');btn.classList.add('is-done');btn.textContent=done;return result;}
+ catch(e){btn.classList.remove('is-working');btn.textContent=original;throw e;}
+ finally{btn.disabled=false;setTimeout(()=>{if(!btn.disabled){btn.textContent=original;btn.classList.remove('is-done');}},2200);}
+}
+$('refresh').addEventListener('click',async()=>{
+ try{await runButton($('refresh'),'Đang làm mới...','✓ Đã làm mới',async()=>{await load(true);});feedback('Đã làm mới Kho văn bản.');}
+ catch(e){feedback('Không làm mới được: '+e.message,true);}
+});
+$('sync').addEventListener('click',async()=>{
+ try{await runButton($('sync'),'Đang đồng bộ...','✓ Đã đồng bộ',async()=>{
+ const data=await post('syncKhoVanBan');await load(true);feedback((data.message||'Đã đồng bộ Google Drive.')+' Thêm '+data.created+', cập nhật '+data.updated+'.');
+ });}catch(e){feedback('Đồng bộ thất bại: '+e.message,true);}
+});
+
+function openEdit(d){editId=d.id;$('editSo').value=d.soHieu;$('editNgay').value=d.ngayBanHanh||'';const loai = String(d.loai || '').trim(); const select = $('editLoai');  if ([...select.options].some(o => o.value === loai)) {   select.value = loai; } else {   select.value = ''; }$('editTrich').value=(d.trichYeu==='Chưa cập nhật'? '': d.trichYeu);$('editDialog').showModal()}$('cancelEdit').addEventListener('click',()=>$('editDialog').close());$('editForm').addEventListener('submit',async e=>{
+ e.preventDefault();const save=$('editForm').querySelector('button[type=submit]');
+ try{await runButton(save,'Đang lưu...','✓ Đã lưu',async()=>{
+ await post('updateKhoVanBan',{fileId:editId,soHieu:$('editSo').value.trim(),ngayBanHanh:$('editNgay').value,loai:$('editLoai').value,trichYeu:$('editTrich').value.trim()});
+ await load(true);
+ });$('editDialog').close();feedback('Đã lưu thông tin văn bản.');}
+ catch(err){feedback('Không lưu được: '+err.message,true);alert('Không lưu được: '+err.message);}
+});load();
 </script></body></html>
